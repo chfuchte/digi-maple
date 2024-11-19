@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+
+.DS_Store
+.fleet
+.idea
+.vscode
+
+logs
+*.log
