@@ -16,7 +16,7 @@
 | `.gitignore`         | files/directories that git should ignore (don't track/ push)                                     | Yes |
 | `.prettierrc.json`   | prettier configuration file (code formatter)                                                     | Yes |
 | `app.vue`            | the base of our frontend. It contains the basic scaffold that should be the same for every route | Yes |
-| `bun.lockb`          | lock file for dependencies (like package-lock.json)                                              | -   |
+| `bun.lockb`          | lock file for dependencies (like package-lock.json)                                              | Yes |
 | `eslint.config.mjs`  | eslint configuration file (code linter)                                                          | Yes |
 | `nuxt.config.ts`     | nuxt configuration file to add modules, etc.                                                     | Yes |
 | `package.json`       | npm configuration file (dependencies, scripts, etc.)                                             | Yes |
