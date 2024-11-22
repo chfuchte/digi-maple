@@ -1,5 +1,11 @@
 # Small Explanation of /frontend
 
+## Prerequsites
+
+- [Node.js](https://nodejs.org) (just the normal LTS)
+- [Bun](https://bun.sh)
+- any text editor with Vue and TypeScript support (f.e. VSCode or Zed with proper extentions)
+
 ## What does each file/directory do?
 
 | File/ Directory      | Purpose                                                                                          | Git |
