@@ -2,7 +2,6 @@
 
 <template>
     <div>
-        Wuhu! This is the index page!
+        <section>wuhu</section>
     </div>
-  <Button>Klick mich</Button>
 </template>
