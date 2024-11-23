@@ -9,7 +9,24 @@ export default defineNuxtConfig({
         }
     },
     css: ["~/assets/css/global.css"],
-    modules: ['@vueuse/nuxt', "@nuxtjs/tailwindcss", "@nuxt/eslint"],
+    modules: [
+      '@vueuse/nuxt',
+      "@nuxtjs/tailwindcss",
+      "@nuxt/eslint",
+      "shadcn-nuxt",
+      "@nuxtjs/color-mode",
+    ],
+    shadcn: {
+        /**
+         * Prefix for all the imported component
+         */
+        prefix: '',
+        /**
+         * Directory that the component lives in.
+         * @default "./components/ui"
+         */
+        componentDir: './components/ui'
+    },
     tailwindcss: {
         exposeConfig: true,
         viewer: false,
