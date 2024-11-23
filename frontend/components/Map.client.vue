@@ -32,7 +32,7 @@ const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
                 zoomControl: false,
             }">
             <LControl position="topleft">
-                <MapZoom />
+                <MapZoom :map="map" />
             </LControl>
             <LImageOverlay :url="props.image!" :bounds />
             <LMarker v-for="marker in markers" :key="marker.name ?? ''" :lat-lng="marker">
