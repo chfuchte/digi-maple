@@ -5,27 +5,21 @@ export default defineNuxtConfig({
         head: {
             bodyAttrs: {
                 class: "dark",
-            }
-        }
+            },
+        },
     },
     css: ["~/assets/css/global.css"],
-    modules: [
-      '@vueuse/nuxt',
-      "@nuxtjs/tailwindcss",
-      "@nuxt/eslint",
-      "shadcn-nuxt",
-      "@nuxtjs/color-mode",
-    ],
+    modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode", "@nuxtjs/leaflet"],
     shadcn: {
         /**
          * Prefix for all the imported component
          */
-        prefix: '',
+        prefix: "",
         /**
          * Directory that the component lives in.
          * @default "./components/ui"
          */
-        componentDir: './components/ui'
+        componentDir: "./components/ui",
     },
     tailwindcss: {
         exposeConfig: true,

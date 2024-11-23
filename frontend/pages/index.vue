@@ -1,11 +1,17 @@
-<script lang="ts"></script>
+<script setup lang="ts">
+import polandMap from "@/assets/big_poland_with_districts.png";
+</script>
 
 <template>
-<<<<<<< HEAD
-    <div>
-        <section>wuhu</section>
-    </div>
-=======
-    <div>Wuhu! This is the index page!</div>
->>>>>>> 5cec34692125fc25dddda91263ffa0130f3814fc
+    <Map
+        :image="polandMap"
+        :width="2049"
+        :height="2108"
+        :markers="[
+            {
+                name: 'Test',
+                lng: 2049 / 2,
+                lat: 2108 / 2,
+            },
+        ]" />
 </template>
