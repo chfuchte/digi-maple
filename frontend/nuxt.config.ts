@@ -16,6 +16,7 @@ export default defineNuxtConfig({
       "shadcn-nuxt",
       "@nuxtjs/color-mode",
       "@nuxtjs/leaflet",
+      "nuxt-lucide-icons",
     ],
     shadcn: {
         /**
