@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import polandMap from "@/assets/big_poland_with_districts.png";
+import devMapImagePath from "@/assets/dev/Lageplan_Campus_Bockenheim.svg";
+
+const imageHeightWidthRatio = 0.94285675588;
+const height = 2000;
+const width = imageHeightWidthRatio * height;
 </script>
 
 <template>
     <Map
-        :image="polandMap"
-        :width="2049"
-        :height="2108"
+        :image="devMapImagePath"
+        :width="width"
+        :height="height"
         :markers="[
             {
                 name: 'Test',
-                lng: 2049 / 2,
-                lat: 2108 / 2,
+                lng: width / 2,
+                lat: height / 2,
             },
         ]" />
 </template>
