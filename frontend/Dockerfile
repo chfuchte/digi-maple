@@ -12,8 +12,6 @@ RUN cd /temp/dev && bun install --frozen-lockfile
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
-
-# (optional tests): not for now
 # building
 ENV NODE_ENV=production
 RUN bun run build
@@ -24,6 +22,6 @@ COPY --from=prerelease /usr/src/app/.output .output
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the frontend-server
-USER bun
+USER bun-maple
 EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "start" ]
