@@ -9,7 +9,14 @@ export default defineNuxtConfig({
         },
     },
     css: ["~/assets/css/global.css"],
-    modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode", "@nuxtjs/leaflet"],
+    modules: [
+        "@vueuse/nuxt",
+        "@nuxtjs/tailwindcss",
+        "shadcn-nuxt",
+        "@nuxtjs/color-mode",
+        "@nuxtjs/leaflet",
+        "nuxt-lucide-icons",
+    ],
     shadcn: {
         /**
          * Prefix for all the imported component

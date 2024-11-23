@@ -14,6 +14,7 @@ const props = defineProps<{
 }>();
 
 const zoom = ref(-2);
+const map = ref();
 
 const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
 </script>
@@ -26,15 +27,17 @@ const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
             :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
             :crs="CRS.Simple"
             :min-zoom="-2"
-            :max-zoom="2">
+            :max-zoom="2"
+            :options="{
+                zoomControl: false,
+            }">
+            <LControl position="topleft">
+                <MapZoom />
+            </LControl>
             <LImageOverlay :url="props.image!" :bounds />
             <LMarker v-for="marker in markers" :key="marker.name ?? ''" :lat-lng="marker">
                 <LPopup :content="marker.name ?? ''" />
             </LMarker>
-            <!--<LMarker
-          :lat-lng="bounds.getCenter()"
-          title="Ich bin die Mitte"
-      />-->
         </LMap>
     </div>
 </template>
