@@ -1,7 +1,5 @@
 <script lang="ts"></script>
 
 <template>
-    <div>
-        Wuhu! This is the index page!
-    </div>
+    <div>Wuhu! This is the index page!</div>
 </template>
