@@ -1,0 +1,7 @@
+services:
+  frontend:
+    container_name: maple_frontend
+    build: ./frontend
+    ports:
+      - "80:3000"
+    restart: unless-stopped

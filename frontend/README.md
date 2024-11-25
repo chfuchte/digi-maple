@@ -38,3 +38,7 @@
 -   `bun start` - starts the production server (after `bun run build`)
 -   `bun lint` - lints the code with eslint
 -   `bun format` - formats the code with pretter
+
+## Hating TypeScript?
+
+Just change the `<script lang="ts">` to `<script lang="js">` in the `.vue` files anoying you and @chfuchte merges it to ts later on.F
