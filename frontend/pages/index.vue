@@ -7,15 +7,21 @@ const width = imageHeightWidthRatio * height;
 </script>
 
 <template>
-    <Map
-        :image="devMapImagePath"
-        :width="width"
-        :height="height"
-        :markers="[
+    <div class="flex flex-col w-screen h-screen">
+        <DebugBar />
+        <Map
+            :image="devMapImagePath"
+            name="Uni Campus Bockenheim"
+            :width="width"
+            :height="height"
+            :markers="[
             {
                 name: 'Test',
                 lng: width / 2,
                 lat: height / 2,
             },
-        ]" />
+        ]"
+            class="flex-grow"
+        />
+    </div>
 </template>

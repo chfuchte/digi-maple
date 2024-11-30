@@ -1,18 +1,25 @@
 <script setup lang="ts">
-  import type {GlobalThis} from "type-fest";
+const props = defineProps<{
+  disableZoomIn: boolean;
+  disableZoomOut: boolean;
+}>()
 
-  const props = defineProps<{
-    map: globalThis.Ref<any, any>,
-  }>();
+const emit = defineEmits(['zoomIn', 'zoomOut'])
 </script>
 
 <template>
-  <div class="absolute z-400 top-0 left-0">
-    <Button @click="console.log(props.map.value);">
+  <div class="flex flex-col gap-1 bg-neutral-900/[0.5] backdrop-blur p-1.5 rounded-md border-black">
+    <Button @click="emit('zoomIn')" :disabled="props.disableZoomIn">
       <LucideChevronUp />
     </Button>
-    <Button>
+    <Button @click="emit('zoomOut')" :disabled="props.disableZoomOut">
       <LucideChevronDown />
     </Button>
   </div>
 </template>
+
+<style scoped>
+  div {
+    border-width: 1px;
+  }
+</style>
