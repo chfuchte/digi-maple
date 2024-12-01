@@ -1,5 +1,5 @@
 FROM oven/bun:latest AS base
-WORKDIR /usr/src/app
+WORKDIR /usr/src/web
 
 # install dependencies
 FROM base AS install
@@ -18,8 +18,8 @@ RUN bun run build
 
 # copy build bundle to the final image
 FROM base AS release
-COPY --from=prerelease /usr/src/app/.output .output
-COPY --from=prerelease /usr/src/app/package.json .
+COPY --from=prerelease /usr/src/web/.output .output
+COPY --from=prerelease /usr/src/web/package.json .
 
 # run the frontend-server
 USER bun-maple
