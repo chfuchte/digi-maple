@@ -1,27 +1,19 @@
 <script setup lang="ts">
-import devMapImagePath from "@/assets/dev/Lageplan_Campus_Bockenheim.svg";
-
-const imageHeightWidthRatio = 0.94285675588;
-const height = 2000;
-const width = imageHeightWidthRatio * height;
 </script>
 
 <template>
-    <div class="flex flex-col w-screen h-screen">
-        <DebugBar />
-        <Map
-            :image="devMapImagePath"
-            name="Uni Campus Bockenheim"
-            :width="width"
-            :height="height"
-            :markers="[
-            {
-                name: 'Test',
-                lng: width / 2,
-                lat: height / 2,
-            },
-        ]"
-            class="flex-grow"
-        />
+    <TitleHeader />
+    <div class="flex-grow bg-gray-200 flex flex-col gap-3 items-center justify-center text-black">
+        <h1 class="text-3xl">Test oder so</h1>
+        <NuxtLink to="/maps/">
+            <Button variant="secondary">
+                Example Map
+            </Button>
+        </NuxtLink>
+        <NuxtLink to="/create">
+            <Button variant="secondary">
+                Create
+            </Button>
+        </NuxtLink>
     </div>
 </template>
