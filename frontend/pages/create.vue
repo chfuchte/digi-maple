@@ -3,20 +3,35 @@ import devMapImagePath from "@/assets/dev/Lageplan_Campus_Bockenheim.svg";
 import { ref } from "vue";
 import { Map } from "leaflet";
 import type { Marker } from "leaflet";
-import { DialogDescription } from "~/components/ui/dialog";
+
+interface IMarker {
+    id: string;
+    name: string;
+    lng: number;
+    lat: number;
+}
+
+let createdMarkers = ref<IMarker[]>([
+    { "id": crypto.randomUUID(), "name": "Test 1", "lng": 2000 / 2, "lat": 1885.71351176 / 2 },
+]);
+let title = "";
 
 let leafletObject: Map | null = null;
 
-let markers = ref<{id: string, lng: number, lat: number}[]>([
-    {"id": crypto.randomUUID(), "lng": 2000 / 2, "lat": 1885.71351176 / 2}
-]);
+let markerNameModel = defineModel<string>("markerNameModel");
+let titleModel = defineModel<string>("titleModel");
 
-function onMapReady(map: Map) {
+function onMapReady(map: Map): void {
     leafletObject = map;
 }
 
-function add() {
-    markers.value.push({"id": crypto.randomUUID(), "lng": leafletObject!.getCenter().lng, "lat": leafletObject!.getCenter().lat });
+function addMarker(name: string): void {
+    createdMarkers.value.push({
+        "id": crypto.randomUUID(),
+        "name": name,
+        "lng": leafletObject!.getCenter().lng,
+        "lat": leafletObject!.getCenter().lat,
+    });
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
@@ -26,26 +41,32 @@ function bytesToBase64(bytes: Uint8Array): string {
     return btoa(binString);
 }
 
-function generate() {
-    const markers = <{name: string, lng: number, lat: number}[]>[]
+function generate(): string {
+    const markers = <IMarker[]>[];
     leafletObject!.eachLayer((layer) => {
         // We can't test if it's an instance of Marker because it's not available in a universal-render page.
         // So we use this workaround.
         // We also can't use refs on the LMarkers because their API is incomplete.
         if (layer.options.hasOwnProperty("draggable")) {
             const marker = layer as Marker;
-            markers.push({"name": marker.getAttribution!() as string, "lng": marker.getLatLng().lng, "lat": marker.getLatLng().lat});
+            const id = marker.getAttribution!() as string;
+            markers.push({
+                "id": id,
+                "name": createdMarkers.value.find((current) => current.id == id)?.name ?? "Something went wrong!",
+                "lng": marker.getLatLng().lng,
+                "lat": marker.getLatLng().lat,
+            });
         }
     });
 
     const data = {
-        "name": crypto.randomUUID(),
+        "name": title,
         "width": 1885.71351176,
         "height": 2000,
-        "markers": markers
+        "markers": markers,
     };
 
-    return bytesToBase64(new TextEncoder().encode(JSON.stringify(data)))
+    return bytesToBase64(new TextEncoder().encode(JSON.stringify(data)));
 }
 </script>
 
@@ -64,8 +85,8 @@ function generate() {
                         This is your Base64 encoded data string!
                     </DialogDescription>
                 </DialogHeader>
-                <div>
-                    <p class="break-all whitespace-normal">{{ generate() }}</p>
+                <div class="overflow-y-auto max-h-96">
+                    <pre class="break-all whitespace-normal">{{ generate() }}</pre>
                 </div>
                 <DialogFooter>
                     <Button @click="navigateTo(`/maps/${generate()}`, { open: { target: '_blank' } })">
@@ -75,11 +96,44 @@ function generate() {
             </DialogContent>
         </Dialog>
     </TitleHeader>
-    <aside class="absolute right-0 bottom-0 p-1.5">
-        <Button variant="outline" size="icon" @click="add">
-            <LucideCirclePlus class="w-20 h-20"></LucideCirclePlus>
-        </Button>
-    </aside>
+    <div class="absolute right-0 top-24 over-map overflow-hidden">
+        <Drawer title="Title">
+            <div
+                class="bg-white border-black border-l border-t border-b p-3.5 rounded-bl text-black flex flex-col items-start">
+                <h1 class="font-bold">Map title</h1>
+                <h3 class="text-sm text-gray-700">Enter a short title.</h3>
+                <Input v-model:model-value="titleModel" class="mt-2" type="text" placeholder="Title"></Input>
+                <Button variant="secondary" class="self-end mt-2" @click="title = titleModel!">Save</Button>
+            </div>
+        </Drawer>
+    </div>
+    <div class="absolute right-0 bottom-0 p-1.5 over-map">
+        <Dialog>
+            <DialogTrigger>
+                <Button variant="outline" size="icon">
+                    <LucideCirclePlus class="w-20 h-20"></LucideCirclePlus>
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>
+                        Add marker
+                    </DialogTitle>
+                    <DialogDescription>
+                        Enter a name.
+                    </DialogDescription>
+                </DialogHeader>
+                <Input v-model:model-value="markerNameModel" type="text" placeholder="Name" />
+                <DialogFooter>
+                    <DialogClose>
+                        <Button @click="addMarker(markerNameModel!)">
+                            Create
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    </div>
     <MapView
         :image="devMapImagePath"
         :width="1885.71351176"
@@ -87,14 +141,14 @@ function generate() {
         @onMapReady="onMapReady"
         class="flex-grow"
     >
-        <LMarker :draggable="true" v-for="marker in markers" :lat-lng="marker" :attribution="marker.id">
-            <LPopup :content="marker.id" />
+        <LMarker :draggable="true" v-for="marker in createdMarkers" :lat-lng="marker" :attribution="marker.id">
+            <LPopup :content="marker.name" />
         </LMarker>
     </MapView>
 </template>
 
 <style scoped>
-aside {
+.over-map {
     z-index: 500;
 }
 </style>

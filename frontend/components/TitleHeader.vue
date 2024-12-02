@@ -4,8 +4,6 @@ import { Map } from "lucide-vue-next";
 const { title = "" } = defineProps<{
     title?: string;
 }>();
-
-console.log(title);
 </script>
 
 <template>
