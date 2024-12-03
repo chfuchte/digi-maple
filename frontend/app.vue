@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="flex flex-col w-screen h-screen">
+        <DebugBar />
         <NuxtRouteAnnouncer />
         <NuxtLayout>
             <NuxtPage />
