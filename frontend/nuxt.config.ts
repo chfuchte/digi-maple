@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     app: {
         head: {
             bodyAttrs: {
-                class: "dark",
+                class: "",
             },
         },
     },
