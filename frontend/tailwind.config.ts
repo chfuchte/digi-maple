@@ -82,4 +82,5 @@ export default {
         },
     },
     plugins: [animate],
+    // @ts-ignore
 } satisfies Config;
