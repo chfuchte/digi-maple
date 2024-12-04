@@ -1,11 +1,14 @@
-FROM oven/bun:latest AS base
+FROM node:lts-slim AS base
 WORKDIR /usr/src/web
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # install dependencies
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+COPY package.json pnpm-lock.yaml /temp/dev/
+RUN cd /temp/dev && pnpm install --frozen-lockfile
 
 # copy node_modules from temp directory
 # then copy all project files (the code)
@@ -14,14 +17,13 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 # building
 ENV NODE_ENV=production
-RUN bun run build
+RUN pnpm run build
 
 # copy build bundle to the final image
 FROM base AS release
 COPY --from=prerelease /usr/src/web/.output .output
-COPY --from=prerelease /usr/src/web/package.json .
 
-# run the frontend-server
-USER bun-maple
+# run the frontend-ssr-server
+USER node
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "start" ]
+ENTRYPOINT [ "node", ".output/server/index.mjs" ]

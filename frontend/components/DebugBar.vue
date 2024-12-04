@@ -6,13 +6,7 @@
 
 <style scoped>
 div {
-    background: repeating-linear-gradient(
-        45deg,
-        #ff4e4e,
-        #ff4e4e 10px,
-        #af1616 10px,
-        #af1616 20px
-    );
+    background: repeating-linear-gradient(45deg, #ff4e4e, #ff4e4e 10px, #af1616 10px, #af1616 20px);
 }
 
 h6 {

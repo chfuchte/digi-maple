@@ -2,9 +2,9 @@
 
 ## Prerequsites
 
--   [Node.js](https://nodejs.org) (just the normal LTS)
--   [Bun](https://bun.sh)
--   any text editor with Vue and TypeScript support (f.e. VSCode or Zed with proper extentions)
+- [Node.js](https://nodejs.org) (just the normal LTS)
+- [Bun](https://bun.sh)
+- any text editor with Vue and TypeScript support (f.e. VSCode or Zed with proper extentions)
 
 ## What does each file/directory do?
 
@@ -22,7 +22,7 @@
 | `.gitignore`         | files/directories that git should ignore (don't track/ push)                                     | Yes |
 | `.prettierrc.json`   | prettier configuration file (code formatter)                                                     | Yes |
 | `app.vue`            | the base of our frontend. It contains the basic scaffold that should be the same for every route | Yes |
-| `bun.lockb`          | lock file for dependencies (like package-lock.json)                                              | Yes |
+| `pnpm-lock.yaml`     | lock file for dependencies (containing the detils)                                               | Yes |
 | `eslint.config.mjs`  | eslint configuration file (code linter)                                                          | Yes |
 | `nuxt.config.ts`     | nuxt configuration file to add modules, etc.                                                     | Yes |
 | `package.json`       | npm configuration file (dependencies, scripts, etc.)                                             | Yes |
@@ -31,14 +31,15 @@
 
 ## Important Commands
 
--   `bun install` - generates `node_modules` and `bun.lockb` (like `npm install`)
--   `bun update` - updates the dependencies in `node_modules` and `bun.lockb` (like `npm update`)bun upgrade
--   `bun dev` - starts the development server
--   `bun run build` - builds the project for production
--   `bun start` - starts the production server (after `bun run build`)
--   `bun lint` - lints the code with eslint
--   `bun format` - formats the code with pretter
+- `pnpm install` - generates `node_modules` (like `npm install`)
+- `pnpm update` - checkes for new dependency-updates
+- `pnpm upgrade` - updates the dependencies in `node_modules` and `pnpm-lock.yaml` to the latest version (like `npm upgrade`)
+- `pnpm dev` - starts the development server
+- `pnpm build` - builds the project for production
+- `pnpm start` - starts the production server (after `bun build`)
+- `pnpm format` - formats the code with pretter
 
-## Hating TypeScript?
+## Docker
 
-Just change the `<script lang="ts">` to `<script lang="js">` in the `.vue` files anoying you and @chfuchte merges it to ts later on.F
+- `docker build -t maple-frontend .` - builds the docker image
+- `cd .. && docker-compose up` - starts the docker container (docker-compose is located in the root directory)

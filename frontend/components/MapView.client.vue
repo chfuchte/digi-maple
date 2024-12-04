@@ -42,18 +42,17 @@ const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
         :min-zoom="-2"
         :max-zoom="2"
         :options="{
-                zoomControl: false,
-                attributionControl: false,
-            }"
+            zoomControl: false,
+            attributionControl: false,
+        }"
         @ready="onMapReady"
         @update:zoom="zoomEvent">
         <LControl position="bottomleft">
             <MapZoom
-                @zoom-in="leafletObject?.zoomIn();"
-                @zoom-out="leafletObject?.zoomOut();"
+                @zoom-in="leafletObject?.zoomIn()"
+                @zoom-out="leafletObject?.zoomOut()"
                 :disable-zoom-in="zoomInDisabled"
-                :disable-zoom-out="zoomOutDisabled"
-            />
+                :disable-zoom-out="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.image!" :bounds />
         <slot />

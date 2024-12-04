@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
-        "start": "bun .output/server/index.mjs",
+        "start": "node .output/server/index.mjs",
         "dev": "nuxt dev",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
@@ -22,7 +22,6 @@
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "lucide-vue-next": "^0.460.0",
-        "maple-frontend": ".",
         "nuxt": "^3.14.1592",
         "nuxt-lucide-icons": "^1.0.5",
         "radix-vue": "^1.9.10",

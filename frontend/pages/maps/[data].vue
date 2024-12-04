@@ -16,12 +16,12 @@ definePageMeta({
             JSON.parse(new TextDecoder().decode(base64ToBytes(route.params.data as string)));
             return true;
         } catch (e) {
-            return { "statusCode": 400, "statusMessage": "Invalid data" };
+            return { statusCode: 400, statusMessage: "Invalid data" };
         }
     },
 });
 
-const route = useRoute()
+const route = useRoute();
 
 function base64ToBytes(base64: string): Uint8Array {
     const binString = atob(base64);
@@ -29,21 +29,16 @@ function base64ToBytes(base64: string): Uint8Array {
 }
 
 const data: {
-    name: string,
-    width: number,
-    height: number,
-    markers: { name: string, lng: number, lat: number }[]
+    name: string;
+    width: number;
+    height: number;
+    markers: { name: string; lng: number; lat: number }[];
 } = JSON.parse(new TextDecoder().decode(base64ToBytes(route.params.data as string)));
 </script>
 
 <template>
-    <div class="flex flex-col flex-grow">
+    <div class="flex flex-grow flex-col">
         <TitleHeader :title="data.name"></TitleHeader>
-        <MapView
-            :image="devMapImagePath"
-            :width="data.width"
-            :height="data.height"
-            :markers="data.markers"
-        />
+        <MapView :image="devMapImagePath" :width="data.width" :height="data.height" :markers="data.markers" />
     </div>
 </template>

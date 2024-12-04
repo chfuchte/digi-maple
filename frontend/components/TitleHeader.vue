@@ -7,13 +7,13 @@ const { title = "" } = defineProps<{
 </script>
 
 <template>
-    <header class="bg-white border-b-2 border-b-black text-black flex items-center justify-between px-4">
-        <div class="flex items-center gap-3 my-2">
+    <header class="flex items-center justify-between border-b-2 border-b-black bg-white px-4 text-black">
+        <div class="my-2 flex items-center gap-3">
             <div class="flex items-center gap-1">
                 <Map :size="30" />
                 <h1 class="text-3xl">Maple</h1>
             </div>
-            <div v-if="title != ''" class="w-0.5 h-5 bg-black"></div>
+            <div v-if="title != ''" class="h-5 w-0.5 bg-black"></div>
             <h3>
                 {{ title }}
             </h3>

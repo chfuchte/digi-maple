@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-screen h-screen">
+    <div class="flex h-screen w-screen flex-col">
         <DebugBar />
         <NuxtRouteAnnouncer />
         <NuxtLayout>

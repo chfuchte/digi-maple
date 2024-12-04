@@ -8,6 +8,8 @@ export default defineNuxtConfig({
             },
         },
     },
+    ssr: true,
+    routeRules: {},
     css: ["~/assets/css/global.css"],
     modules: [
         "@vueuse/nuxt",
@@ -40,5 +42,4 @@ export default defineNuxtConfig({
             viewer: true,
         },
     },
-    ssr: true,
 });
