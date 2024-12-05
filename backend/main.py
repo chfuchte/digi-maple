@@ -16,30 +16,33 @@ except:
 
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 
+    from fastapi import FastAPI
+    from pydantic import BaseModel
+    import uvicorn
+
 
 #Import project modules
-import simple_module
-
-
+import database_layout_tables as db
+import example_database_entry as ex
 
 app = FastAPI()
 
+#Load example entry to the database (Uncomment the lines below)
 
-#Communication with the server (Simple example)
+ex.new_user()
+ex.new_map()
 
+# Get the contents of the data base as a python dictionary to parse it through FastAPI
+map_dict: dict = db.get_dict()
+
+#Upload the database contents to the server
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, x: Union[str, None] = None):
-    return {"item_id": item_id, "x": x}
+    return map_dict
 
 
 
-# Main (create local server)
-
+# Main (run local server)
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
 
