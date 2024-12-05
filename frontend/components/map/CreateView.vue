@@ -13,6 +13,10 @@ const props = defineProps<{
     }>;
 }>();
 
+const emit = defineEmits<{
+    leafletReady: [Map];
+}>();
+
 const zoomInDisabled = ref(false);
 const zoomOutDisabled = ref(true);
 const zoomLevel = ref<number>(-2);
@@ -21,6 +25,7 @@ let leafletObject = ref<Map>();
 
 const onMapReady = (map: Map) => {
     leafletObject.value = map;
+    emit("leafletReady", map);
     zoomLevel.value = map.getZoom();
 };
 
@@ -55,8 +60,8 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-for="marker in markers" :key="marker.name ?? ''" :lat-lng="marker">
-            <LPopup :content="marker.name ?? ''" />
+        <LMarker :draggable="true" v-for="marker in markers" :lat-lng="marker" :attribution="marker.name">
+            <LPopup :content="marker.name" />
         </LMarker>
     </LMap>
 </template>

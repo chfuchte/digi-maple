@@ -9,7 +9,11 @@ export default defineNuxtConfig({
         },
     },
     ssr: true,
-    routeRules: {},
+    routeRules: {
+        "/create": {
+            ssr: false,
+        },
+    },
     css: ["~/assets/css/global.css"],
     modules: [
         "@vueuse/nuxt",
@@ -20,14 +24,7 @@ export default defineNuxtConfig({
         "nuxt-lucide-icons",
     ],
     shadcn: {
-        /**
-         * Prefix for all the imported component
-         */
         prefix: "",
-        /**
-         * Directory that the component lives in.
-         * @default "./components/ui"
-         */
         componentDir: "./components/ui",
     },
     tailwindcss: {
