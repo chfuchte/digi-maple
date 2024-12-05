@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
+import type { MapMarker } from "@/shared/mapView";
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
     mapImgheight: number;
-    markers?: Array<{
-        name?: string;
-        lng: number;
-        lat: number;
-    }>;
+    markers?: Array<MapMarker>;
 }>();
 
 const zoomInDisabled = ref(false);
@@ -49,14 +46,14 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
         @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
             <MapZoomButtons
-                @zoom-in="leafletObject?.zoomIn()"
-                @zoom-out="leafletObject?.zoomOut()"
+                @zoom-in="leafletObject?.zoomIn(0.5)"
+                @zoom-out="leafletObject?.zoomOut(0.5)"
                 :zoom-indisabled="zoomInDisabled"
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-for="marker in markers" :key="marker.name ?? ''" :lat-lng="marker">
-            <LPopup :content="marker.name ?? ''" />
+        <LMarker v-for="marker in markers" :key="marker.id" :lat-lng="[marker.x, marker.y]">
+            <LPopup :content="marker.display.title" />
         </LMarker>
     </LMap>
 </template>
