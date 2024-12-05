@@ -16,7 +16,7 @@ const mapProps: MapView = {
             display: {
                 title: "Marker 1",
                 description: "Somedescription",
-                markerType: "default",
+                markerType: "favicon",
             },
         },
     ],

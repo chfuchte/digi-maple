@@ -52,8 +52,12 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-for="marker in markers" :key="marker.id" :lat-lng="[marker.x, marker.y]">
-            <LPopup :content="marker.display.title" />
+        <LMarker
+            :icon="getLIconFromString(marker.display.markerType)"
+            v-for="marker in markers"
+            :key="marker.id"
+            :lat-lng="[marker.x, marker.y]">
+            <LPopup> {{ marker.display.title }} </LPopup>
         </LMarker>
     </LMap>
 </template>
