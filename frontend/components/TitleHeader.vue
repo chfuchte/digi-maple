@@ -7,7 +7,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <header class="flex items-center justify-between border-b-2 h-12 border-b-black bg-white px-4 text-black">
+    <header class="flex h-12 items-center justify-between border-b-2 border-b-black bg-white px-4 text-black">
         <div class="my-2 flex items-center gap-3">
             <div class="flex items-center gap-1">
                 <LucideMap :size="30" />

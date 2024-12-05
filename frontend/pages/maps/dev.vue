@@ -7,7 +7,7 @@ const width = imageHeightWidthRatio * height;
 
 useHead({
     title: "Dev Map",
-})
+});
 </script>
 
 <template>
