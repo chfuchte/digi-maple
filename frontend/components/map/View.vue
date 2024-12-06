@@ -31,33 +31,37 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
 </script>
 
 <template>
-    <LMap
-        ref="map"
-        :zoom="zoomLevel"
-        :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
-        :crs="CRS.Simple"
-        :min-zoom="-2"
-        :max-zoom="2"
-        :options="{
+    <LMap ref="map" :zoom="zoomLevel" :center="[bounds.getCenter().lat, bounds.getCenter().lng]" :crs="CRS.Simple"
+        :min-zoom="-2" :max-zoom="2" :options="{
             zoomControl: false,
             attributionControl: false,
-        }"
-        @ready="onMapReady"
-        @update:zoom="handleZoomEvent">
+        }" @ready="onMapReady" @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
-            <MapZoomButtons
-                @zoom-in="leafletObject?.zoomIn(0.5)"
-                @zoom-out="leafletObject?.zoomOut(0.5)"
-                :zoom-indisabled="zoomInDisabled"
-                :zoom-out-disabled="zoomOutDisabled" />
+            <MapZoomButtons @zoom-in="leafletObject?.zoomIn(0.5)" @zoom-out="leafletObject?.zoomOut(0.5)"
+                :zoom-indisabled="zoomInDisabled" :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker
-            :icon="getLIconFromString(marker.display.markerType)"
-            v-for="marker in markers"
-            :key="marker.id"
+        <LMarker :icon="getLIconFromString(marker.display.markerType)" v-for="marker in markers" :key="marker.id"
             :lat-lng="[marker.x, marker.y]">
-            <LPopup> {{ marker.display.title }} </LPopup>
+            <LPopup>
+                <MapPopup :title="marker.display.title" :icon="marker.display.markerType" :content="marker.display.description"></MapPopup>
+            </LPopup>
         </LMarker>
     </LMap>
 </template>
+
+<style>
+.leaflet-popup-content-wrapper {
+    background: none;
+    box-shadow: none;
+}
+
+.leaflet-popup-content {
+    padding: 10px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 10px;
+}
+</style>

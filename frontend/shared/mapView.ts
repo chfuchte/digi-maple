@@ -14,7 +14,7 @@ const mapViewSchema = z.object({
             display: z.object({
                 title: z.string(),
                 description: z.string(),
-                markerType: z.enum(["default"]),
+                markerType: z.enum(["default", "info", "warning", "weelchair"]),
             }),
         }),
     ),

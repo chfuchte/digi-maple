@@ -8,12 +8,8 @@ const customIconDefaultOptions: Omit<IconOptions, "iconUrl"> = {
     popupAnchor: [-10, -15], // point from which the popup should open relative to the iconAnchor
 };
 
-const iconMap: Record<string, Icon | undefined> = {
+const iconMap: Record<string, Icon<IconOptions> | undefined> = {
     default: undefined,
-    favicon: icon({
-        iconUrl: "/favicon.ico",
-        ...customIconDefaultOptions,
-    }),
 } as const;
 
 export default function getLIconFromString(iconStr: string): Icon<IconOptions> | undefined {

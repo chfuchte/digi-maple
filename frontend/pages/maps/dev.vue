@@ -14,9 +14,39 @@ const mapProps: MapView = {
             x: 1000 * 0.94285675588,
             y: 1000,
             display: {
-                title: "Marker 1",
-                description: "Somedescription",
-                markerType: "favicon",
+                title: "Wuhu",
+                description: "Ich bin ein Marker",
+                markerType: "default",
+            },
+        },
+        {
+            id: "0000-0000-0001",
+            x: 1000 * 0.94285675588,
+            y: 800,
+            display: {
+                title: "Sekretariat",
+                description: "Get some help here",
+                markerType: "info",
+            },
+        },
+        {
+            id: "0000-0000-0001",
+            x: 1000 * 0.94285675588,
+            y: 600,
+            display: {
+                title: "Achtung",
+                description: "Viele Besucher",
+                markerType: "warning",
+            },
+        },
+        {
+            id: "0000-0000-0001",
+            x: 1000 * 0.94285675588,
+            y: 400,
+            display: {
+                title: "Eingang zum Gebäude",
+                description: "Barrierefreier Eingang zum Gebäude",
+                markerType: "weelchair",
             },
         },
     ],
