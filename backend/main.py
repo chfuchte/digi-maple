@@ -1,4 +1,3 @@
-from typing import Union
 import subprocess
 import sys
 
@@ -7,7 +6,6 @@ import sys
 
 try:
     from fastapi import FastAPI
-    from pydantic import BaseModel
     import uvicorn
 
 except:
@@ -17,7 +15,6 @@ except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 
     from fastapi import FastAPI
-    from pydantic import BaseModel
     import uvicorn
 
 
@@ -39,8 +36,6 @@ map_dict: dict = db.get_dict()
 @app.get("/")
 def read_root():
     return map_dict
-
-
 
 # Main (run local server)
 if __name__ == "__main__":
