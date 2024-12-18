@@ -1,14 +1,13 @@
 <script setup lang="ts"></script>
 
 <template>
-    <TitleHeader />
-    <div class="flex flex-grow flex-col items-center justify-center gap-3 bg-gray-200 text-black">
-        <h1 class="text-3xl">Test oder so</h1>
-        <NuxtLink to="/maps/">
-            <Button variant="secondary"> Example Map </Button>
+    <!-- TODO: transform to a welcome page of the "product" -->
+    <div class="flex h-full flex-grow flex-col items-center justify-center gap-4">
+        <NuxtLink to="/maps/dev">
+            <Button size="lg" class="w-80" variant="default"> Development Map </Button>
         </NuxtLink>
         <NuxtLink to="/create">
-            <Button variant="secondary"> Create </Button>
+            <Button size="lg" class="w-80" variant="default"> Create Map </Button>
         </NuxtLink>
     </div>
 </template>

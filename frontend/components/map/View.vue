@@ -2,12 +2,10 @@
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
 
-const emit = defineEmits<{ (e: "onMapReady", leafletObject: Map): void }>();
-
 const props = defineProps<{
-    image: string;
-    width: number;
-    height: number;
+    mapImgUrl: string;
+    mapImgWidth: number;
+    mapImgheight: number;
     markers?: Array<{
         name?: string;
         lng: number;
@@ -17,26 +15,28 @@ const props = defineProps<{
 
 const zoomInDisabled = ref(false);
 const zoomOutDisabled = ref(true);
+const zoomLevel = ref<number>(-2);
 
-let leafletObject: Map | null = null;
+let leafletObject = ref<Map>();
 
 const onMapReady = (map: Map) => {
-    leafletObject = map;
-    emit("onMapReady", map);
+    leafletObject.value = map;
+    zoomLevel.value = map.getZoom();
 };
 
-const zoomEvent = (zoomLevel: number) => {
-    zoomInDisabled.value = zoomLevel == leafletObject?.getMaxZoom();
-    zoomOutDisabled.value = zoomLevel == leafletObject?.getMinZoom();
+const handleZoomEvent = (newZoomLevel: number) => {
+    zoomLevel.value = newZoomLevel;
+    zoomInDisabled.value = zoomLevel.value == leafletObject.value?.getMaxZoom();
+    zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
+const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
 </script>
 
 <template>
     <LMap
         ref="map"
-        :zoom="-2"
+        :zoom="zoomLevel"
         :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
         :crs="CRS.Simple"
         :min-zoom="-2"
@@ -46,16 +46,15 @@ const bounds = latLngBounds([0, 0], [props.width!, props.height!]);
             attributionControl: false,
         }"
         @ready="onMapReady"
-        @update:zoom="zoomEvent">
+        @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
-            <MapZoom
+            <MapZoomButtons
                 @zoom-in="leafletObject?.zoomIn()"
                 @zoom-out="leafletObject?.zoomOut()"
-                :disable-zoom-in="zoomInDisabled"
-                :disable-zoom-out="zoomOutDisabled" />
+                :zoom-indisabled="zoomInDisabled"
+                :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
-        <LImageOverlay :url="props.image!" :bounds />
-        <slot />
+        <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker v-for="marker in markers" :key="marker.name ?? ''" :lat-lng="marker">
             <LPopup :content="marker.name ?? ''" />
         </LMarker>
