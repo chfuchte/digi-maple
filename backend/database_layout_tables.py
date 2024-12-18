@@ -88,12 +88,15 @@ def get_dict() -> dict:
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
 
-    main_dict = {"maps": {}, "users": {}}
+    # Structure for the final output
+    main_dict = {"maps": [], "users": []}
 
+    # Process maps
     for map_entry in maps:
         map_id, name, authorId, imgUrl, imgWidth, imgHeight = map_entry
         markers = _get_markers_for_map(map_id)
-        main_dict["maps"][map_id] = {
+        map_dict = {
+            "id": map_id,
             "name": name,
             "author": authorId,
             "imgUrl": imgUrl,
@@ -101,7 +104,7 @@ def get_dict() -> dict:
             "imgHeight": imgHeight,
             "markers": [
                 {
-                    "id": str(marker[0]),
+                    "id": marker[0],
                     "x": marker[2],
                     "y": marker[3],
                     "display": {
@@ -112,15 +115,17 @@ def get_dict() -> dict:
                 } for marker in markers
             ]
         }
+        main_dict["maps"].append(map_dict)
 
+    # Process users
     for user_entry in users:
-        print(user_entry)
-        id, username, email, _ = user_entry # don't give out password
-        main_dict["users"][username] = {
+        id, username, email, _ = user_entry  # Exclude password for security
+        user_dict = {
             "id": id,
             "username": username,
             "email": email,
         }
+        main_dict["users"].append(user_dict)
 
     return main_dict
 

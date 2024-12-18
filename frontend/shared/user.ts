@@ -6,6 +6,8 @@ const userSchema = z.object({
     email: z.string().email(),
 });
 
+const usersSchema = z.array(userSchema);
+
 type User = z.infer<typeof userSchema>;
 
-export { type User, userSchema };
+export { type User, userSchema, usersSchema };

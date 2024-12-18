@@ -5,22 +5,24 @@ def insert_example_map():
     try:
         # Check if the map already exists
         cursor = db.conn.cursor()
-        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Cool Map",))
+        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Uni Campus Bockenheim",))
         existing_map = cursor.fetchone()
 
         if existing_map:
             db.delete_map(existing_map[0])  # Delete the map by ID if it exists
 
         # Insert the new map
-        db.insert_map("Cool Map", "Olaf", "https://example.com/map.jpg", 100, 200)
+        db.insert_map("Uni Campus Bockenheim", "Olaf", "http://localhost:3000/_nuxt/assets/dev/Lageplan_Campus_Bockenheim.svg", 1885, 2000)
 
         # Fetch the new map ID
-        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Cool Map",))
+        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Uni Campus Bockenheim",))
         map_id = cursor.fetchone()[0]
 
         # Insert markers for the map
-        db.insert_marker(map_id, 123, 321, "Eiffel Tower", "A famous landmark in Paris", "default")
-        db.insert_marker(map_id, 436, 342, "Cool spot", "A nice place to visit", "info")
+        db.insert_marker(map_id, 942, 1000, "Wuhu!", "Ich bin ein Marker", "warning")
+        db.insert_marker(map_id, 942, 800, "Sekretariat", "Get some help here", "info")
+        db.insert_marker(map_id, 942, 600, "Achtung", "Viele Besucher hier", "warning")
+        db.insert_marker(map_id, 942, 400, "Eingang zum Gebäude", "Barrierefreier Eingang zum Gebäude", "weelchair")
 
     except IntegrityError as e:
         print(f"Warning: IntegrityError occurred: {e}")
@@ -36,7 +38,7 @@ def insert_example_user():
             db.delete_user(existing_user[0])  # Delete the user by ID if it exists
 
         # Insert the new user
-        db.insert_user("Olaf", "Olaf@gmail.com", "pass1234")
+        db.insert_user("Olaf", "olaf@mail.com", "1234")
 
     except IntegrityError as e:
         print(f"Warning: IntegrityError occurred: {e}")
