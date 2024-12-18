@@ -65,21 +65,21 @@ def insert_user(username, email, password):
     conn.commit()
     print(f"Inserted '{username}' into users")
 
-# Function to delete a map by name
-def delete_map(map_name):
+# Function to delete a map by ID
+def delete_map(map_id):
     cursor.execute('''
-    DELETE FROM maps WHERE name = ?
-    ''', (map_name,))
+    DELETE FROM maps WHERE id = ?
+    ''', (map_id,))
     conn.commit()
-    print(f"Deleted '{map_name}' from maps")
+    print(f"Deleted map with ID '{map_id}'")
 
-# Function to delete a user by username
-def delete_user(username):
+# Function to delete a user by ID
+def delete_user(user_id):
     cursor.execute('''
-    DELETE FROM users WHERE username = ?
-    ''', (username,))
+    DELETE FROM users WHERE id = ?
+    ''', (user_id,))
     conn.commit()
-    print(f"Deleted '{username}' from users")
+    print(f"Deleted user with ID '{user_id}'")
 
 # Function to get the database in a dictionary format
 def get_dict() -> dict:
@@ -114,10 +114,12 @@ def get_dict() -> dict:
         }
 
     for user_entry in users:
-        user_id, username, email, password = user_entry
+        print(user_entry)
+        id, username, email, _ = user_entry # don't give out password
         main_dict["users"][username] = {
+            "id": id,
+            "username": username,
             "email": email,
-            "password": password
         }
 
     return main_dict
@@ -133,12 +135,18 @@ def _get_markers_for_map(map_id) -> list:
 
 # Main block for testing
 if __name__ == "__main__":
-    delete_user("Rafal")
+    cursor.execute("SELECT id FROM users WHERE username = ?", ("Rafal",))
+    user = cursor.fetchone()
+    if user:
+        delete_user(user[0])
     insert_user("Rafal", "test@gmail.com", "pass1234")
 
-    delete_map("Map of the World")
+    cursor.execute("SELECT id FROM maps WHERE name = ?", ("Map of the World",))
+    map_record = cursor.fetchone()
+    if map_record:
+        delete_map(map_record[0])
     insert_map("Map of the World", "Rafal", "http://example.com/worldmap.jpg", 1885, 2000)
-    
+
     # Fetch the map ID for inserting markers
     cursor.execute("SELECT id FROM maps WHERE name = ?", ("Map of the World",))
     map_id = cursor.fetchone()[0]

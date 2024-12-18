@@ -1,19 +1,42 @@
-import database_layout_tables as db
 from sqlite3 import IntegrityError
+import database_layout_tables as db 
 
-# Intended to show how to add an entry to the database
-def new_map():
+def insert_example_map():
     try:
-        db.delete_map("Cool Map")
-        db.insert_map(1, "Cool Map", "https://example.com/map.jpg", 100, 200, "Olaf")
-        db.insert_marker("POI-tower", "Eiffel Tower", 123, 321, "Cool Map")
-        db.insert_marker("Circle", "Cool spot", 436, 342, "Cool Map")
-    except IntegrityError:
-        print("Warning: Map by the name 'Cool Map' is already in the database")
+        # Check if the map already exists
+        cursor = db.conn.cursor()
+        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Cool Map",))
+        existing_map = cursor.fetchone()
 
-def new_user():
+        if existing_map:
+            db.delete_map(existing_map[0])  # Delete the map by ID if it exists
+
+        # Insert the new map
+        db.insert_map("Cool Map", "Olaf", "https://example.com/map.jpg", 100, 200)
+
+        # Fetch the new map ID
+        cursor.execute("SELECT id FROM maps WHERE name = ?", ("Cool Map",))
+        map_id = cursor.fetchone()[0]
+
+        # Insert markers for the map
+        db.insert_marker(map_id, 123, 321, "Eiffel Tower", "A famous landmark in Paris", "default")
+        db.insert_marker(map_id, 436, 342, "Cool spot", "A nice place to visit", "info")
+
+    except IntegrityError as e:
+        print(f"Warning: IntegrityError occurred: {e}")
+
+def insert_example_user():
     try:
-        db.delete_user("Olaf")
+        # Check if the user already exists
+        cursor = db.conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE username = ?", ("Olaf",))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            db.delete_user(existing_user[0])  # Delete the user by ID if it exists
+
+        # Insert the new user
         db.insert_user("Olaf", "Olaf@gmail.com", "pass1234")
-    except IntegrityError:
-        print("Warning: User by the name 'Olaf' is already in the database")
+
+    except IntegrityError as e:
+        print(f"Warning: IntegrityError occurred: {e}")
