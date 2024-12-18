@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const mapViewSchema = z.object({
+    id: z.number(),
     name: z.string(),
     author: z.string(),
     imgUrl: z.string().url(),
@@ -8,7 +9,7 @@ const mapViewSchema = z.object({
     imgHeight: z.number(),
     markers: z.array(
         z.object({
-            id: z.string(),
+            id: z.number(),
             x: z.number(),
             y: z.number(),
             display: z.object({
@@ -20,7 +21,9 @@ const mapViewSchema = z.object({
     ),
 });
 
+const mapViewsSchema = z.array(mapViewSchema);
+
 type MapView = z.infer<typeof mapViewSchema>;
 type MapMarker = MapView["markers"][number];
 
-export { type MapView, type MapMarker, mapViewSchema };
+export { type MapView, type MapMarker, mapViewSchema, mapViewsSchema };
