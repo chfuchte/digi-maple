@@ -9,8 +9,7 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8080",
+    "*", # Allow all origins
 ]
 
 app.add_middleware(
@@ -33,5 +32,3 @@ def read_root():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8080)
-
-
