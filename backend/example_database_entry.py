@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-import database_layout_tables as db 
+import database_layout_tables as db
 
 def insert_example_map():
     try:
@@ -12,7 +12,7 @@ def insert_example_map():
             db.delete_map(existing_map[0])  # Delete the map by ID if it exists
 
         # Insert the new map
-        db.insert_map("Uni Campus Bockenheim", "Olaf", "http://localhost:3000/_nuxt/assets/dev/Lageplan_Campus_Bockenheim.svg", 1885, 2000)
+        db.insert_map("Uni Campus Bockenheim", "Olaf", "http://localhost/dev/Lageplan_Campus_Bockenheim.svg", 1885, 2000)
 
         # Fetch the new map ID
         cursor.execute("SELECT id FROM maps WHERE name = ?", ("Uni Campus Bockenheim",))
