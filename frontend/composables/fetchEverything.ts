@@ -6,9 +6,9 @@ export default async function fetchEverything(): Promise<{
     maps: MapView[];
 }> {
     const res = await $fetch<{
-        users: unknown;
-        maps: unknown;
-    }>("http://localhost:8080/");
+      users: unknown;
+      maps: unknown;
+    }>("http://localhost:8080/")
 
     return {
         users: usersSchema.parse(res.users),
