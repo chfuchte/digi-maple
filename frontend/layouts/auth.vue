@@ -9,7 +9,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <main class="grid place-items-center w-dvw h-dvh">
+    <main class="grid place-items-start justify-center max-sm:py-6 py-20">
         <slot />
     </main>
 </template>
