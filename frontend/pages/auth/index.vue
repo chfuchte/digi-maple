@@ -3,11 +3,21 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
+const tab = ref("login")
+
 definePageMeta({
     layout: "auth"
 })
 
-const tab = ref("login")
+useHead({
+    title: computed(() => tab.value === "login" ? "Anmelden" : "Registrieren")
+})
+
+onMounted(() => {
+    if (window.location.hash === "#register") {
+        tab.value = "register"
+    }
+})
 
 const loginFormSchema = toTypedSchema(z.object({
     email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),

@@ -13,6 +13,13 @@ export default defineNuxtConfig({
         "/create": {
             ssr: false,
         },
+        "/auth": {
+            prerender: true,
+            static: true,
+        },
+        "/auth/register": {
+            redirect: "/auth#register",
+        }
     },
     css: ["~/assets/css/global.css"],
     modules: [
