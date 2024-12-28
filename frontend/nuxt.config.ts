@@ -24,6 +24,10 @@ export default defineNuxtConfig({
       "nuxt-lucide-icons",
       "@pinia/nuxt",
     ],
+    colorMode: {
+        classSuffix: "",
+        classPrefix: "",
+    },
     shadcn: {
         prefix: "",
         componentDir: "./components/ui",

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-onBeforeMount(async () => {
+
+onMounted(async () => {
     const { getUser } = useCurrentUserStore();
     const user = getUser();
     if (user) {
-        return await navigateTo('/');
+        return navigateTo('/');
     }
 })
 </script>

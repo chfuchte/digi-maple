@@ -14,7 +14,6 @@ onBeforeMount(async () => {
             });
         } catch (error) {
             console.error(error);
-            alert("Error while fetching data");
             useHead({
                 title: mapProps.value?.name ?? "Error",
             });
@@ -25,13 +24,11 @@ onBeforeMount(async () => {
 
 <template>
     <ClientOnly fallback="Loading...">
-        <h2 v-if="!mapProps">Error loading map</h2>
+        <div v-if="!mapProps" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <h2 class="font-bold text-2xl">Error loading map</h2>
+        </div>
 
-        <MapView
-            v-else
-            :map-img-url="mapProps.imgUrl"
-            :map-img-width="mapProps.imgWidth"
-            :map-imgheight="mapProps.imgHeight"
-            :markers="mapProps.markers" />
+        <MapView v-else :map-img-url="mapProps.imgUrl" :map-img-width="mapProps.imgWidth"
+            :map-imgheight="mapProps.imgHeight" :markers="mapProps.markers" />
     </ClientOnly>
 </template>
