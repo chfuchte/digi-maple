@@ -2,7 +2,10 @@
 import devMapImagePath from "@/assets/dev/Lageplan_Campus_Bockenheim.svg";
 import { ref } from "vue";
 import { Map } from "leaflet";
-import type { Marker } from "leaflet";
+
+definePageMeta({
+    middleware: 'auth'
+});
 
 const imageHeightWidthRatio = 0.94285675588;
 const height = 2000;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { getUser } = useCurrentUserStore()
-const user = computed(() => getUser())
+const user = getUser()
 
 const colorMode = useColorMode()
 

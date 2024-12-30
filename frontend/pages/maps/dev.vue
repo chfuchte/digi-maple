@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { MapView } from "@/shared/mapView";
 
+definePageMeta({
+    middleware: 'auth'
+});
+
 let mapProps: Ref<MapView | undefined> = ref<MapView | undefined>(undefined);
 
 onBeforeMount(async () => {

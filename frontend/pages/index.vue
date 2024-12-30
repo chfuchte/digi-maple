@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+    middleware: 'auth'
+});
+</script>
 
 <template>
     <!-- TODO: transform to a welcome page of the "product" -->
