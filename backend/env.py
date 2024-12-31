@@ -14,3 +14,8 @@ def db_url():
     if os.environ.get('ENVIRONMENT') == 'production' and os.environ.get('DATABASE_URL') is None:
         raise Exception('DATABASE_URL is not set')
     return os.environ.get('DATABASE_URL') or 'sqlite:///./sqlite.db'
+
+def debug():
+    print('RUNTIME:', os.environ.get('RUNTIME'))
+    print('ENVIRONMENT:', os.environ.get('ENVIRONMENT'))
+    print('DATABASE_URL:', os.environ.get('DATABASE_URL'))
