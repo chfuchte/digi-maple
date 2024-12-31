@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS markers (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 )
@@ -57,13 +57,13 @@ def insert_marker(mapId, x, y, title, description, marker_type):
     print(f"Inserted marker '{title}' into markers")
 
 # Function to insert a user into the users table
-def insert_user(username, email, password):
+def insert_user(name, email, password):
     cursor.execute('''
-    INSERT INTO users (username, email, password)
+    INSERT INTO users (name, email, password)
     VALUES (?, ?, ?)
-    ''', (username, email, password))
+    ''', (name, email, password))
     conn.commit()
-    print(f"Inserted '{username}' into users")
+    print(f"Inserted '{name}' into users")
 
 # Function to delete a map by ID
 def delete_map(map_id):
@@ -119,10 +119,10 @@ def get_dict() -> dict:
 
     # Process users
     for user_entry in users:
-        id, username, email, _ = user_entry  # Exclude password for security
+        id, name, email, _ = user_entry  # Exclude password for security
         user_dict = {
             "id": id,
-            "username": username,
+            "name": name,
             "email": email,
         }
         main_dict["users"].append(user_dict)
@@ -140,7 +140,7 @@ def _get_markers_for_map(map_id) -> list:
 
 # Main block for testing
 if __name__ == "__main__":
-    cursor.execute("SELECT id FROM users WHERE username = ?", ("Rafal",))
+    cursor.execute("SELECT id FROM users WHERE name = ?", ("Rafal",))
     user = cursor.fetchone()
     if user:
         delete_user(user[0])

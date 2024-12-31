@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
+import { useForm, Form as VForm } from 'vee-validate'
 import { z } from 'zod'
 
 const tab = ref("login")
@@ -26,9 +26,15 @@ const loginFormSchema = toTypedSchema(z.object({
 const loginform = useForm({
     validationSchema: loginFormSchema,
 })
-const onLoginSubmit = loginform.handleSubmit((values) => {
-    // TODO
-    console.log('Form submitted!', values)
+const onLoginSubmit = loginform.handleSubmit(async (values) => {
+    apiLogin(values.email, values.password).then(res => {
+        if (res) {
+            navigateTo("/create");
+        } else {
+            // TODO: Show error message
+            alert("Fehler bei der Anmeldung.")
+        }
+    })
 })
 
 const registerFormSchema = toTypedSchema(z.object({
@@ -40,8 +46,14 @@ const registerform = useForm({
     validationSchema: registerFormSchema,
 })
 const onRegisterSubmit = registerform.handleSubmit((values) => {
-    // TODO
-    console.log('Form submitted!', values)
+    apiRegister(values.fullName, values.email, values.password).then(registerSuccess => {
+        if (registerSuccess) {
+            tab.value = "login"
+        } else {
+            // TODO: Show error message
+            alert("Fehler bei der Registrierung.")
+        }
+    })
 })
 
 </script>
@@ -57,91 +69,96 @@ const onRegisterSubmit = registerform.handleSubmit((values) => {
             </TabsTrigger>
         </TabsList>
         <TabsContent value="login">
-            <form @submit="onLoginSubmit">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Anmeldung</CardTitle>
-                        <CardDescription>
-                            Falls Sie noch kein Konto haben, können Sie sich
-                            <span class="underline" @click="tab = 'register'">hier</span> registrieren.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent class="space-y-2">
-                        <FormField v-slot="{ componentField }" name="email">
-                            <FormItem>
-                                <FormLabel>E-Mail</FormLabel>
-                                <FormControl>
-                                    <Input type="email" placeholder="vorname.nachname@email.com"
-                                        v-bind="componentField" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+            <VForm :form="loginform" as="div">
+                <form @submit="onLoginSubmit">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Anmeldung</CardTitle>
+                            <CardDescription>
+                                Falls Sie noch kein Konto haben, können Sie sich
+                                <span class="underline" @click="tab = 'register'">hier</span> registrieren.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent class="space-y-2">
+                            <FormField v-slot="{ componentField }" name="email">
+                                <FormItem>
+                                    <FormLabel>E-Mail</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="vorname.nachname@email.com"
+                                            v-bind="componentField" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
 
-                        <FormField v-slot="{ componentField }" name="password">
-                            <FormItem>
-                                <FormLabel>Passwort</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="Pupsbaerchensonderzeichen1!"
-                                        v-bind="componentField" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </CardContent>
-                    <CardFooter>
-                        <Button type="submit" class="w-full">Anmelden</Button>
-                    </CardFooter>
-                </Card>
-            </form>
+                            <FormField v-slot="{ componentField }" name="password">
+                                <FormItem>
+                                    <FormLabel>Passwort</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Pupsbaerchensonderzeichen1!"
+                                            v-bind="componentField" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
+                        </CardContent>
+                        <CardFooter>
+                            <Button type="submit" class="w-full">Anmelden</Button>
+                        </CardFooter>
+                    </Card>
+                </form>
+            </VForm>
         </TabsContent>
+
         <TabsContent value="register">
-            <form @submit="onRegisterSubmit">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Registrierung</CardTitle>
-                        <CardDescription>
-                            Change your password here. After saving, you'll be logged out.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent class="space-y-2">
-                        <FormField v-slot="{ componentField }" name="fullName">
-                            <FormItem>
-                                <FormLabel>Vollständiger Name</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Vorname Nachname" v-bind="componentField" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+            <VForm :form="registerform" as="div">
+                <form @submit="onRegisterSubmit">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Registrierung</CardTitle>
+                            <CardDescription>
+                                Change your password here. After saving, you'll be logged out.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent class="space-y-2">
+                            <FormField v-slot="{ componentField }" name="fullName">
+                                <FormItem>
+                                    <FormLabel>Vollständiger Name</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Vorname Nachname" v-bind="componentField" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
 
-                        <FormField v-slot="{ componentField }" name="email">
-                            <FormItem>
-                                <FormLabel>E-Mail</FormLabel>
-                                <FormControl>
-                                    <Input type="email" placeholder="vorname.nachname@email.com"
-                                        v-bind="componentField" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+                            <FormField v-slot="{ componentField }" name="email">
+                                <FormItem>
+                                    <FormLabel>E-Mail</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="vorname.nachname@email.com"
+                                            v-bind="componentField" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
 
-                        <FormField v-slot="{ componentField }" name="password">
-                            <FormItem>
-                                <FormLabel>Passwort</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="Pupsbaerchensonderzeichen1!"
-                                        v-bind="componentField" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </CardContent>
-                    <CardFooter>
-                        <Button type="submit" class="w-full">Registrierung abschließen</Button>
-                    </CardFooter>
-                </Card>
-            </form>
+                            <FormField v-slot="{ componentField }" name="password">
+                                <FormItem>
+                                    <FormLabel>Passwort</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Pupsbaerchensonderzeichen1!"
+                                            v-bind="componentField" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
+                        </CardContent>
+                        <CardFooter>
+                            <Button type="submit" class="w-full">Registrierung abschließen</Button>
+                        </CardFooter>
+                    </Card>
+                </form>
+            </VForm>
         </TabsContent>
     </Tabs>
 </template>

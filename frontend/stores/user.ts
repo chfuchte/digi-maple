@@ -7,7 +7,7 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
     const fetch = async () => {
         const {
             clear, data, error, status
-        } = await useAsyncData("currentUser", () => $fetch<User>("http://localhost:8080/whoami"));
+        } = await useAsyncData("currentUser", () => $fetch<User>("http://localhost:8080/auth/whoami"));
 
         if (status.value === "success") {
             const user = userSchema.parse(data);

@@ -34,14 +34,14 @@ def insert_example_user():
     try:
         # Check if the user already exists
         cursor = db.conn.cursor()
-        cursor.execute("SELECT id FROM users WHERE username = ?", ("Olaf",))
+        cursor.execute("SELECT id FROM users WHERE name = ?", ("test",))
         existing_user = cursor.fetchone()
 
         if existing_user:
             db.delete_user(existing_user[0])  # Delete the user by ID if it exists
 
         # Insert the new user
-        db.insert_user("Olaf", "olaf@mail.com", "1234")
+        db.insert_user("test", "test@mail.com", "12345678")
 
     except IntegrityError as e:
         print(f"Warning: IntegrityError occurred: {e}")
