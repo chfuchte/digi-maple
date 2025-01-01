@@ -1,14 +1,22 @@
+import axios from "axios";
+
 export async function apiLogin(email: string, password: string): Promise<boolean> {
     try {
-        const res = await $fetch<{ success: boolean }>("http://localhost:8080/auth/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
+        const { status, headers } = await axios.post("http://localhost:8080/auth/login", {
+            email,
+            password
+        }, {
             headers: {
                 "Content-Type": "application/json"
             }
         })
 
-        return res.success ?? false
+        if (status === 200) {
+            document.cookie += headers["set-cookie"]
+            return true
+        } else {
+            return false
+        }
     } catch {
         return false
     }

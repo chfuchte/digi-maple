@@ -1,14 +1,18 @@
+import axios from "axios"
+
 export async function apiRegister(fullName: string, email: string, password: string): Promise<boolean> {
     try {
-        const res = await $fetch<{ success: boolean }>("http://localhost:8080/auth/register", {
-            method: "POST",
-            body: JSON.stringify({ fullName, email, password }),
+        const { status } = await axios.post("http://localhost:8080/auth/register", {
+            full_name: fullName,
+            email,
+            password
+        }, {
             headers: {
                 "Content-Type": "application/json"
             }
         })
 
-        return res.success ?? false
+        return status === 200
     } catch {
         return false
     }

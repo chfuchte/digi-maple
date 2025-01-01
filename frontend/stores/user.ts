@@ -1,3 +1,4 @@
+import axios from "axios";
 import { userSchema, type User } from "~/shared/user";
 
 export const useCurrentUserStore = defineStore('currentUser', () => {
@@ -7,7 +8,7 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
     const fetch = async () => {
         const {
             clear, data, error, status
-        } = await useAsyncData("currentUser", () => $fetch<User>("http://localhost:8080/auth/whoami"));
+        } = await useAsyncData("currentUser", () => axios.get("http://localhost:8080/auth/whoami"));
 
         if (status.value === "success") {
             const user = userSchema.parse(data);
@@ -28,7 +29,7 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
     }
 
     const logout = async () => {
-        await $fetch("http://localhost:8080/auth/logout");
+        await apiLogout();
         currentUser.value = null;
     }
 

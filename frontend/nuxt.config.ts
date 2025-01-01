@@ -8,19 +8,7 @@ export default defineNuxtConfig({
             },
         },
     },
-    ssr: true,
-    routeRules: {
-        "/create": {
-            ssr: false,
-        },
-        "/auth": {
-            prerender: true,
-            static: true,
-        },
-        "/auth/register": {
-            redirect: "/auth#register",
-        }
-    },
+    ssr: false,
     css: ["~/assets/css/global.css"],
     modules: [
       "@vueuse/nuxt",

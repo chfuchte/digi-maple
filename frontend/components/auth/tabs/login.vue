@@ -1,0 +1,70 @@
+<script setup lang="ts">
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { z } from 'zod';
+
+const formSchema = z.object({
+    email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
+    password: z.string()
+})
+
+const typedFormSchema = toTypedSchema(formSchema)
+
+type LoginForm = z.infer<typeof formSchema>
+
+const loginForm = useForm({
+    validationSchema: typedFormSchema,
+})
+
+const onloginSubmit = (values: LoginForm) => {
+    apiLogin(values.email, values.password).then(loginSuccess => {
+        if (loginSuccess) {
+            navigateTo("/create");
+        } else {
+            // TODO: Show error message
+            alert("Fehler bei dem Login.")
+        }
+    })
+}
+
+</script>
+
+<template>
+    <form @submit="(e) => {
+        e.preventDefault();
+        loginForm.handleSubmit(onloginSubmit)(e);
+    }" :validation-schema="loginForm">
+        <Card>
+            <CardHeader>
+                <CardTitle>Anmeldung</CardTitle>
+                <CardDescription>
+                    Melden Sie sich hier an.
+                </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-2">
+                <FormField v-slot="{ componentField }" name="email">
+                    <FormItem>
+                        <FormLabel>E-Mail</FormLabel>
+                        <FormControl>
+                            <Input type="email" placeholder="vorname.nachname@email.com" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ componentField }" name="password">
+                    <FormItem>
+                        <FormLabel>Passwort</FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="Pupsbaerchensonderzeichen1!" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
+            </CardContent>
+            <CardFooter>
+                <Button type="submit" class="w-full">Anmelden</Button>
+            </CardFooter>
+        </Card>
+    </form>
+</template>
