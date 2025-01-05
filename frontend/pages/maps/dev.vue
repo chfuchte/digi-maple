@@ -12,7 +12,7 @@ onBeforeMount(async () => {
         // Ensures this runs only on the client side
         try {
             const res = await fetchEverything();
-            mapProps.value = res.maps[0];
+            mapProps.value = res[0];
             useHead({
                 title: mapProps.value?.name ?? "Error",
             });

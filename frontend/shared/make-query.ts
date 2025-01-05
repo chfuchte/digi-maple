@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export function makeGET(url: string) {
+export function makeGET<T>(url: string) {
     const token = localStorage.getItem("auth_token");
-    return axios.get(url, {
+    return axios.get<T>(url, {
         headers: {
             Authorization: `Bearer ${token}`,
         }

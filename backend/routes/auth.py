@@ -39,7 +39,7 @@ def logout(authorization: str = Header(default=None), session: Session = Depends
 def login(user: UserLogin, session: Session = Depends(get_session)):
     existing_user = session.query(User).filter_by(email=user.email).first()
     if not existing_user or existing_user.password != user.password:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Credentials")
     session_token = secrets.token_hex(32)
     expires = datetime.datetime.now() + datetime.timedelta(days=1)
     new_session = SessionModel(user_id=existing_user.id, token=session_token, expires=expires)
