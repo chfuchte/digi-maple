@@ -16,6 +16,6 @@ def db_url():
     return os.environ.get('DATABASE_URL') or 'sqlite:///./sqlite.db'
 
 def debug():
-    print('RUNTIME:', os.environ.get('RUNTIME'))
-    print('ENVIRONMENT:', os.environ.get('ENVIRONMENT'))
-    print('DATABASE_URL:', os.environ.get('DATABASE_URL'))
+    print('RUNTIME:', os.environ.get('RUNTIME') or 'dev')
+    print('ENVIRONMENT:', os.environ.get('ENVIRONMENT') or 'dev')
+    print('DATABASE_URL:', db_url())

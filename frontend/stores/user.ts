@@ -1,4 +1,4 @@
-import axios from "axios";
+import { makeGET } from "~/shared/make-query";
 import { userSchema, type User } from "~/shared/user";
 
 export const useCurrentUserStore = defineStore('currentUser', () => {
@@ -6,15 +6,16 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
     const lastFetched = ref<number>(0);
 
     const fetch = async () => {
-        const {
-            clear, data, error, status
-        } = await useAsyncData("currentUser", () => axios.get("http://localhost:8080/auth/whoami"));
+        const res = await makeGET("http://localhost:8080/auth/whoami");
 
-        if (status.value === "success") {
-            const user = userSchema.parse(data);
-            currentUser.value = user;
-        } else if (status.value === "error" || error.value !== null) {
-            clear();
+        if (res.status === 200) {
+            try {
+                const user = userSchema.parse(res.data);
+                currentUser.value = user;
+            } catch (e) {
+                currentUser.value = null;
+            }
+        } else {
             currentUser.value = null;
         }
 

@@ -16,15 +16,14 @@ const loginForm = useForm({
     validationSchema: typedFormSchema,
 })
 
-const onloginSubmit = (values: LoginForm) => {
-    apiLogin(values.email, values.password).then(loginSuccess => {
-        if (loginSuccess) {
-            navigateTo("/create");
-        } else {
-            // TODO: Show error message
-            alert("Fehler bei dem Login.")
-        }
-    })
+const onloginSubmit = async (values: LoginForm) => {
+    const loginSuccess = await apiLogin(values.email, values.password)
+    if (loginSuccess) {
+        await navigateTo("/");
+    } else {
+        // TODO: Show error message
+        alert("Fehler bei dem Login.")
+    }
 }
 
 </script>

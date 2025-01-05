@@ -1,18 +1,14 @@
-import axios from "axios";
+import { makePOST } from "~/shared/make-query"
 
 export async function apiLogin(email: string, password: string): Promise<boolean> {
     try {
-        const { status, headers } = await axios.post("http://localhost:8080/auth/login", {
+        const { status, data } = await makePOST<{ access_token: string, token_type: "Bearer" }>("http://localhost:8080/auth/login", {
             email,
             password
-        }, {
-            headers: {
-                "Content-Type": "application/json"
-            }
         })
 
         if (status === 200) {
-            document.cookie += headers["set-cookie"]
+            localStorage.setItem("auth_token", data.access_token)
             return true
         } else {
             return false

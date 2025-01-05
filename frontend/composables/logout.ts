@@ -1,13 +1,8 @@
-import axios from "axios"
+import { makePOST } from "~/shared/make-query"
 
 export async function apiLogout(): Promise<boolean> {
     try {
-        const { status } = await axios.post("http://localhost:8080/auth/logout", undefined, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            withCredentials: true
-        })
+        const { status } = await makePOST("http://localhost:8080/auth/logout", {})
 
         return status === 200
     } catch {

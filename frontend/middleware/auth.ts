@@ -6,7 +6,10 @@ export default defineNuxtRouteMiddleware((to) => {
     }
 
     // check if user is authenticated
-    if (useCurrentUserStore().getUser()) return
+    const auth = useCurrentUserStore().getUser() !== null
+    
+    if (auth && to.path === '/auth') return navigateTo('/')
+    else if (auth) return
 
     return navigateTo('/auth')
 })

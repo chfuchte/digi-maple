@@ -8,6 +8,11 @@ const toggleColorMode = () => {
     colorMode.preference = colorMode.preference === 'light' ? 'dark' : 'light';
 }
 
+const logout = async () => {
+    await useCurrentUserStore().logout()
+    await navigateTo("/");
+}
+
 </script>
 
 <template>
@@ -20,9 +25,9 @@ const toggleColorMode = () => {
         </NuxtLink>
 
         <div class="flex items-center gap-2">
-            <NuxtLink to="/auth/logout" v-if="user">
-                <Button variant="link">Abmelden</Button>
-            </NuxtLink>
+            <a v-if="user">
+                <Button @click="logout" variant="link">Abmelden</Button>
+            </a>
             <NuxtLink to="/auth" v-else>
                 <Button variant="link">Anmelden</Button>
             </NuxtLink>
