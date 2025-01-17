@@ -81,7 +81,13 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker v-for="marker in markers" @click="markerClickedEvent(marker.id)" :draggable="true" :lat-lng="marker">
-          <LIcon :class-name="marker.id == lastClickedMarker ? 'selected-marker-icon' : 'marker-icon'">
+          <LIcon :class-name="
+            marker.id == lastClickedMarker
+              ? 'selected-marker-icon'
+              : markers!.at(-1).id == marker.id
+                 ? 'new-marker-icon'
+                 : 'marker-icon'"
+          >
             <div />
           </LIcon>
           <LPopup :content="marker.name" />
@@ -96,6 +102,13 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
     height: 1.5em !important;
     background-color: cornflowerblue;
     border: 2px solid midnightblue;
+  }
+
+  .new-marker-icon {
+    width: 1.5em !important;
+    height: 1.5em !important;
+    background-color: mediumseagreen;
+    border: 2px solid darkolivegreen;
   }
 
   .selected-marker-icon {
