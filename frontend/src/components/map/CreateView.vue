@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
-import {LMap, LControl, LImageOverlay, LMarker, LPopup, LIcon} from "@vue-leaflet/vue-leaflet";
+import { LMap, LControl, LImageOverlay, LMarker, LPopup, LIcon } from "@vue-leaflet/vue-leaflet";
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
-import { latLngBounds, CRS, Map } from "leaflet";
+import { latLngBounds, CRS, Map, LatLng } from "leaflet";
 import { LucideMapPinPlus } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
@@ -23,6 +23,7 @@ const emit = defineEmits<{
     leafletReady: [Map];
     createMarker: [void];
     markerClicked: [string];
+    markerLocationUpdate: [string, LatLng];
 }>();
 
 const zoomInDisabled = ref(false);
@@ -45,9 +46,21 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const markerClickedEvent = (id: string) => {
+const markerClickedEvent = (id: string, markers: any, marker: any) => {
+    console.log("test:");
+    console.log(markers);
+    console.log(marker);
+
+    console.log("create view:");
+    console.log(props.markers);
+    console.log("create view clicked: " + id);
+
     lastClickedMarker.value = id;
     emit("markerClicked", id);
+};
+
+const markerLocationUpdatedEvent = (id: string, location: LatLng) => {
+    emit("markerLocationUpdate", id, location);
 };
 
 const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
@@ -80,41 +93,47 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             </Button>
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-for="marker in markers" @click="markerClickedEvent(marker.id)" :draggable="true" :lat-lng="marker">
-          <LIcon :class-name="
-            marker.id == lastClickedMarker
-              ? 'selected-marker-icon'
-              : markers!.at(-1).id == marker.id
-                 ? 'new-marker-icon'
-                 : 'marker-icon'"
-          >
-            <div />
-          </LIcon>
-          <LPopup :content="marker.name" />
+        <LMarker
+            v-for="marker in markers"
+            @click="markerClickedEvent(marker.id, markers, marker)"
+            @update:lat-lng="(location: LatLng) => markerLocationUpdatedEvent(marker.id, location)"
+            :draggable="true"
+            :lat-lng="marker">
+            <LIcon
+                :class-name="
+                    marker.id == lastClickedMarker
+                        ? 'selected-marker-icon'
+                        : markers!.at(-1).id == marker.id
+                          ? 'new-marker-icon'
+                          : 'marker-icon'
+                ">
+                <div />
+            </LIcon>
+            <LPopup :content="marker.name" />
         </LMarker>
     </LMap>
 </template>
 
 <!--suppress CssUnusedSymbol -->
 <style>
-  .marker-icon {
+.marker-icon {
     width: 1.5em !important;
     height: 1.5em !important;
     background-color: cornflowerblue;
     border: 2px solid midnightblue;
-  }
+}
 
-  .new-marker-icon {
+.new-marker-icon {
     width: 1.5em !important;
     height: 1.5em !important;
     background-color: mediumseagreen;
     border: 2px solid darkolivegreen;
-  }
+}
 
-  .selected-marker-icon {
+.selected-marker-icon {
     width: 1.5em !important;
     height: 1.5em !important;
     background-color: indianred;
     border: 2px solid darkred;
-  }
+}
 </style>

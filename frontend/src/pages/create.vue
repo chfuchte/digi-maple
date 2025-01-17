@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Map } from "leaflet";
+import {type LatLng, Map} from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
 import MapCreateView from "@/components/map/CreateView.vue";
@@ -55,17 +55,39 @@ function createMarker(): void {
   });
 }
 
+function deleteMarker(): void {
+  const marker = selectedMarker.value!;
+
+  selectedMarker.value = null;
+
+  markers.value = markers.value.filter((_, index) => index !== marker);
+
+  console.log(markers.value);
+
+  //markerNameModel.value = "";
+  //markerDescriptionModel.value = "";
+}
+
 function editMarker(name: string, description: string): void {
   markers.value[selectedMarker.value!].description = description;
   markers.value[selectedMarker.value!].name = name;
 }
 
 function markerClicked(id: string): void {
+  console.log("clicked: " + id);
+
   let marker = markers.value.findIndex((marker) => marker.id == id);
 
   selectedMarker.value = marker;
   markerNameModel.value =  markers.value[marker].name;
   markerDescriptionModel.value = markers.value[marker].description;
+}
+
+function markerLocationUpdated(id: string, location: LatLng): void {
+  let marker = markers.value.findIndex((marker) => marker.id == id);
+
+  markers.value[marker].lng = location.lng;
+  markers.value[marker].lat = location.lat;
 }
 </script>
 
@@ -97,6 +119,9 @@ function markerClicked(id: string): void {
                 <Input v-model:model-value="markerNameModel" id="name" type="text" autocomplete="off" placeholder="Gebäude B" />
                 <Label for="description">Description</Label>
                 <Textarea v-model:model-value="markerDescriptionModel" id="description" type="text" placeholder="Aufzüge sind kapput!" />
+                <Button variant="destructive" @click="deleteMarker()" type="button" :disabled="selectedMarker == null">
+                  Löschen
+                </Button>
                 <Button variant="secondary" @click="editMarker(markerNameModel!, markerDescriptionModel!)" type="button" :disabled="selectedMarker != null && markers[selectedMarker].name == markerNameModel && markers[selectedMarker].description == markerDescriptionModel">
                   Ändern
                 </Button>
@@ -108,6 +133,7 @@ function markerClicked(id: string): void {
             @leaflet-ready="onMapReady"
             @create-marker="createMarker"
             @marker-clicked="markerClicked"
+            @marker-location-update="markerLocationUpdated"
             :map-img-url="devMapImagePath"
             :map-img-width="width"
             :map-img-height="height"
