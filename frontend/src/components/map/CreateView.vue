@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
-import { LMap, LControl, LImageOverlay, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import {LMap, LControl, LImageOverlay, LMarker, LPopup, LIcon} from "@vue-leaflet/vue-leaflet";
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
@@ -31,6 +31,8 @@ const zoomLevel = ref<number>(-2);
 
 const leafletObject = ref<Map>();
 
+let lastClickedMarker = ref("");
+
 const onMapReady = (map: Map) => {
     leafletObject.value = map;
     emit("leafletReady", map);
@@ -44,6 +46,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
 };
 
 const markerClickedEvent = (id: string) => {
+    lastClickedMarker.value = id;
     emit("markerClicked", id);
 };
 
@@ -72,17 +75,33 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LControl position="bottomright">
-          <Button variant="outline" @click="emit('createMarker');">
-            <LucideMapPinPlus/>
-          </Button>
+            <Button variant="outline" @click="emit('createMarker')">
+                <LucideMapPinPlus />
+            </Button>
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker
-            v-for="marker in markers"
-            @click="markerClickedEvent(marker.id)"
-            :draggable="true"
-            :lat-lng="marker">
-            <LPopup :content="marker.name" />
+        <LMarker v-for="marker in markers" @click="markerClickedEvent(marker.id)" :draggable="true" :lat-lng="marker">
+          <LIcon :class-name="marker.id == lastClickedMarker ? 'selected-marker-icon' : 'marker-icon'">
+            <div />
+          </LIcon>
+          <LPopup :content="marker.name" />
         </LMarker>
     </LMap>
 </template>
+
+<!--suppress CssUnusedSymbol -->
+<style>
+  .marker-icon {
+    width: 1.5em !important;
+    height: 1.5em !important;
+    background-color: cornflowerblue;
+    border: 2px solid midnightblue;
+  }
+
+  .selected-marker-icon {
+    width: 1.5em !important;
+    height: 1.5em !important;
+    background-color: indianred;
+    border: 2px solid darkred;
+  }
+</style>
