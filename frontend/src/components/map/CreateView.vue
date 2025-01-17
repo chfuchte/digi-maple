@@ -4,12 +4,15 @@ import { LMap, LControl, LImageOverlay, LMarker, LPopup } from "@vue-leaflet/vue
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
+import { LucideMapPinPlus } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
-    mapImgheight: number;
+    mapImgHeight: number;
     markers?: Array<{
+        id: string;
         name?: string;
         lng: number;
         lat: number;
@@ -18,6 +21,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     leafletReady: [Map];
+    createMarker: [void];
+    markerClicked: [string];
 }>();
 
 const zoomInDisabled = ref(false);
@@ -38,22 +43,45 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
+const markerClickedEvent = (id: string) => {
+    emit("markerClicked", id);
+};
+
+const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 </script>
 
 <template>
-    <LMap ref="map" :zoom="zoomLevel" :center="[bounds.getCenter().lat, bounds.getCenter().lng]" :crs="CRS.Simple"
-        :min-zoom="-2" :max-zoom="2" :options="{
+    <LMap
+        ref="map"
+        :zoom="zoomLevel"
+        :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
+        :crs="CRS.Simple"
+        :min-zoom="-2"
+        :max-zoom="2"
+        :options="{
             zoomControl: false,
             attributionControl: false,
-        }" @ready="onMapReady" @update:zoom="handleZoomEvent">
+        }"
+        @ready="onMapReady"
+        @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
-            <MapZoomButtons @zoom-in="leafletObject?.zoomIn()" @zoom-out="leafletObject?.zoomOut()"
-                :zoom-indisabled="zoomInDisabled" :zoom-out-disabled="zoomOutDisabled" />
+            <MapZoomButtons
+                @zoom-in="leafletObject?.zoomIn()"
+                @zoom-out="leafletObject?.zoomOut()"
+                :zoom-indisabled="zoomInDisabled"
+                :zoom-out-disabled="zoomOutDisabled" />
+        </LControl>
+        <LControl position="bottomright">
+          <Button variant="outline" @click="emit('createMarker');">
+            <LucideMapPinPlus/>
+          </Button>
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker :key="`${marker.name};${marker.lat};${marker.lng}`" :draggable="true" v-for="marker in markers"
-            :lat-lng="marker" :attribution="marker.name">
+        <LMarker
+            v-for="marker in markers"
+            @click="markerClickedEvent(marker.id)"
+            :draggable="true"
+            :lat-lng="marker">
             <LPopup :content="marker.name" />
         </LMarker>
     </LMap>

@@ -3,12 +3,11 @@ import { ref } from "vue";
 import { Map } from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
-import Drawer from "@/components/Drawer.vue";
 import MapCreateView from "@/components/map/CreateView.vue";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LucideCirclePlus } from "lucide-vue-next"
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const devMapImagePath = "dev/Lageplan_Campus_Bockenheim.svg";
 const imageHeightWidthRatio = 0.94285675588;
@@ -16,17 +15,27 @@ const height = 2000;
 const width = imageHeightWidthRatio * height;
 
 interface IMarker {
-    name: string;
-    lng: number;
-    lat: number;
+  id: string;
+  name: string;
+  description: string;
+  lng: number;
+  lat: number;
 }
 
 let leafletObject: Map | null = null;
 
-const markerNameModel = defineModel<string>("markerNameModel");
-const titleModel = defineModel<string>("titleModel");
-const markers = ref<Array<IMarker>>([]);
-const title = ref("Neue Karte");
+let selectedMarker = ref<number | null>();
+
+let markers = ref<Array<IMarker>>([]);
+let title = ref("Neue Karte");
+let description = ref("");
+
+let markerNameModel = defineModel<string>("markerNameModel");
+let markerDescriptionModel = defineModel<string>("markerDescriptionModel");
+let descriptionModel = defineModel<string>("descriptionModel");
+descriptionModel.value = description.value;
+let titleModel = defineModel<string>("titleModel");
+titleModel.value = title.value;
 
 useHead({
     title: title,
@@ -36,86 +45,73 @@ function onMapReady(map: Map): void {
     leafletObject = map;
 }
 
-function addMarker(name: string): void {
-    markers.value.push({
-        name: name,
-        lng: leafletObject!.getCenter().lng,
-        lat: leafletObject!.getCenter().lat,
-    });
+function createMarker(): void {
+  markers.value.push({
+    id: crypto.randomUUID(),
+    name: "Marker",
+    description: "Lorem Ipsum....",
+    lng: leafletObject!.getCenter().lng,
+    lat: leafletObject!.getCenter().lat
+  });
 }
 
-/*
-old code
-function generate() {
-    const markers = <IMarker[]>[];
-    leafletObject!.eachLayer((layer) => {
-        // We can't test if it's an instance of Marker because it's not available in a universal-render page.
-        // So we use this workaround.
-        // We also can't use refs on the LMarkers because their API is incomplete.
-        if (layer.options.hasOwnProperty("draggable")) {
-            const marker = layer as Marker;
-            const id = marker.getAttribution!() as string;
-            markers.push({
-                name: createdMarkers.value.find((current) => current.id == id)?.name ?? "Something went wrong!",
-                lng: marker.getLatLng().lng,
-                lat: marker.getLatLng().lat,
-            });
-        }
-    });
-
-    const data = {
-        name: title,
-        width: 1885.71351176,
-        height: 2000,
-        markers: markers,
-    };
-
-    return data;
+function editMarker(name: string, description: string): void {
+  markers.value[selectedMarker.value!].description = description;
+  markers.value[selectedMarker.value!].name = name;
 }
-*/
+
+function markerClicked(id: string): void {
+  let marker = markers.value.findIndex((marker) => marker.id == id);
+
+  selectedMarker.value = marker;
+  markerNameModel.value =  markers.value[marker].name;
+  markerDescriptionModel.value = markers.value[marker].description;
+}
 </script>
 
 <template>
     <Layout>
-        <div class="over-map absolute right-0 top-24 overflow-hidden">
-            <Drawer title="Title">
-                <div
-                    class="flex flex-col items-start rounded-bl border-b border-l border-t border-black bg-white p-3.5 text-black">
-                    <h1 class="font-bold">Map title</h1>
-                    <h3 class="text-sm text-gray-700">Enter a short title.</h3>
-                    <Input v-model:model-value="titleModel" class="mt-2" type="text" placeholder="Title"></Input>
-                    <Button variant="secondary" class="mt-2 self-end" @click="title = titleModel!">Save</Button>
-                </div>
-            </Drawer>
-        </div>
-        <div class="over-map absolute bottom-0 right-0 p-1.5">
-            <Dialog>
-                <DialogTrigger>
-                    <Button variant="outline" size="icon">
-                        <LucideCirclePlus class="h-20 w-20"></LucideCirclePlus>
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle> Add marker </DialogTitle>
-                        <DialogDescription> Enter a name. </DialogDescription>
-                    </DialogHeader>
-                    <Input v-model:model-value="markerNameModel" type="text" placeholder="Name" />
-                    <DialogFooter>
-                        <DialogClose>
-                            <Button @click="addMarker(markerNameModel!)"> Create </Button>
-                        </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        </div>
-        <MapCreateView @leaflet-ready="onMapReady" :map-img-url="devMapImagePath" :map-img-width="width"
-            :map-imgheight="height" :markers="markers" />
+      <div class="flex h-full">
+        <aside class="bg-white border-black border-r p-4 w-1/3 overflow-y-auto">
+          <form class="flex flex-col w-full items-start gap-6">
+            <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full">
+              <legend class="-ml-1 px-1 text-sm font-medium">
+                Settings
+              </legend>
+              <div class="flex flex-col gap-3">
+                <Label for="name">Name</Label>
+                <Input v-model:model-value="titleModel" id="name" type="text" placeholder="Campus Bockenheim" autocomplete="off" />
+                <Label for="description">Description</Label>
+                <Textarea v-model:model-value="descriptionModel"  id="description" type="text" placeholder="Eine Karte mit verschiedenen Markern." />
+                <Button @click="title = titleModel!; description = descriptionModel!;" variant="secondary" type="button" :disabled="title == titleModel && description == descriptionModel">
+                  Speichern
+                </Button>
+              </div>
+            </fieldset>
+            <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full" :disabled="selectedMarker == null">
+              <legend class="-ml-1 px-1 text-sm font-medium">
+                Edit marker
+              </legend>
+              <div class="flex flex-col gap-3">
+                <Label for="name">Name</Label>
+                <Input v-model:model-value="markerNameModel" id="name" type="text" autocomplete="off" placeholder="Gebäude B" />
+                <Label for="description">Description</Label>
+                <Textarea v-model:model-value="markerDescriptionModel" id="description" type="text" placeholder="Aufzüge sind kapput!" />
+                <Button variant="secondary" @click="editMarker(markerNameModel!, markerDescriptionModel!)" type="button" :disabled="selectedMarker != null && markers[selectedMarker].name == markerNameModel && markers[selectedMarker].description == markerDescriptionModel">
+                  Ändern
+                </Button>
+              </div>
+            </fieldset>
+          </form>
+        </aside>
+        <MapCreateView
+            @leaflet-ready="onMapReady"
+            @create-marker="createMarker"
+            @marker-clicked="markerClicked"
+            :map-img-url="devMapImagePath"
+            :map-img-width="width"
+            :map-img-height="height"
+            :markers="markers" />
+      </div>
     </Layout>
 </template>
-
-<style scoped>
-.over-map {
-    z-index: 500;
-}
-</style>
