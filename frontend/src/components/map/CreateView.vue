@@ -32,7 +32,7 @@ const zoomLevel = ref<number>(-2);
 
 const leafletObject = ref<Map>();
 
-let lastClickedMarker = ref("");
+const lastClickedMarker = ref("");
 
 const onMapReady = (map: Map) => {
     leafletObject.value = map;
@@ -46,7 +46,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const markerClickedEvent = (id: string, markers: any, marker: any) => {
+const markerClickedEvent = (id: string, markers: unknown, marker: unknown) => {
     console.log("test:");
     console.log(markers);
     console.log(marker);
@@ -94,8 +94,9 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker
+            :key="marker.id"
             v-for="marker in markers"
-            @click="markerClickedEvent(marker.id, markers, marker)"
+            @click="() => markerClickedEvent(marker.id, markers, marker)"
             @update:lat-lng="(location: LatLng) => markerLocationUpdatedEvent(marker.id, location)"
             :draggable="true"
             :lat-lng="marker">
