@@ -15,6 +15,11 @@ const router = createRouter({
             component: () => import("../pages/auth/index.vue"),
         },
         {
+            path: "/dashboard",
+            name: "Dashboard",
+            component: () => import("../pages/dashboard.vue")
+        },
+        {
             path: "/create",
             name: "Create a new map",
             component: () => import("../pages/create.vue"),
