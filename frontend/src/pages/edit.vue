@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { type LatLng, Map } from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
-import MapCreateView from "@/components/map/EditView.vue";
+import MapCreateView from "@/components/map/edit/View.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,9 +67,7 @@ function createMarker(): void {
 
 function deleteMarker(): void {
     markers.value = markers.value.filter((_, index) => index !== selectedMarker.value!);
-
     selectedMarker.value = null;
-
     markerNameModel.value = "";
     markerDescriptionModel.value = "";
     markerTypeModel.value = undefined;
@@ -83,7 +81,6 @@ function editMarker(): void {
 
 function markerClicked(id: string): void {
     const marker = markers.value.findIndex((marker) => marker.id == id);
-
     selectedMarker.value = marker;
     markerNameModel.value = markers.value[marker].display.title;
     markerDescriptionModel.value = markers.value[marker].display.description;
@@ -177,7 +174,6 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                 Löschen
                             </Button>
                             <Button
-                                variant="secondary"
                                 @click="editMarker()"
                                 type="button"
                                 :disabled="
