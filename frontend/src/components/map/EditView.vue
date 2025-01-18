@@ -95,7 +95,7 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
                     :class="
                         marker.id === lastClickedMarker
                             ? 'fill-red-500'
-                            : markers!.at(-1).id === marker.id
+                            : markers![markers!.length - 1].id === marker.id
                               ? 'fill-green-500'
                               : 'fill-blue-500'
                     "

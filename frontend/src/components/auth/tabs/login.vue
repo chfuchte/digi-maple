@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { apiLogin } from "@/queries/login";
+import { apiLogin } from "@/queries/auth/login";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";

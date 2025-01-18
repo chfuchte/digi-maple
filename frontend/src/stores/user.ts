@@ -1,5 +1,5 @@
 import { makeGET } from "@/lib/utils";
-import { apiLogout } from "@/queries/logout";
+import { apiLogout } from "@/queries/auth/logout";
 import { userSchema, type User } from "@/schema/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
