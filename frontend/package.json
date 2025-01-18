@@ -10,7 +10,8 @@
         "build-only": "vite build",
         "type-check": "vue-tsc --build",
         "lint": "eslint . --fix",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "shadcn:add": "npx shadcn-vue@latest add"
     },
     "dependencies": {
         "@radix-icons/vue": "^1.0.0",
