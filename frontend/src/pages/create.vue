@@ -8,32 +8,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+import { type MapMarker, markerTypes } from "@/schema/mapView";
+import {LucideAccessibility, LucideAlertTriangle, LucideInfo, LucidePin} from "lucide-vue-next";
 
 const devMapImagePath = "dev/Lageplan_Campus_Bockenheim.svg";
 const imageHeightWidthRatio = 0.94285675588;
 const height = 2000;
 const width = imageHeightWidthRatio * height;
 
-interface IMarker {
-  id: string;
-  name: string;
-  description: string;
-  lng: number;
-  lat: number;
-}
-
 let leafletObject: Map | null = null;
 
 let selectedMarker = ref<number | null>();
 
-let markers = ref<Array<IMarker>>([]);
+let markers = ref<Array<MapMarker>>([]);
 let title = ref("Neue Karte");
 let description = ref("");
 
 let markerNameModel = defineModel<string>("markerNameModel");
 let markerDescriptionModel = defineModel<string>("markerDescriptionModel");
+let markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
+
 let descriptionModel = defineModel<string>("descriptionModel");
 descriptionModel.value = description.value;
+
 let titleModel = defineModel<string>("titleModel");
 titleModel.value = title.value;
 
@@ -48,53 +55,53 @@ function onMapReady(map: Map): void {
 function createMarker(): void {
   markers.value.push({
     id: crypto.randomUUID(),
-    name: "Marker",
-    description: "Lorem Ipsum....",
-    lng: leafletObject!.getCenter().lng,
-    lat: leafletObject!.getCenter().lat
+    x: leafletObject!.getCenter().lng,
+    y: leafletObject!.getCenter().lat,
+    display: {
+      title: "Marker",
+      description: "Lorem Ipsum.....",
+      markerType: "default",
+    },
   });
 }
 
 function deleteMarker(): void {
-  const marker = selectedMarker.value!;
+  markers.value = markers.value.filter((_, index) => index !== selectedMarker.value!);
 
   selectedMarker.value = null;
 
-  markers.value = markers.value.filter((_, index) => index !== marker);
-
-  console.log(markers.value);
-
-  //markerNameModel.value = "";
-  //markerDescriptionModel.value = "";
+  markerNameModel.value = "";
+  markerDescriptionModel.value = "";
+  markerTypeModel.value = undefined;
 }
 
-function editMarker(name: string, description: string): void {
-  markers.value[selectedMarker.value!].description = description;
-  markers.value[selectedMarker.value!].name = name;
+function editMarker(): void {
+  markers.value[selectedMarker.value!].display.description = markerDescriptionModel.value!;
+  markers.value[selectedMarker.value!].display.title = markerNameModel.value!;
+  markers.value[selectedMarker.value!].display.markerType = markerTypeModel.value!;
 }
 
 function markerClicked(id: string): void {
-  console.log("clicked: " + id);
-
   let marker = markers.value.findIndex((marker) => marker.id == id);
 
   selectedMarker.value = marker;
-  markerNameModel.value =  markers.value[marker].name;
-  markerDescriptionModel.value = markers.value[marker].description;
+  markerNameModel.value =  markers.value[marker].display.title;
+  markerDescriptionModel.value = markers.value[marker].display.description;
+  markerTypeModel.value = markers.value[marker].display.markerType;
 }
 
 function markerLocationUpdated(id: string, location: LatLng): void {
   let marker = markers.value.findIndex((marker) => marker.id == id);
 
-  markers.value[marker].lng = location.lng;
-  markers.value[marker].lat = location.lat;
+  markers.value[marker].x = location.lng;
+  markers.value[marker].y = location.lat;
 }
 </script>
 
 <template>
     <Layout>
       <div class="flex h-full">
-        <aside class="bg-white border-black border-r p-4 w-1/3 overflow-y-auto">
+        <aside class="bg-secondary border-black border-r p-4 w-1/3 overflow-y-auto resize-x">
           <form class="flex flex-col w-full items-start gap-6">
             <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full">
               <legend class="-ml-1 px-1 text-sm font-medium">
@@ -119,10 +126,30 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                 <Input v-model:model-value="markerNameModel" id="name" type="text" autocomplete="off" placeholder="Gebäude B" />
                 <Label for="description">Description</Label>
                 <Textarea v-model:model-value="markerDescriptionModel" id="description" type="text" placeholder="Aufzüge sind kapput!" />
+                <Select v-model:model-value="markerTypeModel">
+                  <SelectTrigger class="w-full" :disabled="selectedMarker == null">
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Marker Typ</SelectLabel>
+                      <SelectItem v-for="icon in markerTypes" :value="icon">
+                        <div class="flex flex-row items-center gap-2">
+                          <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
+                          <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
+                          <LucideInfo v-else-if="icon == 'info'" :size="18" />
+                          <LucidePin v-else :size="18" />
+
+                          {{ icon }}
+                        </div>
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
                 <Button variant="destructive" @click="deleteMarker()" type="button" :disabled="selectedMarker == null">
                   Löschen
                 </Button>
-                <Button variant="secondary" @click="editMarker(markerNameModel!, markerDescriptionModel!)" type="button" :disabled="selectedMarker != null && markers[selectedMarker].name == markerNameModel && markers[selectedMarker].description == markerDescriptionModel">
+                <Button variant="secondary" @click="editMarker()" type="button" :disabled="selectedMarker != null && markers[selectedMarker].display.title == markerNameModel && markers[selectedMarker].display.description == markerDescriptionModel && markers[selectedMarker].display.markerType == markerTypeModel">
                   Ändern
                 </Button>
               </div>

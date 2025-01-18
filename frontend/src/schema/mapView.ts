@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const markerTypes = ["default", "info", "warning", "weelchair"] as const;
+
 const mapViewSchema = z.object({
     id: z.number(),
     name: z.string(),
@@ -9,13 +11,13 @@ const mapViewSchema = z.object({
     imgHeight: z.number(),
     markers: z.array(
         z.object({
-            id: z.number(),
+            id: z.string(),
             x: z.number(),
             y: z.number(),
             display: z.object({
                 title: z.string(),
                 description: z.string(),
-                markerType: z.enum(["default", "info", "warning", "weelchair"]),
+                markerType: z.enum(markerTypes),
             }),
         }),
     ),

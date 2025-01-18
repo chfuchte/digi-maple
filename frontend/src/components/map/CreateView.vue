@@ -6,17 +6,16 @@ import { ref } from "vue";
 import { latLngBounds, CRS, Map, LatLng } from "leaflet";
 import { LucideMapPinPlus } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
+import MapPopup from "@/components/map/Popup.vue";
+
+import type { MapMarker } from "@/schema/mapView";
+
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
     mapImgHeight: number;
-    markers?: Array<{
-        id: string;
-        name?: string;
-        lng: number;
-        lat: number;
-    }>;
+    markers?: Array<MapMarker>;
 }>();
 
 const emit = defineEmits<{
@@ -46,15 +45,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const markerClickedEvent = (id: string, markers: unknown, marker: unknown) => {
-    console.log("test:");
-    console.log(markers);
-    console.log(marker);
-
-    console.log("create view:");
-    console.log(props.markers);
-    console.log("create view clicked: " + id);
-
+const markerClickedEvent = (id: string) => {
     lastClickedMarker.value = id;
     emit("markerClicked", id);
 };
@@ -96,10 +87,10 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
         <LMarker
             :key="marker.id"
             v-for="marker in markers"
-            @click="() => markerClickedEvent(marker.id, markers, marker)"
+            @click="() => markerClickedEvent(marker.id)"
             @update:lat-lng="(location: LatLng) => markerLocationUpdatedEvent(marker.id, location)"
             :draggable="true"
-            :lat-lng="marker">
+            :lat-lng="new LatLng(marker.y, marker.x)">
             <LIcon
                 :class-name="
                     marker.id == lastClickedMarker
@@ -110,7 +101,10 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
                 ">
                 <div />
             </LIcon>
-            <LPopup :content="marker.name" />
+            <LPopup>
+              <MapPopup :title="marker.display.title" :icon="marker.display.markerType"
+                        :content="marker.display.description"></MapPopup>
+            </LPopup>
         </LMarker>
     </LMap>
 </template>
@@ -136,5 +130,19 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
     height: 1.5em !important;
     background-color: indianred;
     border: 2px solid darkred;
+}
+
+.leaflet-popup-content-wrapper {
+  background: none;
+  box-shadow: none;
+}
+
+.leaflet-popup-content {
+  padding: 10px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 10px;
 }
 </style>
