@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-import database_layout_tables as db
+from database import database_layout_tables as db
 from env import is_docker
 
 def insert_example_map():

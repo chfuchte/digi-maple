@@ -1,5 +1,9 @@
 import sqlite3
 
+# RESET THE DATABASE FOR DEBUG PURPOSES -------------------------------------------------------------
+with open("maps_and_markers.db", "w") as file:
+    file.write("")
+
 # Connect to the SQLite database (or create it)
 conn = sqlite3.connect('maps_and_markers.db')
 cursor = conn.cursor()
@@ -47,6 +51,7 @@ def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
     conn.commit()
     print(f"Inserted '{name}' into maps")
 
+
 # Function to insert a marker into the markers table
 def insert_marker(mapId, x, y, title, description, marker_type):
     cursor.execute('''
@@ -64,6 +69,15 @@ def insert_user(username, email, password):
     ''', (username, email, password))
     conn.commit()
     print(f"Inserted '{username}' into users")
+
+def edit_user(user_id, username, email, password):
+    cursor.execute('''
+    UPDATE users
+    SET username = ?, email = ?, password = ?
+    WHERE id = ?;
+    ''', (username, email, password, user_id))
+    conn.commit()
+    print(f"Updated user {user_id} to '{username}'")
 
 # Function to delete a map by ID
 def delete_map(map_id):
@@ -89,7 +103,7 @@ def get_dict() -> dict:
     users = cursor.fetchall()
 
     # Structure for the final output
-    main_dict = {"maps": [], "users": []}
+    main_dict = {"maps": {}, "users": {}}
 
     # Process maps
     for map_entry in maps:
@@ -115,17 +129,17 @@ def get_dict() -> dict:
                 } for marker in markers
             ]
         }
-        main_dict["maps"].append(map_dict)
+        main_dict["maps"][map_id] = map_dict
 
     # Process users
     for user_entry in users:
-        id, username, email, _ = user_entry  # Exclude password for security
+        user_id, username, email, _ = user_entry  # Exclude password for security
         user_dict = {
-            "id": id,
+            "id": user_id,
             "username": username,
             "email": email,
         }
-        main_dict["users"].append(user_dict)
+        main_dict["users"][user_id] = user_dict
 
     return main_dict
 
