@@ -30,6 +30,6 @@
 | Column Name | Data Type | Unique | Nullable | PK  |
 | ----------- | --------- | ------ | -------- | --- |
 | id          | SERIAL    | YES    | NO       | YES |
-| name        | TEXT      | YES    | NO       | NO  |
+| username    | TEXT      | YES    | NO       | NO  |
 | email       | TEXT      | YES    | NO       | NO  |
 | password    | TEXT      | NO     | NO       | NO  |

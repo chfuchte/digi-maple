@@ -1,4 +1,4 @@
-fastapi[all]
+starlette
 uvicorn
-sqlalchemy
 pydantic
+fastapi[standard]

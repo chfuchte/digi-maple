@@ -1,25 +1,34 @@
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from db.database import Base, engine
-from routes.auth import router as auth_router
-from routes.example import router as example_router
-from env import debug
+import uvicorn
 
-Base.metadata.create_all(bind=engine)
+import database_layout_tables as db
+import example_database_entry as ex
 
 app = FastAPI()
+
+
+origins = [
+    "*", # Allow all origins
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(auth_router)
-app.include_router(example_router)
+ex.insert_example_map()
+ex.insert_example_user()
+
+map_dict: dict = db.get_dict()
+
+@app.get("/")
+def read_root():
+    # Get the contents of the data base as a python dictionary to parse it through FastAPI
+    return map_dict
 
 if __name__ == "__main__":
-    debug()
     uvicorn.run(app, host="0.0.0.0", port=8080)
