@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { apiRegister } from "@/queries/register";
+import { apiRegister } from "@/queries/auth/register";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -30,7 +30,7 @@ const registerform = useForm({
 });
 
 const onRegisterSubmit = (values: RegisterForm) => {
-    apiRegister(values.fullName, values.email, values.password).then((registerSuccess) => {
+    apiRegister(values.fullName, values.email, values.password).then((registerSuccess: boolean) => {
         if (registerSuccess) {
             useRouter().push("/auth");
         } else {
@@ -42,11 +42,14 @@ const onRegisterSubmit = (values: RegisterForm) => {
 </script>
 
 <template>
-    <form @submit="(e) => {
-        e.preventDefault();
-        registerform.handleSubmit(onRegisterSubmit)(e);
-    }
-        " :validation-schema="registerform">
+    <form
+        @submit="
+            (e) => {
+                e.preventDefault();
+                registerform.handleSubmit(onRegisterSubmit)(e);
+            }
+        "
+        :validation-schema="registerform">
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>

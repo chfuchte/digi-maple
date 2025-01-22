@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { apiLogin } from "@/queries/login";
+import { apiLogin } from "@/queries/auth/login";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -40,11 +40,14 @@ const onloginSubmit = async (values: LoginForm) => {
 </script>
 
 <template>
-    <form @submit="(e) => {
-        e.preventDefault();
-        loginForm.handleSubmit(onloginSubmit)(e);
-    }
-        " :validation-schema="loginForm">
+    <form
+        @submit="
+            (e) => {
+                e.preventDefault();
+                loginForm.handleSubmit(onloginSubmit)(e);
+            }
+        "
+        :validation-schema="loginForm">
         <Card>
             <CardHeader>
                 <CardTitle>Anmeldung</CardTitle>

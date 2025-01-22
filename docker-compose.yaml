@@ -1,12 +1,12 @@
 services:
   frontend:
-    container_name: maple_frontend
+    container_name: maple/frontend
     build: ./frontend
     ports:
       - "80:80"
     restart: unless-stopped
   backend:
-    container_name: maple_backend
+    container_name: maple/backend
     build: ./backend
     ports:
       - "8080:8080"

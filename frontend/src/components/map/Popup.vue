@@ -12,7 +12,6 @@ const props = defineProps<{
 <template>
     <div class="flex h-auto w-40 flex-col items-start justify-start gap-2">
         <h4 class="inline-flex gap-1 font-bold">
-            <!-- TODO: imports! -->
             <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
             <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
             <LucideInfo v-else-if="icon == 'info'" :size="18" />
