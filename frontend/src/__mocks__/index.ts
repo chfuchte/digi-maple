@@ -9,10 +9,40 @@ type Mockup = {
 };
 
 export const useMockupData = defineStore("__mockup_data__", () => {
+    const current_user_idx = ref<number | null>(null);
+
     const data = ref<Mockup>({
         users: [],
         maps: [],
     });
 
-    return data;
+    const getCurrentUser = () => {
+        return data.value.users[current_user_idx.value!];
+    }
+
+    const setCurrentUser = (email: string) => {
+        current_user_idx.value = data.value.users.findIndex((user) => user.email === email);
+    }
+
+    const registerUser = (user: Omit<User, "id">) => {
+        data.value.users.push({
+            id: data.value.users.length + 1,
+            ...user,
+        });
+    }
+
+    const addMapView = (map: Omit<MapView, "id">) => {
+        data.value.maps.push({
+            id: data.value.maps.length + 1,
+            ...map,
+        });
+    }
+
+    return {
+        getCurrentUser,
+        setCurrentUser,
+        registerUser,
+        addMapView,
+        data,
+    };
 });
