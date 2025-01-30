@@ -52,6 +52,10 @@ def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
     print(f"Inserted '{name}' into maps")
 
 
+def get_map_id_by_name(name: str):
+    cursor.execute("SELECT id FROM maps WHERE name = ?", ("Uni Campus Bockenheim",))
+    return cursor.fetchone()[0] + 1
+
 # Function to insert a marker into the markers table
 def insert_marker(mapId, x, y, title, description, marker_type):
     cursor.execute('''
