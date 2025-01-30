@@ -4,7 +4,8 @@ import { LMap, LControl, LImageOverlay, LMarker, LPopup, LIcon } from "@vue-leaf
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map, LatLng } from "leaflet";
-import { LucideMapPinPlus, LucideMapPin } from "lucide-vue-next";
+import { LucideMapPinPlus } from "lucide-vue-next";
+import MapPin from "@/components/map/pins/index.vue";
 import { Button } from "@/components/ui/button";
 import MapPopup from "@/components/map/Popup.vue";
 
@@ -90,16 +91,8 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             @update:lat-lng="(location: LatLng) => markerLocationUpdatedEvent(marker.id, location)"
             :draggable="true"
             :lat-lng="new LatLng(marker.y, marker.x)">
-            <LIcon :iconSize="[42, 42]" class-name="border-none outline-none">
-                <LucideMapPin
-                    :class="
-                        marker.id === lastClickedMarker
-                            ? 'fill-red-500'
-                            : markers![markers!.length - 1].id === marker.id
-                              ? 'fill-green-500'
-                              : 'fill-blue-500'
-                    "
-                    :size="42" />
+            <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
+                <MapPin :variant="marker.display.markerType" class="text-blue-600" :size="32" />
             </LIcon>
             <LPopup>
                 <MapPopup
