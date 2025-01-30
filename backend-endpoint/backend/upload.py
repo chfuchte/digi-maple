@@ -1,6 +1,3 @@
-
-
-
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
@@ -63,7 +60,7 @@ def get_markers():
 # Route to render the main page (HTML for interacting with the map)
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('indexx.html')
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
