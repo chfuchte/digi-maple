@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Upload & Marker Editor</title>
+  <style>
+    .map-container {
+      position: relative;
+      display: inline-block;
+    }
+    .marker {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: red;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload a Map and Place Markers</h1>
+  
+  <!-- Form to upload the map -->
+  <input type="file" id="mapUpload" accept="image/*">
+  <button onclick="uploadMap()">Upload Map</button>
+  
+  <br><br>
+
+  <!-- Canvas to display map and markers -->
+  <div id="mapContainer" class="map-container">
+    <img id="uploadedMap" style="max-width: 100%; display: none;">
+  </div>
+  
+  <h3>Add Marker</h3>
+  <label for="markerType">Marker Type:</label>
+  <select id="markerType">
+    <option value="red">Red</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+  </select>
+  <br><br>
+  
+  <button onclick="enableMarkerPlacement()">Place Marker</button>
+
+  <script>
+    let mapUrl = '';
+    let markers = [];
+    let placingMarker = false;
+
+    function uploadMap() {
+      const fileInput = document.getElementById('mapUpload');
+      const formData = new FormData();
+      formData.append('map', fileInput.files[0]);
+
+      fetch('/upload-map', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        mapUrl = data.map_url;
+        document.getElementById('uploadedMap').src = mapUrl;
+        document.getElementById('uploadedMap').style.display = 'block';
+        document.getElementById('mapContainer').style.position = 'relative';
+      })
+      .catch(error => {
+        console.error('Error uploading map:', error);
+      });
+    }
+
+    function enableMarkerPlacement() {
+      placingMarker = true;
+    }
+
+    document.getElementById('mapContainer').addEventListener('click', function(event) {
+      if (placingMarker && mapUrl) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        const type = document.getElementById('markerType').value;
+
+        // Place marker on the map
+        const marker = document.createElement('div');
+        marker.classList.add('marker');
+        marker.style.left = `${x - 10}px`; // Center the marker
+        marker.style.top = `${y - 10}px`;
+        marker.style.backgroundColor = type;
+
+        document.getElementById('mapContainer').appendChild(marker);
+
+        // Send marker data to the server
+        fetch('/add-marker', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ x, y, type, mapUrl })
+        })
+        .then(response => response.json())
+        .then(data => {
+          markers.push(data.marker);
+        })
+        .catch(error => {
+          console.error('Error adding marker:', error);
+        });
+        
+        placingMarker = false; // Disable marker placement after placing
+      }
+    });
+  </script>
+</body>
+</html>
