@@ -10,14 +10,19 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
 
     const fetch = async () => {
         try {
-            const res = await makeGET("http://localhost:8080/auth/whoami");
+            /*const res = await makeGET("http://localhost:8080/auth/whoami");
 
             if (res.status === 200) {
                 const user = userSchema.parse(res.data);
                 currentUser.value = user;
             } else {
                 currentUser.value = null;
-            }
+            }*/
+            currentUser.value = userSchema.parse({
+                "id": 42,
+                "full_name": "Max Mustermann",
+                "email": "max.mustermann@blabla.com"
+            })
         } catch {
             currentUser.value = null;
         }
