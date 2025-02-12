@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { useCurrentUserStore } from '@/stores/user';
-import { useColorMode } from '@vueuse/core';
+import { useCurrentUserStore } from "@/stores/user";
+import { useColorMode } from "@vueuse/core";
 import { useRouter, RouterLink } from "vue-router";
-import { LucideMap, LucideEllipsisVertical, LucideSunMoon } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from './ui/dropdown-menu';
-import { LucideCircleUser, LucideLogOut, LucideLogIn, LucideMapPinned, LucideSettings } from 'lucide-vue-next';
+import { LucideMap, LucideEllipsisVertical, LucideSunMoon } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
+import { LucideCircleUser, LucideLogOut, LucideLogIn, LucideMapPinned, LucideSettings } from "lucide-vue-next";
 
 const { getUser } = useCurrentUserStore();
 const user = getUser();
@@ -23,6 +29,7 @@ const toggleColorMode = () => {
 };
 
 const logout = async () => {
+    await useCurrentUserStore().logout();
     await useCurrentUserStore().logout();
     await router.push("/auth");
 };
@@ -54,44 +61,44 @@ const logout = async () => {
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button variant="ghost">
-                  <LucideCircleUser />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <template v-if="user">
-                  <DropdownMenuItem>
-                    <LucideCircleUser class="!w-12 !h-12" />
-                    <div>
-                      <h3>{{user.full_name}}</h3>
-                      <small>3 Maps</small>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <RouterLink to="/dashboard">
-                    <DropdownMenuItem>
-                      <LucideMapPinned />
-                      <span>Dashboard</span>
-                    </DropdownMenuItem>
-                  </RouterLink>
-                  <DropdownMenuItem>
-                    <LucideSettings />
-                    <span>Einstellungen</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem @click="logout">
-                    <LucideLogOut />
-                    <span>Abmelden</span>
-                  </DropdownMenuItem>
-                </template>
-                <RouterLink to="/auth" v-else>
-                  <DropdownMenuItem>
-                    <LucideLogIn />
-                    <span>Anmelden</span>
-                  </DropdownMenuItem>
-                </RouterLink>
-              </DropdownMenuContent>
+                <DropdownMenuTrigger>
+                    <Button variant="ghost">
+                        <LucideCircleUser />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <template v-if="user">
+                        <DropdownMenuItem>
+                            <LucideCircleUser class="!h-12 !w-12" />
+                            <div>
+                                <h3>{{ user.full_name }}</h3>
+                                <small>3 Maps</small>
+                            </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <RouterLink to="/dashboard">
+                            <DropdownMenuItem>
+                                <LucideMapPinned />
+                                <span>Dashboard</span>
+                            </DropdownMenuItem>
+                        </RouterLink>
+                        <DropdownMenuItem>
+                            <LucideSettings />
+                            <span>Einstellungen</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem @click="logout">
+                            <LucideLogOut />
+                            <span>Abmelden</span>
+                        </DropdownMenuItem>
+                    </template>
+                    <RouterLink to="/auth" v-else>
+                        <DropdownMenuItem>
+                            <LucideLogIn />
+                            <span>Anmelden</span>
+                        </DropdownMenuItem>
+                    </RouterLink>
+                </DropdownMenuContent>
             </DropdownMenu>
         </div>
     </header>

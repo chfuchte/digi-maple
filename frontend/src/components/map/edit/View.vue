@@ -5,11 +5,11 @@ import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map, LatLng } from "leaflet";
 import { LucideMapPinPlus } from "lucide-vue-next";
+import MapPin from "@/components/map/pins/index.vue";
 import { Button } from "@/components/ui/button";
 import MapPopup from "@/components/map/Popup.vue";
 
 import type { MapMarker } from "@/schema/mapView";
-
 
 const props = defineProps<{
     mapImgUrl: string;
@@ -91,19 +91,14 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             @update:lat-lng="(location: LatLng) => markerLocationUpdatedEvent(marker.id, location)"
             :draggable="true"
             :lat-lng="new LatLng(marker.y, marker.x)">
-            <LIcon
-                :class-name="
-                    marker.id == lastClickedMarker
-                        ? 'selected-marker-icon'
-                        : markers!.at(-1).id == marker.id
-                          ? 'new-marker-icon'
-                          : 'marker-icon'
-                ">
-                <div />
+            <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
+                <MapPin :variant="marker.display.markerType" class="text-blue-600" :size="32" />
             </LIcon>
             <LPopup>
-              <MapPopup :title="marker.display.title" :icon="marker.display.markerType"
-                        :content="marker.display.description"></MapPopup>
+                <MapPopup
+                    :title="marker.display.title"
+                    :icon="marker.display.markerType"
+                    :content="marker.display.description"></MapPopup>
             </LPopup>
         </LMarker>
     </LMap>
@@ -111,38 +106,17 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 
 <!--suppress CssUnusedSymbol -->
 <style>
-.marker-icon {
-    width: 1.5em !important;
-    height: 1.5em !important;
-    background-color: cornflowerblue;
-    border: 2px solid midnightblue;
-}
-
-.new-marker-icon {
-    width: 1.5em !important;
-    height: 1.5em !important;
-    background-color: mediumseagreen;
-    border: 2px solid darkolivegreen;
-}
-
-.selected-marker-icon {
-    width: 1.5em !important;
-    height: 1.5em !important;
-    background-color: indianred;
-    border: 2px solid darkred;
-}
-
 .leaflet-popup-content-wrapper {
-  background: none;
-  box-shadow: none;
+    background: none;
+    box-shadow: none;
 }
 
 .leaflet-popup-content {
-  padding: 10px !important;
-  margin: 0 !important;
-  width: 100% !important;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 10px;
+    padding: 10px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 10px;
 }
 </style>

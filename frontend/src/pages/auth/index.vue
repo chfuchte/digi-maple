@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useHead } from '@unhead/vue'
-import AuthLayout from '@/components/layouts/auth.vue';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AuthTabsLogin from '@/components/auth/tabs/login.vue';
-import AuthTabsRegister from '@/components/auth/tabs/register.vue';
+import { computed, onMounted, ref } from "vue";
+import { useHead } from "@unhead/vue";
+import AuthLayout from "@/components/layouts/auth.vue";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AuthTabsLogin from "@/components/auth/tabs/login.vue";
+import AuthTabsRegister from "@/components/auth/tabs/register.vue";
 
 const tab = ref("login");
 
