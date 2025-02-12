@@ -19,10 +19,10 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
                 currentUser.value = null;
             }*/
             currentUser.value = userSchema.parse({
-                "id": 42,
-                "full_name": "Max Mustermann",
-                "email": "max.mustermann@blabla.com"
-            })
+                id: 42,
+                full_name: "Max Mustermann",
+                email: "max.mustermann@blabla.com",
+            });
         } catch {
             currentUser.value = null;
         }

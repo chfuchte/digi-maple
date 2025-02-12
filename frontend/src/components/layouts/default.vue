@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TitleHeader from '../TitleHeader.vue';
+import TitleHeader from "../TitleHeader.vue";
 </script>
 
 <template>

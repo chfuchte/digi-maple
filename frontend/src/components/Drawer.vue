@@ -11,8 +11,10 @@ const { title = "" } = defineProps<{
 
 <template>
     <div class="flex items-start">
-        <button class="rounded-l-md border-b border-l border-t border-black p-1.5 text-black"
-            @click="isExpanded = !isExpanded" :class="{ 'bg-gray-100': isExpanded, 'bg-white': !isExpanded }">
+        <button
+            class="rounded-l-md border-b border-l border-t border-black p-1.5 text-black"
+            @click="isExpanded = !isExpanded"
+            :class="{ 'bg-gray-100': isExpanded, 'bg-white': !isExpanded }">
             <LucideChevronLeft v-if="isExpanded" />
             <div class="mr-1.5 flex" v-else>
                 <LucideChevronRight />

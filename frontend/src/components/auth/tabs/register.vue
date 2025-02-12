@@ -42,11 +42,14 @@ const onRegisterSubmit = (values: RegisterForm) => {
 </script>
 
 <template>
-    <form @submit="(e) => {
-        e.preventDefault();
-        registerform.handleSubmit(onRegisterSubmit)(e);
-    }
-        " :validation-schema="registerform">
+    <form
+        @submit="
+            (e) => {
+                e.preventDefault();
+                registerform.handleSubmit(onRegisterSubmit)(e);
+            }
+        "
+        :validation-schema="registerform">
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>

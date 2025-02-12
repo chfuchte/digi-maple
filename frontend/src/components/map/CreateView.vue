@@ -10,7 +10,6 @@ import MapPopup from "@/components/map/Popup.vue";
 
 import type { MapMarker } from "@/schema/mapView";
 
-
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
@@ -102,8 +101,10 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
                 <div />
             </LIcon>
             <LPopup>
-              <MapPopup :title="marker.display.title" :icon="marker.display.markerType"
-                        :content="marker.display.description"></MapPopup>
+                <MapPopup
+                    :title="marker.display.title"
+                    :icon="marker.display.markerType"
+                    :content="marker.display.description"></MapPopup>
             </LPopup>
         </LMarker>
     </LMap>
@@ -133,16 +134,16 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 }
 
 .leaflet-popup-content-wrapper {
-  background: none;
-  box-shadow: none;
+    background: none;
+    box-shadow: none;
 }
 
 .leaflet-popup-content {
-  padding: 10px !important;
-  margin: 0 !important;
-  width: 100% !important;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 10px;
+    padding: 10px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 10px;
 }
 </style>

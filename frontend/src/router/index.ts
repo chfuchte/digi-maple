@@ -17,7 +17,7 @@ const router = createRouter({
         {
             path: "/dashboard",
             name: "Dashboard",
-            component: () => import("../pages/dashboard.vue")
+            component: () => import("../pages/dashboard.vue"),
         },
         {
             path: "/create",
@@ -28,7 +28,7 @@ const router = createRouter({
             path: "/maps/dev",
             name: "Dev Map View",
             component: () => import("../pages/maps/dev.vue"),
-        }
+        },
     ],
 });
 
