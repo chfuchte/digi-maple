@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { useCurrentUserStore } from '@/stores/user';
-import { useColorMode } from '@vueuse/core';
+import { useCurrentUserStore } from "@/stores/user";
+import { useColorMode } from "@vueuse/core";
 import { useRouter, RouterLink } from "vue-router";
-import { LucideMap, LucideEllipsisVertical, LucideSunMoon } from 'lucide-vue-next';
-import { Button } from './ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { LucideMap, LucideEllipsisVertical, LucideSunMoon } from "lucide-vue-next";
+import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { useMockupData } from "@/__mocks__";
 
 const { getUser } = useCurrentUserStore();
+const { getCurrentUser } = useMockupData();
 const user = getUser();
+const user2 = getCurrentUser();
 
 const router = useRouter();
 
@@ -22,7 +25,7 @@ const toggleColorMode = () => {
 };
 
 const logout = async () => {
-    await useCurrentUserStore().logout();;
+    await useCurrentUserStore().logout();
     await router.push("/auth");
 };
 </script>

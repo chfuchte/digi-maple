@@ -15,15 +15,19 @@ const router = createRouter({
             component: () => import("../pages/auth/index.vue"),
         },
         {
+            path: "/edit",
+            name: "Edit a map",
+            component: () => import("../pages/edit.vue"),
+        },
+        {
             path: "/create",
-            name: "Create a new map",
-            component: () => import("../pages/create.vue"),
+            redirect: "/edit",
         },
         {
             path: "/maps/dev",
             name: "Dev Map View",
             component: () => import("../pages/maps/dev.vue"),
-        }
+        },
     ],
 });
 

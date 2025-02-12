@@ -30,7 +30,11 @@ onBeforeMount(async () => {
             <h2 class="text-2xl font-bold">Error loading map</h2>
         </div>
 
-        <MapView v-else :map-img-url="mapProps.imgUrl" :map-img-width="mapProps.imgWidth"
-            :map-imgheight="mapProps.imgHeight" :markers="mapProps.markers" />
+        <MapView
+            v-else
+            :map-img-url="mapProps.imgUrl"
+            :map-img-width="mapProps.imgWidth"
+            :map-imgheight="mapProps.imgHeight"
+            :markers="mapProps.markers" />
     </Layout>
 </template>
