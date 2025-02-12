@@ -6,7 +6,6 @@ import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
 import type { MapMarker } from "@/schema/mapView";
-import { getLIconFromString } from "@/lib/getLIconFromString";
 
 const props = defineProps<{
     mapImgUrl: string;
@@ -57,11 +56,10 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker
-            :icon="getLIconFromString(marker.display.markerType)"
-            v-for="marker in markers"
-            :key="marker.id"
-            :lat-lng="[marker.x, marker.y]">
+        <LMarker v-for="marker in markers" :key="marker.id" :lat-lng="[marker.x, marker.y]">
+            <LIcon :iconSize="[42, 42]" class-name="border-none outline-none">
+                <LucideMapPin class="fill-blue-500" :size="42" />
+            </LIcon>
             <LPopup>
                 <MapPopup
                     :title="marker.display.title"

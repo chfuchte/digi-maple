@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { apiRegister } from "@/queries/register";
+// import { apiRegister } from "@/queries/auth/register";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useMockupData } from "@/__mocks__";
 
 const formSchema = z.object({
     fullName: z.string(),
@@ -16,10 +17,12 @@ const formSchema = z.object({
         .string()
         .min(8, "Das Passwort muss mindestens 8 Zeichen lang sein.")
         .regex(
-            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$/,
             "Das Passwort muss mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.",
         ),
 });
+
+const { data, registerUser } = useMockupData();
 
 const typedFormSchema = toTypedSchema(formSchema);
 
@@ -29,8 +32,11 @@ const registerform = useForm({
     validationSchema: typedFormSchema,
 });
 
-const onRegisterSubmit = (values: RegisterForm) => {
-    apiRegister(values.fullName, values.email, values.password).then((registerSuccess) => {
+const router = useRouter();
+
+const onRegisterSubmit = async (values: RegisterForm) => {
+    /*
+    apiRegister(values.fullName, values.email, values.password).then((registerSuccess: boolean) => {
         if (registerSuccess) {
             useRouter().push("/auth");
         } else {
@@ -38,6 +44,17 @@ const onRegisterSubmit = (values: RegisterForm) => {
             alert("Fehler bei der Registrierung.");
         }
     });
+    */
+    const exists = data.users.find((user) => user.email === values.email);
+    if (exists) {
+        alert("User already exists");
+    } else {
+        registerUser({
+            email: values.email,
+            full_name: values.fullName,
+        });
+        await router.push("/auth");
+    }
 };
 </script>
 

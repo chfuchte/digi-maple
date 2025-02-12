@@ -30,6 +30,7 @@ const toggleColorMode = () => {
 
 const logout = async () => {
     await useCurrentUserStore().logout();
+    await useCurrentUserStore().logout();
     await router.push("/auth");
 };
 </script>

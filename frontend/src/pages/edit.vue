@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { type LatLng, Map } from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
-import MapCreateView from "@/components/map/CreateView.vue";
+import MapCreateView from "@/components/map/edit/View.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,20 +28,20 @@ const width = imageHeightWidthRatio * height;
 
 let leafletObject: Map | null = null;
 
-let selectedMarker = ref<number | null>();
+const selectedMarker = ref<number | null>();
 
-let markers = ref<Array<MapMarker>>([]);
-let title = ref("Neue Karte");
-let description = ref("");
+const markers = ref<Array<MapMarker>>([]);
+const title = ref("Neue Karte");
+const description = ref("");
 
-let markerNameModel = defineModel<string>("markerNameModel");
-let markerDescriptionModel = defineModel<string>("markerDescriptionModel");
-let markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
+const markerNameModel = defineModel<string>("markerNameModel");
+const markerDescriptionModel = defineModel<string>("markerDescriptionModel");
+const markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
 
-let descriptionModel = defineModel<string>("descriptionModel");
+const descriptionModel = defineModel<string>("descriptionModel");
 descriptionModel.value = description.value;
 
-let titleModel = defineModel<string>("titleModel");
+const titleModel = defineModel<string>("titleModel");
 titleModel.value = title.value;
 
 useHead({
@@ -67,9 +67,7 @@ function createMarker(): void {
 
 function deleteMarker(): void {
     markers.value = markers.value.filter((_, index) => index !== selectedMarker.value!);
-
     selectedMarker.value = null;
-
     markerNameModel.value = "";
     markerDescriptionModel.value = "";
     markerTypeModel.value = undefined;
@@ -82,8 +80,7 @@ function editMarker(): void {
 }
 
 function markerClicked(id: string): void {
-    let marker = markers.value.findIndex((marker) => marker.id == id);
-
+    const marker = markers.value.findIndex((marker) => marker.id == id);
     selectedMarker.value = marker;
     markerNameModel.value = markers.value[marker].display.title;
     markerDescriptionModel.value = markers.value[marker].display.description;
@@ -91,7 +88,7 @@ function markerClicked(id: string): void {
 }
 
 function markerLocationUpdated(id: string, location: LatLng): void {
-    let marker = markers.value.findIndex((marker) => marker.id == id);
+    const marker = markers.value.findIndex((marker) => marker.id == id);
 
     markers.value[marker].x = location.lng;
     markers.value[marker].y = location.lat;
@@ -101,7 +98,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
 <template>
     <Layout>
         <div class="flex h-full">
-            <aside class="w-1/3 resize-x overflow-y-auto border-r border-black bg-secondary p-4">
+            <aside class="w-1/3 resize-x overflow-y-auto bg-secondary p-4">
                 <form class="flex w-full flex-col items-start gap-6">
                     <fieldset class="flex w-full flex-col gap-6 rounded-lg border p-4">
                         <legend class="-ml-1 px-1 text-sm font-medium">Settings</legend>
@@ -156,7 +153,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Marker Typ</SelectLabel>
-                                        <SelectItem v-for="icon in markerTypes" :value="icon">
+                                        <SelectItem :key="icon" v-for="icon in markerTypes" :value="icon">
                                             <div class="flex flex-row items-center gap-2">
                                                 <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
                                                 <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
@@ -177,7 +174,6 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                 Löschen
                             </Button>
                             <Button
-                                variant="secondary"
                                 @click="editMarker()"
                                 type="button"
                                 :disabled="
