@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button } from '../ui/button';
-import { LucideZoomIn, LucideZoomOut } from 'lucide-vue-next';
+import { Button } from "../ui/button";
+import { LucideZoomIn, LucideZoomOut } from "lucide-vue-next";
 
 const props = defineProps<{
     zoomInDisabled: boolean;

@@ -18,18 +18,22 @@ const router = createRouter({
         {
             path: "/dashboard",
             name: "Dashboard",
-            component: () => import("../pages/dashboard.vue")
+            component: () => import("../pages/dashboard.vue"),
+        },
+        {
+            path: "/edit",
+            name: "Edit a map",
+            component: () => import("../pages/edit.vue"),
         },
         {
             path: "/create",
-            name: "Create a new map",
-            component: () => import("../pages/create.vue"),
+            redirect: "/edit",
         },
         {
             path: "/maps/dev",
             name: "Dev Map View",
             component: () => import("../pages/maps/dev.vue"),
-        }
+        },
     ],
 });
 

@@ -6,7 +6,6 @@ import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
 import type { MapMarker } from "@/schema/mapView";
-import { getLIconFromString } from "@/lib/getLIconFromString";
 
 const props = defineProps<{
     mapImgUrl: string;
@@ -36,20 +35,35 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
 </script>
 
 <template>
-    <LMap ref="map" :zoom="zoomLevel" :center="[bounds.getCenter().lat, bounds.getCenter().lng]" :crs="CRS.Simple"
-        :min-zoom="-2" :max-zoom="2" :options="{
+    <LMap
+        ref="map"
+        :zoom="zoomLevel"
+        :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
+        :crs="CRS.Simple"
+        :min-zoom="-2"
+        :max-zoom="2"
+        :options="{
             zoomControl: false,
             attributionControl: false,
-        }" @ready="onMapReady" @update:zoom="handleZoomEvent">
+        }"
+        @ready="onMapReady"
+        @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
-            <MapZoomButtons @zoom-in="leafletObject?.zoomIn(0.5)" @zoom-out="leafletObject?.zoomOut(0.5)"
-                :zoom-in-disabled="zoomInDisabled" :zoom-out-disabled="zoomOutDisabled" />
+            <MapZoomButtons
+                @zoom-in="leafletObject?.zoomIn(0.5)"
+                @zoom-out="leafletObject?.zoomOut(0.5)"
+                :zoom-in-disabled="zoomInDisabled"
+                :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker :icon="getLIconFromString(marker.display.markerType)" v-for="marker in markers" :key="marker.id"
-            :lat-lng="[marker.x, marker.y]">
+        <LMarker v-for="marker in markers" :key="marker.id" :lat-lng="[marker.x, marker.y]">
+            <LIcon :iconSize="[42, 42]" class-name="border-none outline-none">
+                <LucideMapPin class="fill-blue-500" :size="42" />
+            </LIcon>
             <LPopup>
-                <MapPopup :title="marker.display.title" :icon="marker.display.markerType"
+                <MapPopup
+                    :title="marker.display.title"
+                    :icon="marker.display.markerType"
                     :content="marker.display.description"></MapPopup>
             </LPopup>
         </LMarker>
