@@ -11,8 +11,8 @@ import { RouterLink } from "vue-router";
             <RouterLink to="/maps/dev">
                 <Button size="lg" class="w-80" variant="default"> Development Map </Button>
             </RouterLink>
-            <RouterLink to="/create">
-                <Button size="lg" class="w-80" variant="default"> Create Map </Button>
+            <RouterLink to="/edit">
+                <Button size="lg" class="w-80" variant="default"> Edit Map </Button>
             </RouterLink>
         </div>
     </Layout>
