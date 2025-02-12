@@ -43,7 +43,7 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
         }" @ready="onMapReady" @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
             <MapZoomButtons @zoom-in="leafletObject?.zoomIn(0.5)" @zoom-out="leafletObject?.zoomOut(0.5)"
-                :zoom-indisabled="zoomInDisabled" :zoom-out-disabled="zoomOutDisabled" />
+                :zoom-in-disabled="zoomInDisabled" :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker :icon="getLIconFromString(marker.display.markerType)" v-for="marker in markers" :key="marker.id"
@@ -57,6 +57,14 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
 </template>
 
 <style>
+.dark .leaflet-container {
+  background: #171717;
+}
+
+.leaflet-container {
+  background: #f4f4f4;
+}
+
 .leaflet-popup-content-wrapper {
     background: none;
     box-shadow: none;

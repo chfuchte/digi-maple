@@ -20,6 +20,7 @@ import {
 
 import { type MapMarker, markerTypes } from "@/schema/mapView";
 import {LucideAccessibility, LucideAlertTriangle, LucideInfo, LucidePin} from "lucide-vue-next";
+import {ResizablePanelGroup, ResizablePanel, ResizableHandle} from "@/components/ui/resizable";
 
 const devMapImagePath = "dev/Lageplan_Campus_Bockenheim.svg";
 const imageHeightWidthRatio = 0.94285675588;
@@ -28,20 +29,20 @@ const width = imageHeightWidthRatio * height;
 
 let leafletObject: Map | null = null;
 
-let selectedMarker = ref<number | null>();
+const selectedMarker = ref<number | null>();
 
-let markers = ref<Array<MapMarker>>([]);
-let title = ref("Neue Karte");
-let description = ref("");
+const markers = ref<Array<MapMarker>>([]);
+const title = ref("Neue Karte");
+const description = ref("");
 
-let markerNameModel = defineModel<string>("markerNameModel");
-let markerDescriptionModel = defineModel<string>("markerDescriptionModel");
-let markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
+const markerNameModel = defineModel<string>("markerNameModel");
+const markerDescriptionModel = defineModel<string>("markerDescriptionModel");
+const markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
 
-let descriptionModel = defineModel<string>("descriptionModel");
+const descriptionModel = defineModel<string>("descriptionModel");
 descriptionModel.value = description.value;
 
-let titleModel = defineModel<string>("titleModel");
+const titleModel = defineModel<string>("titleModel");
 titleModel.value = title.value;
 
 useHead({
@@ -82,7 +83,7 @@ function editMarker(): void {
 }
 
 function markerClicked(id: string): void {
-  let marker = markers.value.findIndex((marker) => marker.id == id);
+  const marker = markers.value.findIndex((marker) => marker.id == id);
 
   selectedMarker.value = marker;
   markerNameModel.value =  markers.value[marker].display.title;
@@ -91,7 +92,7 @@ function markerClicked(id: string): void {
 }
 
 function markerLocationUpdated(id: string, location: LatLng): void {
-  let marker = markers.value.findIndex((marker) => marker.id == id);
+  const marker = markers.value.findIndex((marker) => marker.id == id);
 
   markers.value[marker].x = location.lng;
   markers.value[marker].y = location.lat;
@@ -100,71 +101,76 @@ function markerLocationUpdated(id: string, location: LatLng): void {
 
 <template>
     <Layout>
-      <div class="flex h-full">
-        <aside class="bg-secondary border-black border-r p-4 w-1/3 overflow-y-auto resize-x">
-          <form class="flex flex-col w-full items-start gap-6">
-            <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full">
-              <legend class="-ml-1 px-1 text-sm font-medium">
-                Settings
-              </legend>
-              <div class="flex flex-col gap-3">
-                <Label for="name">Name</Label>
-                <Input v-model:model-value="titleModel" id="name" type="text" placeholder="Campus Bockenheim" autocomplete="off" />
-                <Label for="description">Description</Label>
-                <Textarea v-model:model-value="descriptionModel"  id="description" type="text" placeholder="Eine Karte mit verschiedenen Markern." />
-                <Button @click="title = titleModel!; description = descriptionModel!;" variant="secondary" type="button" :disabled="title == titleModel && description == descriptionModel">
-                  Speichern
-                </Button>
-              </div>
-            </fieldset>
-            <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full" :disabled="selectedMarker == null">
-              <legend class="-ml-1 px-1 text-sm font-medium">
-                Edit marker
-              </legend>
-              <div class="flex flex-col gap-3">
-                <Label for="name">Name</Label>
-                <Input v-model:model-value="markerNameModel" id="name" type="text" autocomplete="off" placeholder="Gebäude B" />
-                <Label for="description">Description</Label>
-                <Textarea v-model:model-value="markerDescriptionModel" id="description" type="text" placeholder="Aufzüge sind kapput!" />
-                <Select v-model:model-value="markerTypeModel">
-                  <SelectTrigger class="w-full" :disabled="selectedMarker == null">
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Marker Typ</SelectLabel>
-                      <SelectItem v-for="icon in markerTypes" :value="icon">
-                        <div class="flex flex-row items-center gap-2">
-                          <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
-                          <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
-                          <LucideInfo v-else-if="icon == 'info'" :size="18" />
-                          <LucidePin v-else :size="18" />
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel :min-size="22" :default-size="30" :max-size="75" class="w-1/3">
+          <aside class="h-full p-4 overflow-y-auto [&::scrollbar-width]:[thin]">
+            <form class="flex flex-col w-full items-start gap-6">
+              <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full">
+                <legend class="-ml-1 px-1 text-sm font-medium">
+                  Settings
+                </legend>
+                <div class="flex flex-col gap-3">
+                  <Label for="name">Name</Label>
+                  <Input v-model:model-value="titleModel" id="name" type="text" placeholder="Campus Bockenheim" autocomplete="off" />
+                  <Label for="description">Description</Label>
+                  <Textarea v-model:model-value="descriptionModel"  id="description" type="text" placeholder="Eine Karte mit verschiedenen Markern." />
+                  <Button @click="title = titleModel!; description = descriptionModel!;" variant="secondary" type="button" :disabled="title == titleModel && description == descriptionModel">
+                    Speichern
+                  </Button>
+                </div>
+              </fieldset>
+              <fieldset class="flex flex-col gap-6 rounded-lg border p-4 w-full" :disabled="selectedMarker == null">
+                <legend class="-ml-1 px-1 text-sm font-medium">
+                  Edit marker
+                </legend>
+                <div class="flex flex-col gap-3">
+                  <Label for="name">Name</Label>
+                  <Input v-model:model-value="markerNameModel" id="name" type="text" autocomplete="off" placeholder="Gebäude B" />
+                  <Label for="description">Description</Label>
+                  <Textarea v-model:model-value="markerDescriptionModel" id="description" type="text" placeholder="Aufzüge sind kapput!" />
+                  <Select v-model:model-value="markerTypeModel">
+                    <SelectTrigger class="w-full" :disabled="selectedMarker == null">
+                      <SelectValue placeholder="Select a type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Marker Typ</SelectLabel>
+                        <SelectItem v-for="icon in markerTypes" :value="icon" :key="icon">
+                          <div class="flex flex-row items-center gap-2">
+                            <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
+                            <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
+                            <LucideInfo v-else-if="icon == 'info'" :size="18" />
+                            <LucidePin v-else :size="18" />
 
-                          {{ icon }}
-                        </div>
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <Button variant="destructive" @click="deleteMarker()" type="button" :disabled="selectedMarker == null">
-                  Löschen
-                </Button>
-                <Button variant="secondary" @click="editMarker()" type="button" :disabled="selectedMarker != null && markers[selectedMarker].display.title == markerNameModel && markers[selectedMarker].display.description == markerDescriptionModel && markers[selectedMarker].display.markerType == markerTypeModel">
-                  Ändern
-                </Button>
-              </div>
-            </fieldset>
-          </form>
-        </aside>
-        <MapCreateView
-            @leaflet-ready="onMapReady"
-            @create-marker="createMarker"
-            @marker-clicked="markerClicked"
-            @marker-location-update="markerLocationUpdated"
-            :map-img-url="devMapImagePath"
-            :map-img-width="width"
-            :map-img-height="height"
-            :markers="markers" />
-      </div>
+                            {{ icon }}
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="destructive" @click="deleteMarker()" type="button" :disabled="selectedMarker == null">
+                    Löschen
+                  </Button>
+                  <Button variant="secondary" @click="editMarker()" type="button" :disabled="selectedMarker != null && markers[selectedMarker].display.title == markerNameModel && markers[selectedMarker].display.description == markerDescriptionModel && markers[selectedMarker].display.markerType == markerTypeModel">
+                    Ändern
+                  </Button>
+                </div>
+              </fieldset>
+            </form>
+          </aside>
+        </ResizablePanel>
+        <ResizableHandle with-handle />
+        <ResizablePanel>
+          <MapCreateView
+              @leaflet-ready="onMapReady"
+              @create-marker="createMarker"
+              @marker-clicked="markerClicked"
+              @marker-location-update="markerLocationUpdated"
+              :map-img-url="devMapImagePath"
+              :map-img-width="width"
+              :map-img-height="height"
+              :markers="markers" />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </Layout>
 </template>

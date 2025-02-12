@@ -60,6 +60,7 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 <template>
     <LMap
         ref="map"
+        class="bg-white"
         :zoom="zoomLevel"
         :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
         :crs="CRS.Simple"
@@ -75,13 +76,13 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             <MapZoomButtons
                 @zoom-in="leafletObject?.zoomIn()"
                 @zoom-out="leafletObject?.zoomOut()"
-                :zoom-indisabled="zoomInDisabled"
+                :zoom-in-disabled="zoomInDisabled"
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
-        <LControl position="bottomright">
-            <Button variant="outline" @click="emit('createMarker')">
-                <LucideMapPinPlus />
-            </Button>
+        <LControl position="bottomright" class="p-1.5 border rounded-md bg-background flex">
+          <Button variant="secondary" @click="emit('createMarker')">
+            <LucideMapPinPlus />
+          </Button>
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker
@@ -111,6 +112,14 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 
 <!--suppress CssUnusedSymbol -->
 <style>
+.dark .leaflet-container {
+  background: #171717;
+}
+
+.leaflet-container {
+  background: #f4f4f4;
+}
+
 .marker-icon {
     width: 1.5em !important;
     height: 1.5em !important;

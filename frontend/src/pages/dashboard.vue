@@ -3,7 +3,7 @@ import Layout from "@/components/layouts/default.vue";
 import { useRouter } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { LucidePlusCircle } from "lucide-vue-next";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {
     AlertDialog,
     AlertDialogDescription,
@@ -97,12 +97,13 @@ function upload(): void {
                 </Dialog>
             </div>
             <div class="column-layout grid gap-4">
-                <Card v-for="_ in 8">
+                <Card v-for="n in 8" :key="n">
                     <CardHeader>
                         <CardTitle>Test Map</CardTitle>
+                        <CardDescription>Example description....</CardDescription>
                     </CardHeader>
                     <CardContent class="flex justify-center">
-                        <img src="/dev/preview.png" alt="An example preview map" width="250" />
+                        <img src="/dev/preview.png" alt="An example preview map" :width="250" />
                     </CardContent>
                     <CardFooter class="flex flex-row justify-between">
                         <Button>Öffnen</Button>
