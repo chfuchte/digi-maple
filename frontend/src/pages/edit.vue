@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 import { type LatLng, Map } from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
@@ -141,14 +141,15 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                             class="flex w-full flex-col gap-6 rounded-lg border p-4"
                             :disabled="selectedMarker == null">
                             <legend class="-ml-1 px-1 text-sm font-medium">Edit marker</legend>
-                            <div class="h-[150px] w-full" v-bind:class="{'grayscale opacity-25': selectedMarker == null}">
+                            <div
+                                class="h-[150px] w-full"
+                                v-bind:class="{ 'opacity-25 grayscale': selectedMarker == null }">
                                 <Preview
                                     :map-img-url="devMapImagePath"
                                     :map-img-width="width"
                                     :map-img-height="height"
                                     :marker="selectedMarker != null ? markers[selectedMarker] : null"
-                                    class="rounded-md"
-                                />
+                                    class="rounded-md" />
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>

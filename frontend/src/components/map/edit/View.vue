@@ -78,10 +78,10 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
                 :zoom-in-disabled="zoomInDisabled"
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
-        <LControl position="bottomright" class="p-1.5 border rounded-md bg-background flex">
-          <Button variant="secondary" @click="emit('createMarker')">
-            <LucideMapPinPlus />
-          </Button>
+        <LControl position="bottomright" class="flex rounded-md border bg-background p-1.5">
+            <Button variant="secondary" @click="emit('createMarker')">
+                <LucideMapPinPlus />
+            </Button>
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker
@@ -107,11 +107,11 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
 <!--suppress CssUnusedSymbol -->
 <style>
 .dark .leaflet-container {
-  background: #171717;
+    background: #171717;
 }
 
 .leaflet-container {
-  background: #f4f4f4;
+    background: #f4f4f4;
 }
 
 .leaflet-popup-content-wrapper {
