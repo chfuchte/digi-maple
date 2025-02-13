@@ -63,7 +63,7 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
             <LPopup>
                 <MapPopup
                     :title="marker.display.title"
-                    :icon="marker.display.markerType"
+                    :icon="marker.display.icon"
                     :content="marker.display.description"></MapPopup>
             </LPopup>
         </LMarker>
@@ -72,11 +72,11 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
 
 <style>
 .dark .leaflet-container {
-  background: #171717;
+    background: #171717;
 }
 
 .leaflet-container {
-  background: #f4f4f4;
+    background: #f4f4f4;
 }
 
 .leaflet-popup-content-wrapper {

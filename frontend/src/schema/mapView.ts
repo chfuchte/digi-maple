@@ -17,7 +17,8 @@ const mapViewSchema = z.object({
             display: z.object({
                 title: z.string(),
                 description: z.string(),
-                markerType: z.enum(markerTypes),
+                icon: z.enum(markerTypes),
+                color: z.string(),
             }),
         }),
     ),
