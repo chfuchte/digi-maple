@@ -172,26 +172,35 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                     id="description"
                                     type="text"
                                     placeholder="Aufzüge sind kapput!" />
-                                <Select v-model:model-value="markerTypeModel">
-                                    <SelectTrigger class="w-full" :disabled="selectedMarker == null">
-                                        <SelectValue placeholder="Select a type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Marker Typ</SelectLabel>
-                                            <SelectItem v-for="icon in markerTypes" :value="icon" :key="icon">
-                                                <div class="flex flex-row items-center gap-2">
-                                                    <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
-                                                    <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
-                                                    <LucideInfo v-else-if="icon == 'info'" :size="18" />
-                                                    <LucidePin v-else :size="18" />
+                                <Label for="type">Type</Label>
+                                <div class="flex gap-3">
+                                    <Select id="type" v-model:model-value="markerTypeModel" class="flex">
+                                        <SelectTrigger class="w-full" :disabled="selectedMarker == null">
+                                            <SelectValue placeholder="Select a type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Marker Typ</SelectLabel>
+                                                <SelectItem v-for="icon in markerTypes" :value="icon" :key="icon">
+                                                    <div class="flex flex-row items-center gap-2">
+                                                        <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
+                                                        <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
+                                                        <LucideInfo v-else-if="icon == 'info'" :size="18" />
+                                                        <LucidePin v-else :size="18" />
 
-                                                    {{ icon }}
-                                                </div>
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                                        {{ icon }}
+                                                    </div>
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <Input
+                                        v-model:model-value="markerColorModel"
+                                        id="color"
+                                        type="color"
+                                        autocomplete="off"
+                                        class="max-w-[250px]" />
+                                </div>
                                 <Button
                                     variant="destructive"
                                     @click="deleteMarker()"
@@ -207,7 +216,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                         selectedMarker != null &&
                                         markers[selectedMarker].display.title == markerNameModel &&
                                         markers[selectedMarker].display.description == markerDescriptionModel &&
-                                        markers[selectedMarker].display.markerType == markerTypeModel
+                                        markers[selectedMarker].display.icon == markerTypeModel
                                     ">
                                     Ändern
                                 </Button>
