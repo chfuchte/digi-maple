@@ -4,6 +4,7 @@ import { type LatLng, Map } from "leaflet";
 import { useHead } from "@unhead/vue";
 import Layout from "@/components/layouts/default.vue";
 import MapCreateView from "@/components/map/edit/View.vue";
+import Preview from "@/components/map/edit/Preview.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,7 @@ const width = imageHeightWidthRatio * height;
 
 let leafletObject: Map | null = null;
 
-const selectedMarker = ref<number | null>();
+const selectedMarker = ref<number | null>(null);
 
 const markers = ref<Array<MapMarker>>([]);
 const title = ref("Neue Karte");
@@ -68,6 +69,8 @@ function createMarker(): void {
             color: "#2563eb",
         },
     });
+
+    markerClicked(markers.value.at(-1).id);
 }
 
 function deleteMarker(): void {
@@ -100,6 +103,10 @@ function markerLocationUpdated(id: string, location: LatLng): void {
 
     markers.value[marker].x = location.lng;
     markers.value[marker].y = location.lat;
+
+    if (selectedMarker.value != marker) {
+        markerClicked(id);
+    }
 }
 </script>
 
@@ -141,6 +148,16 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                             class="flex w-full flex-col gap-6 rounded-lg border p-4"
                             :disabled="selectedMarker == null">
                             <legend class="-ml-1 px-1 text-sm font-medium">Edit marker</legend>
+                            <div
+                                class="h-[150px] w-full"
+                                v-bind:class="{ 'opacity-25 grayscale': selectedMarker == null }">
+                                <Preview
+                                    :map-img-url="devMapImagePath"
+                                    :map-img-width="width"
+                                    :map-img-height="height"
+                                    :marker="selectedMarker != null ? markers[selectedMarker] : null"
+                                    class="rounded-md" />
+                            </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>
                                 <Input
@@ -199,8 +216,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                         selectedMarker != null &&
                                         markers[selectedMarker].display.title == markerNameModel &&
                                         markers[selectedMarker].display.description == markerDescriptionModel &&
-                                        markers[selectedMarker].display.icon == markerTypeModel &&
-                                        markers[selectedMarker].display.color == markerColorModel
+                                        markers[selectedMarker].display.icon == markerTypeModel
                                     ">
                                     Ändern
                                 </Button>
