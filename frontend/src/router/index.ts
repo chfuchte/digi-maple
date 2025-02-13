@@ -3,6 +3,7 @@ import IndexPage from "@/pages/index.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
+    linkActiveClass: "dark:!text-white !text-black",
     routes: [
         {
             path: "/",

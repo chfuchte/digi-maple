@@ -2,7 +2,6 @@
 import { useCurrentUserStore } from "@/stores/user";
 import { useColorMode } from "@vueuse/core";
 import { useRouter, RouterLink } from "vue-router";
-import { LucideMap, LucideEllipsisVertical, LucideSunMoon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -10,8 +9,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
     DropdownMenuSeparator,
+    DropdownMenuLabel,
 } from "./ui/dropdown-menu";
-import { LucideCircleUser, LucideLogOut, LucideLogIn, LucideMapPinned, LucideSettings } from "lucide-vue-next";
+import {
+    LucideCircleUser,
+    LucideLogOut,
+    LucideLogIn,
+    LucideUser,
+    LucideMoon,
+    LucideSun,
+    LucideMap,
+} from "lucide-vue-next";
 
 const { getUser } = useCurrentUserStore();
 const user = getUser();
@@ -36,55 +44,51 @@ const logout = async () => {
 </script>
 
 <template>
-    <header class="flex h-12 items-center justify-between border-b border-secondary px-4">
-        <RouterLink to="/" class="my-2 flex items-center gap-3">
-            <div class="flex items-center gap-1">
-                <LucideMap :size="30" />
-                <h1 class="text-3xl">Maple</h1>
-            </div>
-        </RouterLink>
+    <header class="flex h-12 items-center justify-between border-b px-4">
+        <nav class="flex items-center gap-4">
+            <RouterLink to="/" class="my-2 mr-2 flex items-center gap-3">
+                <div class="flex items-center gap-1">
+                    <LucideMap :size="30" />
+                    <h1 class="text-3xl">Maple</h1>
+                </div>
+            </RouterLink>
+            <RouterLink
+                to="/dashboard"
+                class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                Dashboard
+            </RouterLink>
+        </nav>
 
         <div class="flex items-center gap-2">
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <Button variant="ghost">
-                        <LucideEllipsisVertical />
-                        <span class="sr-only">Einstellungen</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem @click="toggleColorMode" class="flex items-center justify-end gap-2">
-                        <LucideSunMoon />
-                        <span>Toggle Dark Mode</span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Button @click="toggleColorMode" variant="ghost">
+                <template v-if="colorMode === 'dark'">
+                    <LucideSun />
+                </template>
+                <template v-else>
+                    <LucideMoon />
+                </template>
+            </Button>
 
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <Button variant="ghost">
-                        <LucideCircleUser />
+                    <Button variant="secondary" size="icon" class="rounded-full">
+                        <LucideCircleUser class="h-5 w-5" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <template v-if="user">
-                        <DropdownMenuItem>
-                            <LucideCircleUser class="!h-12 !w-12" />
-                            <div>
-                                <h3>{{ user.full_name }}</h3>
-                                <small>3 Maps</small>
+                        <DropdownMenuLabel class="flex font-normal">
+                            <div class="flex flex-col space-y-1">
+                                <p class="text-sm font-medium leading-none">
+                                    {{ user.full_name }}
+                                </p>
+                                <p class="text-xs leading-none text-muted-foreground">3 Maps</p>
                             </div>
-                        </DropdownMenuItem>
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <RouterLink to="/dashboard">
-                            <DropdownMenuItem>
-                                <LucideMapPinned />
-                                <span>Dashboard</span>
-                            </DropdownMenuItem>
-                        </RouterLink>
                         <DropdownMenuItem>
-                            <LucideSettings />
-                            <span>Einstellungen</span>
+                            <LucideUser />
+                            <span>Account</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem @click="logout">
