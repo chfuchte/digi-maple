@@ -6,7 +6,6 @@ from sqlite3 import IntegrityError
 from database import database_layout_tables as db
 from database import example_database_entry as ex
 
-
 class User(BaseModel):
     username: str
     email: str

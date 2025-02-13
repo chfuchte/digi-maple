@@ -1,6 +1,8 @@
 import sqlite3
 from pydantic import BaseModel
 
+import hashlib
+
 class Marker(BaseModel):
     x: int
     y: int
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS maps (
     authorId TEXT NOT NULL,
     imgUrl TEXT UNIQUE NOT NULL,
     imgWidth INTEGER NOT NULL,
-    imgHeight INTEGER NOT NULL,
+    imgHeight INTEGER NOT NULL
 )
 ''')
 
@@ -77,20 +79,22 @@ def insert_marker(mapId, x, y, title, description, marker_type):
 
 # Function to insert a user into the users table
 def insert_user(username, email, password):
+    password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
     cursor.execute('''
     INSERT INTO users (username, email, password)
     VALUES (?, ?, ?)
-    ''', (username, email, password))
+    ''', (username, email, password_hashed))
     conn.commit()
     print(f"Inserted '{username}' into users")
 
 
 def edit_user(user_id, username, email, password):
+    password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
     cursor.execute('''
     UPDATE users
     SET username = ?, email = ?, password = ?
     WHERE id = ?;
-    ''', (username, email, password, user_id))
+    ''', (username, email, password_hashed, user_id))
     conn.commit()
     print(f"Updated user {user_id} to '{username}'")
 
@@ -165,11 +169,12 @@ def get_dict() -> dict:
 
     # Process users
     for user_entry in users:
-        user_id, username, email, _ = user_entry  # Exclude password for security
+        user_id, username, email, password = user_entry  # I don't care about the password security for now
         user_dict = {
             "id": user_id,
             "username": username,
             "email": email,
+            "password": password
         }
         main_dict["users"][user_id] = user_dict
 
