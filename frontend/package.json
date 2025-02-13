@@ -24,6 +24,7 @@
         "clsx": "^2.1.1",
         "leaflet": "^1.9.4",
         "lucide-vue-next": "^0.471.0",
+        "maple-frontend": "link:",
         "pinia": "^2.3.1",
         "radix-vue": "^1.9.13",
         "tailwind-merge": "^2.6.0",
@@ -54,5 +55,5 @@
         "vite-plugin-vue-devtools": "^7.7.2",
         "vue-tsc": "^2.2.0"
     },
-    "packageManager": "pnpm@9.13.2+sha512.88c9c3864450350e65a33587ab801acf946d7c814ed1134da4a924f6df5a2120fd36b46aab68f7cd1d413149112d53c7db3a4136624cfd00ff1846a0c6cef48a"
+    "packageManager": "pnpm@10.3.0+sha512.ee592eda8815a8a293c206bb0917c4bb0ff274c50def7cbc17be05ec641fc2d1b02490ce660061356bd0d126a4d7eb2ec8830e6959fb8a447571c631d5a2442d"
 }
