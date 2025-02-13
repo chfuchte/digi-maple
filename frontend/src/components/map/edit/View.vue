@@ -92,12 +92,12 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             :draggable="true"
             :lat-lng="new LatLng(marker.y, marker.x)">
             <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
-                <MapPin :variant="marker.display.markerType" :style="{ color: marker.display.color }" :size="32" />
+                <MapPin :variant="marker.display.icon" :style="{ color: marker.display.color }" :size="32" />
             </LIcon>
             <LPopup>
                 <MapPopup
                     :title="marker.display.title"
-                    :icon="marker.display.markerType"
+                    :icon="marker.display.icon"
                     :content="marker.display.description"></MapPopup>
             </LPopup>
         </LMarker>

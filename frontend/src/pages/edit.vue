@@ -37,7 +37,7 @@ const description = ref("");
 
 const markerNameModel = defineModel<string>("markerNameModel");
 const markerDescriptionModel = defineModel<string>("markerDescriptionModel");
-const markerTypeModel = defineModel<MapMarker["display"]["markerType"]>("typeModel");
+const markerTypeModel = defineModel<MapMarker["display"]["icon"]>("typeModel");
 
 const markerColorModel = defineModel<string>("markerColorModel");
 markerColorModel.value = "#2563eb";
@@ -64,7 +64,7 @@ function createMarker(): void {
         display: {
             title: "Marker",
             description: "Lorem Ipsum.....",
-            markerType: "default",
+            icon: "default",
             color: "#2563eb",
         },
     });
@@ -82,7 +82,7 @@ function deleteMarker(): void {
 function editMarker(): void {
     markers.value[selectedMarker.value!].display.description = markerDescriptionModel.value!;
     markers.value[selectedMarker.value!].display.title = markerNameModel.value!;
-    markers.value[selectedMarker.value!].display.markerType = markerTypeModel.value!;
+    markers.value[selectedMarker.value!].display.icon = markerTypeModel.value!;
     markers.value[selectedMarker.value!].display.color = markerColorModel.value!;
 }
 
@@ -91,7 +91,7 @@ function markerClicked(id: string): void {
     selectedMarker.value = marker;
     markerNameModel.value = markers.value[marker].display.title;
     markerDescriptionModel.value = markers.value[marker].display.description;
-    markerTypeModel.value = markers.value[marker].display.markerType;
+    markerTypeModel.value = markers.value[marker].display.icon;
     markerColorModel.value = markers.value[marker].display.color;
 }
 
@@ -181,7 +181,8 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                         v-model:model-value="markerColorModel"
                                         id="color"
                                         type="color"
-                                        autocomplete="off" />
+                                        autocomplete="off"
+                                        class="max-w-[250px]" />
                                 </div>
                                 <Button
                                     variant="destructive"
@@ -198,7 +199,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                         selectedMarker != null &&
                                         markers[selectedMarker].display.title == markerNameModel &&
                                         markers[selectedMarker].display.description == markerDescriptionModel &&
-                                        markers[selectedMarker].display.markerType == markerTypeModel &&
+                                        markers[selectedMarker].display.icon == markerTypeModel &&
                                         markers[selectedMarker].display.color == markerColorModel
                                     ">
                                     Ändern
