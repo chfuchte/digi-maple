@@ -1,7 +1,7 @@
 import { useMockupData } from "@/__mocks__";
-import { makeGET } from "@/lib/utils";
+// import { makeGET } from "@/lib/utils";
 // import { apiLogout } from "@/queries/auth/logout";
-import { type User, userSchema } from "@/schema/user";
+import { type User } from "@/schema/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -20,11 +20,7 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
             } else {
                 currentUser.value = null;
             }*/
-            currentUser.value = userSchema.parse({
-                id: 42,
-                full_name: "Max Mustermann",
-                email: "max.mustermann@blabla.com",
-            });
+            currentUser.value = getCurrentUser();
         } catch {
             currentUser.value = null;
         }
