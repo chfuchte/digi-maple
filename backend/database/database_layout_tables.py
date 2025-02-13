@@ -1,4 +1,12 @@
 import sqlite3
+from pydantic import BaseModel
+
+class Marker(BaseModel):
+    x: int
+    y: int
+    title: str
+    description: str
+    type: str
 
 # RESET THE DATABASE FOR DEBUG PURPOSES -------------------------------------------------------------
 with open("maps_and_markers.db", "w") as file:
@@ -16,7 +24,7 @@ CREATE TABLE IF NOT EXISTS maps (
     authorId TEXT NOT NULL,
     imgUrl TEXT UNIQUE NOT NULL,
     imgWidth INTEGER NOT NULL,
-    imgHeight INTEGER NOT NULL
+    imgHeight INTEGER NOT NULL,
 )
 ''')
 
@@ -65,6 +73,8 @@ def insert_marker(mapId, x, y, title, description, marker_type):
     conn.commit()
     print(f"Inserted marker '{title}' into markers")
 
+
+
 # Function to insert a user into the users table
 def insert_user(username, email, password):
     cursor.execute('''
@@ -74,6 +84,7 @@ def insert_user(username, email, password):
     conn.commit()
     print(f"Inserted '{username}' into users")
 
+
 def edit_user(user_id, username, email, password):
     cursor.execute('''
     UPDATE users
@@ -82,6 +93,23 @@ def edit_user(user_id, username, email, password):
     ''', (username, email, password, user_id))
     conn.commit()
     print(f"Updated user {user_id} to '{username}'")
+
+
+def edit_map(map_id, name, authorId, imgUrl, imgWidth, imgHeight, markers: list[Marker]):
+    cursor.execute('''
+    UPDATE maps
+    SET name = ?, authorId = ?, imgUrl = ?, imgWidth = ?, imgHeight = ?
+    WHERE id = ?;
+    ''', (name, authorId, imgUrl, imgWidth, imgHeight, map_id))
+    conn.commit()
+
+    cursor.execute("DELETE FROM markers WHERE mapId=?;", (map_id))
+
+    for marker in markers:
+        insert_marker(map_id, marker.x, marker.y, marker.title, marker.description, marker.type)
+
+    print(f"Updated map {map_id} to '{name}'")
+
 
 # Function to delete a map by ID
 def delete_map(map_id):

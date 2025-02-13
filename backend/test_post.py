@@ -32,9 +32,9 @@ import requests
 #print(response.text)
 
 # Edits user 1 (From "Olaf" to "edited")
-url = "http://127.0.0.1:8080/maps"
+url = "http://127.0.0.1:8080/maps/1"
 data = {
-            "name": "cool map",
+            "name": "sigma",
             "author": "olaf",
             "imgUrl": "https://example.com",
             "imgWidth": 1920,

@@ -32,6 +32,8 @@ class Map(BaseModel):
     markers: list[Marker]
 
 
+
+
 def search_by_id(list_dicts: list[dict], id: int):
     for i in range(len(list_dicts)):
         if list_dicts[i]["id"] == id:
@@ -58,6 +60,8 @@ ex.insert_example_map()
 ex.insert_example_user()
 
 map_dict: dict = db.get_dict()
+
+
 
 @app.get("/")
 async def read_root():
@@ -131,7 +135,7 @@ async def edit_user(user_id: str, user: User):
         return {"message": "invalid request", "value": "Non integer user_id specified"}
 
 
-# db.insert_map("Uni Campus Bockenheim", "Olaf", demo_map_url, 1885, 2000)
+
 
 @app.post("/maps")
 async def post_map(map_obj: Map):
@@ -165,6 +169,31 @@ async def post_map(map_obj: Map):
         return {"message": "success", "value": ""}
     except IntegrityError:
         return {"message": "map exists", "value": str(map_obj)}
+
+
+
+@app.post("/maps/{map_id}")
+async def edit_map(map_id: str, map_obj: Map):
+    try:
+
+        db.edit_map(
+            map_id,
+            map_obj.name,
+            map_obj.author,
+            map_obj.imgUrl,
+            map_obj.imgWidth,
+            map_obj.imgHeight,
+            map_obj.markers,
+        )
+
+
+        return {"message": "success", "value": ""}
+    except KeyError as e:
+        return {"message": "user not found", "value": ""}
+    except ValueError:
+        return {"message": "invalid request", "value": "Non integer user_id specified"}
+    except IntegrityError as e:
+        return {"message": "unique constraint failed", "value": str(e)}
 
 
 
