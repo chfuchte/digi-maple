@@ -1,4 +1,18 @@
 import sqlite3
+from pydantic import BaseModel
+
+import hashlib
+
+class Marker(BaseModel):
+    x: int
+    y: int
+    title: str
+    description: str
+    type: str
+
+# RESET THE DATABASE FOR DEBUG PURPOSES -------------------------------------------------------------
+with open("maps_and_markers.db", "w") as file:
+    file.write("")
 
 # Connect to the SQLite database (or create it)
 conn = sqlite3.connect('maps_and_markers.db')
@@ -47,6 +61,11 @@ def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
     conn.commit()
     print(f"Inserted '{name}' into maps")
 
+
+def get_map_id_by_name(name: str):
+    cursor.execute("SELECT id FROM maps WHERE name = ?", ("Uni Campus Bockenheim",))
+    return cursor.fetchone()[0] + 1
+
 # Function to insert a marker into the markers table
 def insert_marker(mapId, x, y, title, description, marker_type):
     cursor.execute('''
@@ -56,14 +75,45 @@ def insert_marker(mapId, x, y, title, description, marker_type):
     conn.commit()
     print(f"Inserted marker '{title}' into markers")
 
+
+
 # Function to insert a user into the users table
 def insert_user(username, email, password):
+    password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
     cursor.execute('''
     INSERT INTO users (username, email, password)
     VALUES (?, ?, ?)
-    ''', (username, email, password))
+    ''', (username, email, password_hashed))
     conn.commit()
     print(f"Inserted '{username}' into users")
+
+
+def edit_user(user_id, username, email, password):
+    password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    cursor.execute('''
+    UPDATE users
+    SET username = ?, email = ?, password = ?
+    WHERE id = ?;
+    ''', (username, email, password_hashed, user_id))
+    conn.commit()
+    print(f"Updated user {user_id} to '{username}'")
+
+
+def edit_map(map_id, name, authorId, imgUrl, imgWidth, imgHeight, markers: list[Marker]):
+    cursor.execute('''
+    UPDATE maps
+    SET name = ?, authorId = ?, imgUrl = ?, imgWidth = ?, imgHeight = ?
+    WHERE id = ?;
+    ''', (name, authorId, imgUrl, imgWidth, imgHeight, map_id))
+    conn.commit()
+
+    cursor.execute("DELETE FROM markers WHERE mapId=?;", (map_id))
+
+    for marker in markers:
+        insert_marker(map_id, marker.x, marker.y, marker.title, marker.description, marker.type)
+
+    print(f"Updated map {map_id} to '{name}'")
+
 
 # Function to delete a map by ID
 def delete_map(map_id):
@@ -89,7 +139,7 @@ def get_dict() -> dict:
     users = cursor.fetchall()
 
     # Structure for the final output
-    main_dict = {"maps": [], "users": []}
+    main_dict = {"maps": {}, "users": {}}
 
     # Process maps
     for map_entry in maps:
@@ -115,17 +165,18 @@ def get_dict() -> dict:
                 } for marker in markers
             ]
         }
-        main_dict["maps"].append(map_dict)
+        main_dict["maps"][map_id] = map_dict
 
     # Process users
     for user_entry in users:
-        id, username, email, _ = user_entry  # Exclude password for security
+        user_id, username, email, password = user_entry  # I don't care about the password security for now
         user_dict = {
-            "id": id,
+            "id": user_id,
             "username": username,
             "email": email,
+            "password": password
         }
-        main_dict["users"].append(user_dict)
+        main_dict["users"][user_id] = user_dict
 
     return main_dict
 
