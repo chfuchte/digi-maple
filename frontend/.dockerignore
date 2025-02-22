@@ -1,12 +1,5 @@
-# dependencies
-.output
-.data
-.nuxt
-.nitro
-.cache
 dist
 node_modules
-.nuxt
 Dockerfile
 .dockerignore
 .git
