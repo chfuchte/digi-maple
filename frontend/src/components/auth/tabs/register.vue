@@ -70,7 +70,7 @@ const onRegisterSubmit = async (values: RegisterForm) => {
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>
-                <CardDescription> Change your password here. After saving, you'll be logged out. </CardDescription>
+                <CardDescription>Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten digitalisieren. </CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">
                 <FormField v-slot="{ componentField }" name="fullName">

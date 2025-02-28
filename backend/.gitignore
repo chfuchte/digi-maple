@@ -1,3 +1,4 @@
 __pycache__
 maps_and_markers.db
+database/__pycache__
 sqlite.db

@@ -10,7 +10,6 @@ import TitleHeader from "../TitleHeader.vue";
 </template>
 
 <style>
-/* TODO: extract to css file */
 :root {
     --header-height: 48px;
 }

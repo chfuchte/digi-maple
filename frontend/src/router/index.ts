@@ -34,11 +34,6 @@ const router = createRouter({
             path: "/create",
             redirect: "/edit",
         },
-        {
-            path: "/maps/dev",
-            name: "Dev Map View",
-            component: () => import("../pages/maps/dev.vue"),
-        },
     ],
 });
 

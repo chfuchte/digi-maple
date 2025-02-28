@@ -49,11 +49,16 @@ export const useMockupData = defineStore("__mockup_data__", () => {
         });
     };
 
+    const getMapById = (id: number) => {
+        return data.value.maps.find((map) => map.id === id);
+    };
+
     return {
         getCurrentUser,
         setCurrentUser,
         registerUser,
         addMapView,
+        getMapById,
         data,
     };
 });
