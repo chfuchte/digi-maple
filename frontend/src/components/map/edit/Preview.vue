@@ -54,14 +54,18 @@ watch(
             zoomControl: false,
             attributionControl: false,
             dragging: false,
-            scrollWheelZoom: 'center',
+            scrollWheelZoom: false,
             doubleClickZoom: false,
         }"
         @ready="onMapReady">
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
         <LMarker v-if="marker != null" ref="marker" :key="marker.id" :lat-lng="new LatLng(marker.y, marker.x)">
             <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
-                <MapPin :variant="marker.display.icon" class="text-blue-600" :size="32" />
+                <MapPin
+                    :variant="marker.display.icon"
+                    :style="{ color: marker.display.color }"
+                    class="text-blue-600"
+                    :size="32" />
             </LIcon>
             <LPopup @ready="onPopupReady">
                 <MapPopup

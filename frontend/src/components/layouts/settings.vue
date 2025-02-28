@@ -5,10 +5,12 @@ import SettingsNav from "@/components/settings/Nav.vue";
 
 <template>
     <TitleHeader />
-    <main class="flex">
+    <div class="mx-16 flex gap-16">
         <SettingsNav />
-        <slot />
-    </main>
+        <main class="flex w-full flex-col gap-4 pt-8">
+            <slot />
+        </main>
+    </div>
 </template>
 
 <style>

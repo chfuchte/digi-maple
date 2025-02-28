@@ -155,7 +155,21 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                     :map-img-url="devMapImagePath"
                                     :map-img-width="width"
                                     :map-img-height="height"
-                                    :marker="selectedMarker != null ? markers[selectedMarker] : null"
+                                    :marker="
+                                        selectedMarker != null
+                                            ? {
+                                                  id: '3',
+                                                  x: markers[selectedMarker].x,
+                                                  y: markers[selectedMarker].y,
+                                                  display: {
+                                                      title: markerNameModel!,
+                                                      description: markerDescriptionModel!,
+                                                      icon: markerTypeModel!,
+                                                      color: markerColorModel!,
+                                                  },
+                                              }
+                                            : null
+                                    "
                                     class="rounded-md" />
                             </div>
                             <div class="flex flex-col gap-3">
@@ -216,7 +230,8 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                         selectedMarker != null &&
                                         markers[selectedMarker].display.title == markerNameModel &&
                                         markers[selectedMarker].display.description == markerDescriptionModel &&
-                                        markers[selectedMarker].display.icon == markerTypeModel
+                                        markers[selectedMarker].display.icon == markerTypeModel &&
+                                        markers[selectedMarker].display.color == markerColorModel
                                     ">
                                     Ändern
                                 </Button>

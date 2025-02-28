@@ -87,19 +87,19 @@ const logout = async () => {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <RouterLink to="/account/general">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem class="cursor-pointer">
                                 <LucideUser />
                                 <span>Account</span>
                             </DropdownMenuItem>
                         </RouterLink>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem @click="logout">
+                        <DropdownMenuItem @click="logout" class="cursor-pointer">
                             <LucideLogOut />
                             <span>Abmelden</span>
                         </DropdownMenuItem>
                     </template>
                     <RouterLink to="/auth" v-else>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem class="cursor-pointer">
                             <LucideLogIn />
                             <span>Anmelden</span>
                         </DropdownMenuItem>

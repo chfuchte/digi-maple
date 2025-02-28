@@ -104,7 +104,6 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
     </LMap>
 </template>
 
-<!--suppress CssUnusedSymbol -->
 <style>
 .dark .leaflet-container {
     background: #171717;
