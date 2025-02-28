@@ -86,10 +86,12 @@ const logout = async () => {
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LucideUser />
-                            <span>Account</span>
-                        </DropdownMenuItem>
+                        <RouterLink to="/account/general">
+                            <DropdownMenuItem>
+                                <LucideUser />
+                                <span>Account</span>
+                            </DropdownMenuItem>
+                        </RouterLink>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem @click="logout">
                             <LucideLogOut />

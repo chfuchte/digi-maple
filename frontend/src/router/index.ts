@@ -21,6 +21,11 @@ const router = createRouter({
             component: () => import("../pages/dashboard.vue"),
         },
         {
+            path: "/account/general",
+            name: "General account settings",
+            component: () => import("../pages/account/general.vue"),
+        },
+        {
             path: "/edit",
             name: "Edit a map",
             component: () => import("../pages/edit.vue"),
