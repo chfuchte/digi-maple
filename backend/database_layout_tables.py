@@ -38,18 +38,6 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL
 )
 ''')
-    
-# Create table if not exists (with a BLOB column for images)
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS images (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    image BLOB NOT NULL,
-    FOREIGN KEY (mapid) REFERENCES maps (id)
-)
-''')
-
-
-
 
 # Function to insert a map into the maps table
 def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
@@ -77,20 +65,6 @@ def insert_user(username, email, password):
     ''', (username, email, password))
     conn.commit()
     print(f"Inserted '{username}' into users")
-
-# Function to insert an image into the database
-   def insert_image(map_id, db_path, image_path):
-    # Open the image in binary mode
-    with open(image_path, 'rb') as file:
-        img_data = file.read()
-    
-    # Connect to the database
-    conn = sqlite3.connect(db_path)
-    cursor.execute('''
-    INSERT INTO images (mapId, image) 
-    VALUES (?, ?)
-    ''', (mapId, img_data,))
-    print(f"Inserted '{image_data}' into images")
 
 # Function to delete a map by ID
 def delete_map(map_id):
