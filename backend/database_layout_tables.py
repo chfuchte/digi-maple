@@ -51,7 +51,7 @@ def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
 # Function to insert a marker into the markers table
 def insert_marker(mapId, x, y, title, description, color, marker_type):
     cursor.execute('''
-    INSERT INTO markers (mapId, x, y, title, description, type)
+    INSERT INTO markers (mapId, x, y, title, description, color, type)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (mapId, x, y, title, description, color, marker_type))
     conn.commit()
