@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS markers (
     y INTEGER NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
+    color TEXT NOT NULL CHECK (color REGEXP '^#[0-9A-Fa-f]{6}$'),
     type TEXT NOT NULL,
     FOREIGN KEY (mapId) REFERENCES maps (id)
 )
@@ -48,11 +49,11 @@ def insert_map(name, authorId, imgUrl, imgWidth, imgHeight):
     print(f"Inserted '{name}' into maps")
 
 # Function to insert a marker into the markers table
-def insert_marker(mapId, x, y, title, description, marker_type):
+def insert_marker(mapId, x, y, title, description, color, marker_type):
     cursor.execute('''
     INSERT INTO markers (mapId, x, y, title, description, type)
-    VALUES (?, ?, ?, ?, ?, ?)
-    ''', (mapId, x, y, title, description, marker_type))
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (mapId, x, y, title, description, color, marker_type))
     conn.commit()
     print(f"Inserted marker '{title}' into markers")
 
@@ -108,9 +109,10 @@ def get_dict() -> dict:
                     "x": marker[2],
                     "y": marker[3],
                     "display": {
+                        "color": marker[5]
                         "title": marker[1],
                         "description": marker[4],
-                        "markerType": marker[5]
+                        "markerType": marker[6]
                     }
                 } for marker in markers
             ]
@@ -132,7 +134,7 @@ def get_dict() -> dict:
 # Function to get all markers for a specific map
 def _get_markers_for_map(map_id) -> list:
     cursor.execute('''
-    SELECT id, title, x, y, description, type
+    SELECT id, title, x, y, description, color, type
     FROM markers
     WHERE mapId = ?
     ''', (map_id,))
@@ -156,8 +158,8 @@ if __name__ == "__main__":
     cursor.execute("SELECT id FROM maps WHERE name = ?", ("Map of the World",))
     map_id = cursor.fetchone()[0]
 
-    insert_marker(map_id, 123, 432, "Eiffel Tower", "A famous landmark in Paris", "default")
-    insert_marker(map_id, 420, 69, "Great Wall of China", "A historical wall in China", "info")
+    insert_marker(map_id, 123, 432, "Eiffel Tower", "A famous landmark in Paris", "00FFA2", "default")
+    insert_marker(map_id, 420, 69, "Great Wall of China", "A historical wall in China", "D5CC01", "info")
 
     print(get_dict())
 
