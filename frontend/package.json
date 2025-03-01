@@ -24,7 +24,6 @@
         "clsx": "^2.1.1",
         "leaflet": "^1.9.4",
         "lucide-vue-next": "^0.471.0",
-        "maple-frontend": "link:",
         "pinia": "^2.3.1",
         "radix-vue": "^1.9.13",
         "tailwind-merge": "^2.6.0",
