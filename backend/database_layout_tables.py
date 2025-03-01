@@ -79,6 +79,13 @@ def insert_user(username, email, password):
     print(f"Inserted '{username}' into users")
 
 # Function to insert an image into the database
+   def insert_image(map_id, db_path, image_path):
+    # Open the image in binary mode
+    with open(image_path, 'rb') as file:
+        img_data = file.read()
+    
+    # Connect to the database
+    conn = sqlite3.connect(db_path)
     cursor.execute('''
     INSERT INTO images (mapId, image) 
     VALUES (?, ?)
