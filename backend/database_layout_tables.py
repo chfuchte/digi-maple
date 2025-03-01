@@ -80,7 +80,8 @@ def insert_user(username, email, password):
 
 # Function to insert an image into the database
     cursor.execute('''
-        INSERT INTO images (mapId, image) VALUES (?)
+    INSERT INTO images (mapId, image) 
+    VALUES (?, ?)
     ''', (mapId, img_data,))
     print(f"Inserted '{image_data}' into images")
 
