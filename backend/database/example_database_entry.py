@@ -41,7 +41,7 @@ def insert_example_user():
             db.delete_user(existing_user[0])  # Delete the user by ID if it exists
 
         # Insert the new user
-        db.insert_user("Olaf", "olaf@mail.com", "1234")
+        db.insert_user("normal", "Olaf", "olaf@mail.com", "1234")
 
     except IntegrityError as e:
         print(f"Warning: IntegrityError occurred: {e}")
