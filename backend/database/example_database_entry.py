@@ -22,10 +22,10 @@ def insert_example_map():
         map_id = cursor.fetchone()[0]
 
         # Insert markers for the map
-        db.insert_marker(map_id, 942, 1000, "Wuhu!", "Ich bin ein Marker", "warning")
-        db.insert_marker(map_id, 942, 800, "Sekretariat", "Get some help here", "info")
-        db.insert_marker(map_id, 942, 600, "Achtung", "Viele Besucher hier", "warning")
-        db.insert_marker(map_id, 942, 400, "Eingang zum Gebäude", "Barrierefreier Eingang zum Gebäude", "weelchair")
+        db.insert_marker(map_id, 942, 1000, "Wuhu!", "Ich bin ein Marker", "1212AA", "warning")
+        db.insert_marker(map_id, 942, 800, "Sekretariat", "Get some help here", "355BBC", "info")
+        db.insert_marker(map_id, 942, 600, "Achtung", "Viele Besucher hier", "09ACFF", "warning")
+        db.insert_marker(map_id, 942, 400, "Eingang zum Gebäude", "Barrierefreier Eingang zum Gebäude", "EEEE22", "weelchair")
 
     except IntegrityError as e:
         print(f"Warning: IntegrityError occurred: {e}")
