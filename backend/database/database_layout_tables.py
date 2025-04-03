@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS markers (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role BOOLEAN,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
@@ -79,25 +80,33 @@ def insert_marker(mapId, x, y, title, description, color, marker_type):
 
 
 # Function to insert a user into the users table
-def insert_user(username, email, password):
+def insert_user(role, username, email, password):
     password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    if role == admin:
+        rolevalue = 1     #boolean, true for admins and false for normal users
+    else:
+        rolevalue = 0
     cursor.execute('''
-    INSERT INTO users (username, email, password)
+    INSERT INTO users (role, username, email, password)
     VALUES (?, ?, ?)
-    ''', (username, email, password_hashed))
+    ''', (rolevalue, username, email, password_hashed))
     conn.commit()
-    print(f"Inserted '{username}' into users")
+    print(f"Inserted '{username}' with status '{role}' into users")
 
 
-def edit_user(user_id, username, email, password):
+def edit_user(user_id, role, username, email, password):
     password_hashed = hashlib.sha256(password.encode('utf-8')).hexdigest()
+     if role == admin:
+        rolevalue = 1
+    else:
+        rolevalue = 0
     cursor.execute('''
     UPDATE users
-    SET username = ?, email = ?, password = ?
+    SET role = ?, username = ?, email = ?, password = ?
     WHERE id = ?;
-    ''', (username, email, password_hashed, user_id))
+    ''', (role, username, email, password_hashed, user_id))
     conn.commit()
-    print(f"Updated user {user_id} to '{username}'")
+    print(f"Updated user {user_id} to '{username}' with current status '{role}'")
 
 
 def edit_map(map_id, name, authorId, imgUrl, imgWidth, imgHeight, markers: list[Marker]):
@@ -171,9 +180,10 @@ def get_dict() -> dict:
 
     # Process users
     for user_entry in users:
-        user_id, username, email, password = user_entry  # I don't care about the password security for now
+        user_id, role, username, email, password = user_entry  # I don't care about the password security for now
         user_dict = {
             "id": user_id,
+            "role": role,
             "username": username,
             "email": email,
             "password": password
@@ -197,7 +207,7 @@ if __name__ == "__main__":
     user = cursor.fetchone()
     if user:
         delete_user(user[0])
-    insert_user("Rafal", "test@gmail.com", "pass1234")
+    insert_user("normal", "Rafal", "test@gmail.com", "pass1234")
 
     cursor.execute("SELECT id FROM maps WHERE name = ?", ("Map of the World",))
     map_record = cursor.fetchone()
