@@ -6,6 +6,8 @@ from sqlite3 import IntegrityError
 from database import database_layout_tables as db
 from database import example_database_entry as ex
 
+from search_maps import search
+
 class User(BaseModel):
     username: str
     email: str
@@ -195,6 +197,9 @@ async def edit_map(map_id: str, map_obj: Map):
         return {"message": "unique constraint failed", "value": str(e)}
 
 
+@app.get("/search/maps/{query}")
+async def search_maps(query: str):
+    return search(query, db.get_dict()["maps"])
 
 
 if __name__ == "__main__":
