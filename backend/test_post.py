@@ -32,11 +32,11 @@ import requests
 #print(response.text)
 
 # Edits user 1 (From "Olaf" to "edited")
-url = "http://127.0.0.1:8080/maps/1"
+url = "http://127.0.0.1:8080/maps"
 data = {
-            "name": "sigma",
-            "author": "olaf",
-            "imgUrl": "https://example.com",
+            "name": "Frankfort",
+            "author": "Jose",
+            "imgUrl": "https://example.com.com.com",
             "imgWidth": 1920,
             "imgHeight": 1080,
             "markers": [
@@ -49,6 +49,7 @@ data = {
                 }
             ]
        }
+
 
 response = requests.post(url, json=data)
 print(response.text)
