@@ -1,0 +1,6 @@
+dist/
+node_modules/
+drizzle/
+.env
+sqlite.db
+images/
