@@ -1,5 +1,3 @@
-import { makeGET } from "@/lib/utils";
-import { apiLogout } from "@/queries/auth/logout";
 import { userSchema, type User } from "@/schema/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -10,14 +8,14 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
 
     const fetch = async () => {
         try {
-            const res = await makeGET("http://localhost:8080/auth/whoami");
+            // const res = await makeGET("http://localhost:8080/auth/whoami");
 
-            if (res.status === 200) {
-                const user = userSchema.parse(res.data);
-                currentUser.value = user;
-            } else {
-                currentUser.value = null;
-            }
+            // if (res.status === 200) {
+            //     const user = userSchema.parse(res.data);
+            //     currentUser.value = user;
+            // } else {
+            //     currentUser.value = null;
+            // }
         } catch {
             currentUser.value = null;
         }
@@ -34,7 +32,7 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
     };
 
     const logout = async () => {
-        await apiLogout();
+        // TODO
         currentUser.value = null;
     };
 

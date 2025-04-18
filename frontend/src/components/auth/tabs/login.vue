@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { apiLogin } from "@/queries/auth/login";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -29,13 +28,7 @@ const loginForm = useForm({
 });
 
 const onloginSubmit = async (values: LoginForm) => {
-    const loginSuccess = await apiLogin(values.email, values.password);
-    if (loginSuccess) {
-        await router.push("/");
-    } else {
-        // TODO: Show error message
-        alert("Fehler bei dem Login.");
-    }
+   // TODO
 };
 </script>
 

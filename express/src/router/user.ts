@@ -18,7 +18,7 @@ export function userRouter() {
         const bodySchema = z.object({
             full_name: z.string(),
             email: z.string().email(),
-            password: z.string().min(8),
+            password: z.string(),
         });
 
         const body = bodySchema.safeParse(req.body);
@@ -55,7 +55,7 @@ export function userRouter() {
         }
 
         logger("INFO", `User created successfully: ${email}`);
-        res.status(201).json({ message: "User created" });
+        res.status(200).json({ message: "User created" });
     });
 
     router.post("/api/auth/login", async (req, res) => {
@@ -126,11 +126,6 @@ export function userRouter() {
         logger("INFO", `User logged in: ${email}`);
         res.status(200).json({
             message: "Logged in",
-            user: {
-                id: user.id,
-                full_name: user.full_name,
-                email: user.email,
-            },
         });
     });
 
@@ -174,11 +169,9 @@ export function userRouter() {
         logger("INFO", `Returning user info for: ${user.email}`);
 
         res.status(200).json({
-            user: {
-                id: user.id,
-                full_name: user.full_name,
-                email: user.email,
-            },
+            id: user.id,
+            full_name: user.full_name,
+            email: user.email,
         });
     });
 

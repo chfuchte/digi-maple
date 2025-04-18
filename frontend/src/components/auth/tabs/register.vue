@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { apiRegister } from "@/queries/auth/register";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -32,14 +31,7 @@ const registerform = useForm({
 const router = useRouter();
 
 const onRegisterSubmit = async (values: RegisterForm) => {
-    apiRegister(values.fullName, values.email, values.password).then((registerSuccess: boolean) => {
-        if (registerSuccess) {
-            router.push("/auth");
-        } else {
-            // TODO: Show error message
-            alert("Fehler bei der Registrierung.");
-        }
-    });
+    // TODO
 };
 </script>
 

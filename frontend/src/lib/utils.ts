@@ -1,51 +1,23 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import axios from "axios";
 
-export function makeGET<T>(url: string) {
-    const token = localStorage.getItem("auth_token");
-    return axios.get<T>(url, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+export type Result<T, E = Error> = {
+    data: T;
+    error: null;
+} | {
+    data: null;
+    error: E;
+};
+
+export async function tryCatch<T, E = Error>(promise: Promise<T>): Promise<Result<T, E>> {
+    try {
+        const data = await promise;
+        return { data, error: null };
+    } catch (error) {
+        return { data: null, error: error as E };
+    }
 }
 
-export function makePOST<T>(url: string, data: unknown) {
-    const token = localStorage.getItem("auth_token");
-    return axios.post<T>(url, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
-
-export function makePUT<T>(url: string, data: unknown) {
-    const token = localStorage.getItem("auth_token");
-    return axios.put<T>(url, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
-
-export function makeDELETE<T>(url: string) {
-    const token = localStorage.getItem("auth_token");
-    return axios.delete<T>(url, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
-
-export function makePATCH<T>(url: string, data: unknown) {
-    const token = localStorage.getItem("auth_token");
-    return axios.patch<T>(url, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
