@@ -18,7 +18,6 @@ export async function tryCatch<T, E = Error>(promise: Promise<T>): Promise<Resul
     }
 }
 
-
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }

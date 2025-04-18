@@ -343,6 +343,57 @@ export function mapsRouter() {
         );
     });
 
+    router.patch("/api/maps/:id", async (req, res) => {
+        logger("INFO", `PATCH /api/maps/${req.params.id} called`);
+
+        const authRes = await auth(req);
+        if (!authRes) {
+            logger("WARN", "Unauthorized access attempt to update map");
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
+
+        if (mapIdRes.error) {
+            logger("WARN", `Invalid map ID: ${req.params.id}`);
+            res.status(400).json({ error: "Map id is required" });
+            return;
+        }
+
+        const mapId = mapIdRes.data;
+
+        const body = z
+            .object({
+                name: z.string(),
+            })
+            .safeParse(req.body);
+        if (!body.success) {
+            logger("WARN", `Validation failed: ${JSON.stringify(body.error.errors)}`);
+            res.status(400).json({ error: body.error.errors });
+            return;
+        }
+
+        const { name } = body.data;
+
+        const result = await tryCatch(db.update(maps).set({ name }).where(eq(maps.id, mapId)));
+
+        if (result.error) {
+            logger("ERROR", `Failed to update map: ${result.error}`);
+            res.status(500).json({ error: "Failed to update map" });
+            return;
+        }
+
+        if (result.data.rowsAffected === 0) {
+            logger("WARN", `Map not found with ID: ${mapId}`);
+            res.status(404).json({ error: "Map not found" });
+            return;
+        }
+
+        logger("INFO", `Map updated with ID: ${mapId}`);
+        res.status(200).json({ message: "Map updated successfully" });
+    });
+
     router.post("/api/maps/:id/markers", async (req, res) => {
         logger("INFO", `POST /api/maps/${req.params.id}/markers called`);
 
