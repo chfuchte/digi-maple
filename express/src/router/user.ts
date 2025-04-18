@@ -175,7 +175,7 @@ export function userRouter() {
         });
     });
 
-    router.delete("/api/user", async (req, res) => {
+    /* router.delete("/api/user", async (req, res) => {
         logger("INFO", "DELETE /api/user called");
 
         const authRes = await auth(req);
@@ -245,7 +245,7 @@ export function userRouter() {
 
         logger("INFO", `User updated: ${user.email}`);
         res.status(200).json({ message: "User updated" });
-    });
+    }); */
 
     return router;
 }
