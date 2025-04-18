@@ -29,7 +29,7 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
         if (currentUser.value === null || Date.now() - lastFetched.value > 1000 * 60 * 5) {
             // 5 min
             fetch();
-            }
+        }
         return currentUser.value;
     };
 

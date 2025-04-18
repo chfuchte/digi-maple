@@ -4,7 +4,7 @@ import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
 
-let searchTimeout: NodeJS.Timeout | null = null;
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const search = (e: { target: { value: string } }) => {
     if (searchTimeout) {

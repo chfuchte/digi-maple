@@ -70,7 +70,7 @@ function createMarker(): void {
         },
     });
 
-    markerClicked(markers.value.at(-1).id);
+    markerClicked(markers.value[markers.value.length - 1].id);
 }
 
 function deleteMarker(): void {
