@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { apiRegister } from "@/queries/auth/register";
+import { apiRegister } from "@/queries/auth/register";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { useMockupData } from "@/__mocks__";
 
 const formSchema = z.object({
     fullName: z.string(),
@@ -22,8 +21,6 @@ const formSchema = z.object({
         ),
 });
 
-const { data, registerUser } = useMockupData();
-
 const typedFormSchema = toTypedSchema(formSchema);
 
 type RegisterForm = z.infer<typeof formSchema>;
@@ -35,26 +32,14 @@ const registerform = useForm({
 const router = useRouter();
 
 const onRegisterSubmit = async (values: RegisterForm) => {
-    /*
     apiRegister(values.fullName, values.email, values.password).then((registerSuccess: boolean) => {
         if (registerSuccess) {
-            useRouter().push("/auth");
+            router.push("/auth");
         } else {
             // TODO: Show error message
             alert("Fehler bei der Registrierung.");
         }
     });
-    */
-    const exists = data.users.find((user) => user.email === values.email);
-    if (exists) {
-        alert("User already exists");
-    } else {
-        registerUser({
-            email: values.email,
-            full_name: values.fullName,
-        });
-        await router.push("/auth");
-    }
 };
 </script>
 

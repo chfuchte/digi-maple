@@ -5,7 +5,7 @@ import MapIconPin from "@/components/map/pins/index.vue";
 const props = defineProps<{
     title: string;
     content: string;
-    icon: MapMarker["display"]["markerType"];
+    icon: MapMarker["display"]["icon"];
 }>();
 </script>
 

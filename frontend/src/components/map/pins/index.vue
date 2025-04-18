@@ -7,7 +7,7 @@ import type { MapMarker } from "@/schema/mapView";
 
 const props = defineProps<{
     size?: number;
-    variant?: MapMarker["display"]["markerType"];
+    variant?: MapMarker["display"]["icon"];
 }>();
 </script>
 
