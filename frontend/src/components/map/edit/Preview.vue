@@ -67,10 +67,7 @@ watch(
                     :size="32" />
             </LIcon>
             <LPopup @ready="onPopupReady">
-                <MapPopup
-                    :title="marker.title"
-                    :icon="marker.icon as MapPinType"
-                    :content="marker.description">
+                <MapPopup :title="marker.title" :icon="marker.icon as MapPinType" :content="marker.description">
                 </MapPopup>
             </LPopup>
         </LMarker>

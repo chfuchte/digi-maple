@@ -44,7 +44,7 @@ export default function getLogger(name: string): (level: LogLevel, message: stri
         }
 
         if (!existsSync(join(filepath, filename))) {
-            writeFileSync(join(filepath, filename), `beginn of log ${name}\n`, {
+            writeFileSync(join(filepath, filename), `beginning of log ${name}\n`, {
                 encoding: "utf-8",
             });
         }

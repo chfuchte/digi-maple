@@ -41,12 +41,14 @@ const onloginSubmit = async (values: LoginForm) => {
 </script>
 
 <template>
-    <form @submit="
-        (e) => {
-            e.preventDefault();
-            loginForm.handleSubmit(onloginSubmit)(e);
-        }
-    " :validation-schema="loginForm">
+    <form
+        @submit="
+            (e) => {
+                e.preventDefault();
+                loginForm.handleSubmit(onloginSubmit)(e);
+            }
+        "
+        :validation-schema="loginForm">
         <Card>
             <CardHeader>
                 <CardTitle>Anmeldung</CardTitle>

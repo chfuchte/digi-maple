@@ -44,17 +44,19 @@ const onRegisterSubmit = async (values: RegisterForm) => {
 </script>
 
 <template>
-    <form @submit="
-        (e) => {
-            e.preventDefault();
-            registerform.handleSubmit(onRegisterSubmit)(e);
-        }
-    " :validation-schema="registerform">
+    <form
+        @submit="
+            (e) => {
+                e.preventDefault();
+                registerform.handleSubmit(onRegisterSubmit)(e);
+            }
+        "
+        :validation-schema="registerform">
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>
-                <CardDescription>Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten
-                    digitalisieren.
+                <CardDescription
+                    >Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten digitalisieren.
                 </CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">

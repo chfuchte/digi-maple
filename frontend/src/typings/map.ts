@@ -4,7 +4,7 @@ export type Map = {
     imgWidth: number;
     imgHeight: number;
     imgUrl: string;
-}
+};
 
 export type FullMap = Map & {
     markers: {
@@ -22,8 +22,8 @@ export type FullMap = Map & {
             icon: string;
             color: string;
         }[];
-    }
-}
+    };
+};
 
 export type Marker = {
     id?: number;
@@ -33,12 +33,7 @@ export type Marker = {
     description: string;
     icon: string;
     color: string;
-}
+};
 
-export const markerTypes = [
-    "wheelchair",
-    "warning",
-    "info",
-    "default"
-] as const;
-export type MapPinType = typeof markerTypes[number];
+export const markerTypes = ["wheelchair", "warning", "info", "default"] as const;
+export type MapPinType = (typeof markerTypes)[number];

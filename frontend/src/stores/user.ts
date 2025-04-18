@@ -1,4 +1,5 @@
-import { userSchema, type User } from "@/schema/user";
+import { apiLogout, apiWhoami } from "@/queries/auth";
+import type { User } from "@/typings/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -8,14 +9,12 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
 
     const fetch = async () => {
         try {
-            // const res = await makeGET("http://localhost:8080/auth/whoami");
-
-            // if (res.status === 200) {
-            //     const user = userSchema.parse(res.data);
-            //     currentUser.value = user;
-            // } else {
-            //     currentUser.value = null;
-            // }
+            const user = await apiWhoami();
+            if (user) {
+                currentUser.value = user;
+            } else {
+                currentUser.value = null;
+            }
         } catch {
             currentUser.value = null;
         }
@@ -32,7 +31,7 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
     };
 
     const logout = async () => {
-        // TODO
+        await apiLogout();
         currentUser.value = null;
     };
 

@@ -25,9 +25,11 @@ export async function apiCreateMap(name: string): Promise<number | null> {
         return null;
     }
 
-    const data = z.object({
-        id: z.number(),
-    }).safeParse(res.data.data);
+    const data = z
+        .object({
+            id: z.number(),
+        })
+        .safeParse(res.data.data);
 
     if (!data.success) {
         return null;
@@ -36,22 +38,25 @@ export async function apiCreateMap(name: string): Promise<number | null> {
     return data.data.id;
 }
 
-export async function apiGetMap(mapId: number): Promise<{
-    id: number;
-    name: string;
-    imgWidth: number;
-    imgHeight: number;
-    imgUrl: string;
-    markers: {
-        id: number;
-        x: number;
-        y: number;
-        title: string;
-        description: string;
-        icon: string;
-        color: string;
-    }[];
-} | false> {
+export async function apiGetMap(mapId: number): Promise<
+    | {
+          id: number;
+          name: string;
+          imgWidth: number;
+          imgHeight: number;
+          imgUrl: string;
+          markers: {
+              id: number;
+              x: number;
+              y: number;
+              title: string;
+              description: string;
+              icon: string;
+              color: string;
+          }[];
+      }
+    | false
+> {
     const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/${mapId}`));
 
     if (res.error) {
@@ -62,22 +67,26 @@ export async function apiGetMap(mapId: number): Promise<{
         return false;
     }
 
-    const data = z.object({
-        id: z.number(),
-        name: z.string(),
-        imgWidth: z.number(),
-        imgHeight: z.number(),
-        imgUrl: z.string(),
-        markers: z.array(z.object({
+    const data = z
+        .object({
             id: z.number(),
-            x: z.number(),
-            y: z.number(),
-            title: z.string(),
-            description: z.string(),
-            icon: z.string(),
-            color: z.string(),
-        })),
-    }).safeParse(res.data.data);
+            name: z.string(),
+            imgWidth: z.number(),
+            imgHeight: z.number(),
+            imgUrl: z.string(),
+            markers: z.array(
+                z.object({
+                    id: z.number(),
+                    x: z.number(),
+                    y: z.number(),
+                    title: z.string(),
+                    description: z.string(),
+                    icon: z.string(),
+                    color: z.string(),
+                }),
+            ),
+        })
+        .safeParse(res.data.data);
 
     if (!data.success) {
         return false;
@@ -86,13 +95,16 @@ export async function apiGetMap(mapId: number): Promise<{
     return data.data;
 }
 
-export async function apiGetUserMaps(): Promise<{
-    id: number;
-    name: string;
-    imgWidth: number;
-    imgHeight: number;
-    imgUrl: string;
-}[] | false> {
+export async function apiGetUserMaps(): Promise<
+    | {
+          id: number;
+          name: string;
+          imgWidth: number;
+          imgHeight: number;
+          imgUrl: string;
+      }[]
+    | false
+> {
     const res = await tryCatch(axios.get("http://localhost:8080/api/maps/user"));
 
     if (res.error) {
@@ -103,13 +115,17 @@ export async function apiGetUserMaps(): Promise<{
         return false;
     }
 
-    const data = z.array(z.object({
-        id: z.number(),
-        name: z.string(),
-        imgWidth: z.number(),
-        imgHeight: z.number(),
-        imgUrl: z.string(),
-    })).safeParse(res.data.data);
+    const data = z
+        .array(
+            z.object({
+                id: z.number(),
+                name: z.string(),
+                imgWidth: z.number(),
+                imgHeight: z.number(),
+                imgUrl: z.string(),
+            }),
+        )
+        .safeParse(res.data.data);
 
     if (!data.success) {
         return false;
@@ -128,13 +144,16 @@ export async function apiDeleteMap(mapId: number): Promise<boolean> {
     return res.data.status === 200;
 }
 
-export async function apiSearchMaps(query: string): Promise<{
-    id: number;
-    name: string;
-    imgWidth: number;
-    imgHeight: number;
-    imgUrl: string;
-}[] | false> {
+export async function apiSearchMaps(query: string): Promise<
+    | {
+          id: number;
+          name: string;
+          imgWidth: number;
+          imgHeight: number;
+          imgUrl: string;
+      }[]
+    | false
+> {
     const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/search?s=${query}`));
 
     if (res.error) {
@@ -145,13 +164,17 @@ export async function apiSearchMaps(query: string): Promise<{
         return false;
     }
 
-    const data = z.array(z.object({
-        id: z.number(),
-        name: z.string(),
-        imgWidth: z.number(),
-        imgHeight: z.number(),
-        imgUrl: z.string(),
-    })).safeParse(res.data.data);
+    const data = z
+        .array(
+            z.object({
+                id: z.number(),
+                name: z.string(),
+                imgWidth: z.number(),
+                imgHeight: z.number(),
+                imgUrl: z.string(),
+            }),
+        )
+        .safeParse(res.data.data);
 
     if (!data.success) {
         return false;
@@ -167,18 +190,23 @@ export async function apiAddMarker(
     title: string,
     description: string,
     icon: string,
-    color: string
-): Promise<{
-    id: number;
-} | false> {
-    const res = await tryCatch(axios.post(`http://localhost:8080/api/maps/${mapId}/markers`, {
-        x,
-        y,
-        title,
-        description,
-        icon,
-        color,
-    }));
+    color: string,
+): Promise<
+    | {
+          id: number;
+      }
+    | false
+> {
+    const res = await tryCatch(
+        axios.post(`http://localhost:8080/api/maps/${mapId}/markers`, {
+            x,
+            y,
+            title,
+            description,
+            icon,
+            color,
+        }),
+    );
 
     if (res.error) {
         return false;
@@ -188,9 +216,11 @@ export async function apiAddMarker(
         return false;
     }
 
-    const data = z.object({
-        id: z.number(),
-    }).safeParse(res.data.data);
+    const data = z
+        .object({
+            id: z.number(),
+        })
+        .safeParse(res.data.data);
 
     if (!data.success) {
         return false;
@@ -209,7 +239,7 @@ export async function apiUpdateMarker(
         description?: string;
         icon?: string;
         color?: string;
-    }
+    },
 ): Promise<boolean> {
     const res = await tryCatch(axios.put(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
 
