@@ -197,7 +197,7 @@ function markerLocationUpdated(id: string, location: LatLng): void {
                                                 <SelectLabel>Marker Typ</SelectLabel>
                                                 <SelectItem v-for="icon in markerTypes" :value="icon" :key="icon">
                                                     <div class="flex flex-row items-center gap-2">
-                                                        <LucideAccessibility v-if="icon == 'weelchair'" :size="18" />
+                                                        <LucideAccessibility v-if="icon == 'wheelchair'" :size="18" />
                                                         <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
                                                         <LucideInfo v-else-if="icon == 'info'" :size="18" />
                                                         <LucidePin v-else :size="18" />

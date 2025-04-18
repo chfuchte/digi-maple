@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { LIcon, LImageOverlay, LMap, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
-
-import type { MapMarker } from "@/schema/mapView.ts";
 import { CRS, LatLng, latLngBounds, Map } from "leaflet";
 import { ref, useTemplateRef, watch } from "vue";
 import MapPopup from "@/components/map/Popup.vue";
 import MapPin from "@/components/map/pins/index.vue";
+import type { Marker } from "@/typings/map";
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
     mapImgHeight: number;
-    marker: MapMarker | null;
+    marker: Marker | null;
 }>();
 
 const leafletObject = ref<Map>();
@@ -62,16 +61,16 @@ watch(
         <LMarker v-if="marker != null" ref="marker" :key="marker.id" :lat-lng="new LatLng(marker.y, marker.x)">
             <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
                 <MapPin
-                    :variant="marker.display.icon"
-                    :style="{ color: marker.display.color }"
+                    :variant="marker.icon as MapPinType"
+                    :style="{ color: marker.color }"
                     class="text-blue-600"
                     :size="32" />
             </LIcon>
             <LPopup @ready="onPopupReady">
                 <MapPopup
-                    :title="marker.display.title"
-                    :icon="marker.display.icon"
-                    :content="marker.display.description">
+                    :title="marker.title"
+                    :icon="marker.icon as MapPinType"
+                    :content="marker.description">
                 </MapPopup>
             </LPopup>
         </LMarker>

@@ -5,13 +5,13 @@ import MapPopup from "@/components/map/Popup.vue";
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
-import type { MapMarker } from "@/schema/mapView";
+import type { Marker } from "@/typings/map";
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
     mapImgheight: number;
-    markers?: Array<MapMarker>;
+    markers?: Array<Marker>;
 }>();
 
 const zoomInDisabled = ref(false);
@@ -62,9 +62,9 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
             </LIcon>
             <LPopup>
                 <MapPopup
-                    :title="marker.display.title"
-                    :icon="marker.display.icon"
-                    :content="marker.display.description"></MapPopup>
+                    :title="marker.title"
+                    :icon="marker.icon as MapPinType"
+                    :content="marker.description"></MapPopup>
             </LPopup>
         </LMarker>
     </LMap>

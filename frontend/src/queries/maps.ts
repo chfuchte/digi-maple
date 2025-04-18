@@ -2,7 +2,7 @@ import { tryCatch } from "@/lib/utils";
 import axios from "axios";
 import { z } from "zod";
 
-export async function uploadMapImg(file: File, mapId: number): Promise<boolean> {
+export async function apiUploadMapImg(file: File, mapId: number): Promise<boolean> {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -15,7 +15,7 @@ export async function uploadMapImg(file: File, mapId: number): Promise<boolean> 
     return res.data.status === 200;
 }
 
-export async function createMap(name: string): Promise<number | null> {
+export async function apiCreateMap(name: string): Promise<number | null> {
     const res = await tryCatch(axios.post("http://localhost:8080/api/maps", { name }));
     if (res.error) {
         return null;
@@ -36,7 +36,7 @@ export async function createMap(name: string): Promise<number | null> {
     return data.data.id;
 }
 
-export async function getMap(mapId: number): Promise<{
+export async function apiGetMap(mapId: number): Promise<{
     id: number;
     name: string;
     imgWidth: number;
@@ -86,7 +86,7 @@ export async function getMap(mapId: number): Promise<{
     return data.data;
 }
 
-export async function getUserMaps(): Promise<{
+export async function apiGetUserMaps(): Promise<{
     id: number;
     name: string;
     imgWidth: number;
@@ -118,7 +118,7 @@ export async function getUserMaps(): Promise<{
     return data.data;
 }
 
-export async function deleteMap(mapId: number): Promise<boolean> {
+export async function apiDeleteMap(mapId: number): Promise<boolean> {
     const res = await tryCatch(axios.delete(`http://localhost:8080/api/maps/${mapId}`));
 
     if (res.error) {
@@ -128,14 +128,14 @@ export async function deleteMap(mapId: number): Promise<boolean> {
     return res.data.status === 200;
 }
 
-export async function searchMaps(query: string): Promise<{
+export async function apiSearchMaps(query: string): Promise<{
     id: number;
     name: string;
     imgWidth: number;
     imgHeight: number;
     imgUrl: string;
 }[] | false> {
-    const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/search/${query}`));
+    const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/search?s=${query}`));
 
     if (res.error) {
         return false;
@@ -160,7 +160,7 @@ export async function searchMaps(query: string): Promise<{
     return data.data;
 }
 
-export async function addMarker(
+export async function apiAddMarker(
     mapId: number,
     x: number,
     y: number,
@@ -199,7 +199,7 @@ export async function addMarker(
     return data.data;
 }
 
-export async function updateMarker(
+export async function apiUpdateMarker(
     mapId: number,
     markerId: number,
     data: {
@@ -220,7 +220,7 @@ export async function updateMarker(
     return res.data.status === 200;
 }
 
-export async function deleteMarker(mapId: number, markerId: number): Promise<boolean> {
+export async function apiDeleteMarker(mapId: number, markerId: number): Promise<boolean> {
     const res = await tryCatch(axios.delete(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`));
 
     if (res.error) {
@@ -230,7 +230,7 @@ export async function deleteMarker(mapId: number, markerId: number): Promise<boo
     return res.data.status === 200;
 }
 
-export async function updateMap(mapId: number, name: string): Promise<boolean> {
+export async function apiUpdateMap(mapId: number, name: string): Promise<boolean> {
     const res = await tryCatch(axios.put(`http://localhost:8080/api/maps/${mapId}`, { name }));
 
     if (res.error) {

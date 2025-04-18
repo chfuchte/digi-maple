@@ -8,21 +8,20 @@ import { LucideMapPinPlus } from "lucide-vue-next";
 import MapPin from "@/components/map/pins/index.vue";
 import { Button } from "@/components/ui/button";
 import MapPopup from "@/components/map/Popup.vue";
-
-import type { MapMarker } from "@/schema/mapView";
+import type { Marker } from "@/typings/map";
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
     mapImgHeight: number;
-    markers?: Array<MapMarker>;
+    markers?: Array<Marker>;
 }>();
 
 const emit = defineEmits<{
     leafletReady: [Map];
     createMarker: [void];
-    markerClicked: [string];
-    markerLocationUpdate: [string, LatLng];
+    markerClicked: [number];
+    markerLocationUpdate: [number, LatLng];
 }>();
 
 const zoomInDisabled = ref(false);
@@ -31,7 +30,7 @@ const zoomLevel = ref<number>(-2);
 
 const leafletObject = ref<Map>();
 
-const lastClickedMarker = ref("");
+const lastClickedMarker = ref<number | undefined>(undefined);
 
 const onMapReady = (map: Map) => {
     leafletObject.value = map;
@@ -45,12 +44,12 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const markerClickedEvent = (id: string) => {
+const markerClickedEvent = (id: number) => {
     lastClickedMarker.value = id;
     emit("markerClicked", id);
 };
 
-const markerLocationUpdatedEvent = (id: string, location: LatLng) => {
+const markerLocationUpdatedEvent = (id: number, location: LatLng) => {
     emit("markerLocationUpdate", id, location);
 };
 
@@ -92,13 +91,13 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
             :draggable="true"
             :lat-lng="new LatLng(marker.y, marker.x)">
             <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
-                <MapPin :variant="marker.display.icon" :style="{ color: marker.display.color }" :size="32" />
+                <MapPin :variant="marker.icon as MapPinType" :style="{ color: marker.color }" :size="32" />
             </LIcon>
             <LPopup>
                 <MapPopup
-                    :title="marker.display.title"
-                    :icon="marker.display.icon"
-                    :content="marker.display.description"></MapPopup>
+                    :title="marker.title"
+                    :icon="marker.icon as MapPinType"
+                    :content="marker.description"></MapPopup>
             </LPopup>
         </LMarker>
     </LMap>

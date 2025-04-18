@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { apiRegister } from "@/queries/auth";
 
 const formSchema = z.object({
     fullName: z.string(),
@@ -31,24 +32,29 @@ const registerform = useForm({
 const router = useRouter();
 
 const onRegisterSubmit = async (values: RegisterForm) => {
-    // TODO
+    const registerSuccess = await apiRegister(values.fullName, values.email, values.password);
+    if (registerSuccess) {
+        router.push("/auth");
+    } else {
+        registerform.resetField("password");
+        // TODO: Show error message
+        alert("Fehler bei der Registrierung.");
+    }
 };
 </script>
 
 <template>
-    <form
-        @submit="
-            (e) => {
-                e.preventDefault();
-                registerform.handleSubmit(onRegisterSubmit)(e);
-            }
-        "
-        :validation-schema="registerform">
+    <form @submit="
+        (e) => {
+            e.preventDefault();
+            registerform.handleSubmit(onRegisterSubmit)(e);
+        }
+    " :validation-schema="registerform">
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>
-                <CardDescription
-                    >Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten digitalisieren.
+                <CardDescription>Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten
+                    digitalisieren.
                 </CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">

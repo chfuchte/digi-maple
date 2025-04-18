@@ -3,6 +3,7 @@ import Layout from "@/components/layouts/default.vue";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
+import { apiSearchMaps } from "@/queries/maps";
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -11,10 +12,20 @@ const search = (e: { target: { value: string } }) => {
         clearTimeout(searchTimeout);
     }
 
-    searchTimeout = setTimeout(() => {
-        // fetch data
-        // TODO
-        console.log(e.target.value);
+    searchTimeout = setTimeout(async () => {
+        const searchResult = await apiSearchMaps(e.target.value);
+
+        if (searchResult === false) {
+            alert("Fehler beim Abrufen der Daten");
+            return;
+        }
+
+        if (searchResult.length === 0) {
+            alert("Keine Daten gefunden");
+            return;
+        }
+
+        // TODO: Handle search results
     }, 500);
 };
 </script>

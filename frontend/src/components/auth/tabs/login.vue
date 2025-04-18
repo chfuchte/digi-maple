@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { apiLogin } from "@/queries/auth";
 
 const formSchema = z.object({
     email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
@@ -28,19 +29,24 @@ const loginForm = useForm({
 });
 
 const onloginSubmit = async (values: LoginForm) => {
-   // TODO
+    const loginSuccess = await apiLogin(values.email, values.password);
+    if (loginSuccess) {
+        await router.push("/");
+    } else {
+        loginForm.resetForm();
+        // TODO: Show error message
+        alert("Fehler bei dem Login.");
+    }
 };
 </script>
 
 <template>
-    <form
-        @submit="
-            (e) => {
-                e.preventDefault();
-                loginForm.handleSubmit(onloginSubmit)(e);
-            }
-        "
-        :validation-schema="loginForm">
+    <form @submit="
+        (e) => {
+            e.preventDefault();
+            loginForm.handleSubmit(onloginSubmit)(e);
+        }
+    " :validation-schema="loginForm">
         <Card>
             <CardHeader>
                 <CardTitle>Anmeldung</CardTitle>
