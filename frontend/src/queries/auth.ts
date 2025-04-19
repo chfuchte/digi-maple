@@ -1,10 +1,10 @@
+import { fetcher } from "@/lib/fetch";
 import { tryCatch } from "@/lib/utils";
-import axios from "axios";
 import { z } from "zod";
 
 export async function apiLogin(email: string, password: string): Promise<boolean> {
     const res = await tryCatch(
-        axios.post("http://localhost:8080/api/auth/login", {
+        fetcher.post("http://localhost:8080/api/auth/login", {
             email: email,
             password: password,
         }),
@@ -19,7 +19,7 @@ export async function apiLogin(email: string, password: string): Promise<boolean
 
 export async function apiRegister(email: string, password: string, fullName: string): Promise<boolean> {
     const res = await tryCatch(
-        axios.post("http://localhost:8080/api/auth/register", {
+        fetcher.post("http://localhost:8080/api/auth/register", {
             email: email,
             password: password,
             full_name: fullName,
@@ -34,7 +34,7 @@ export async function apiRegister(email: string, password: string, fullName: str
 }
 
 export async function apiLogout(): Promise<boolean> {
-    const res = await tryCatch(axios.post("http://localhost:8080/api/auth/logout"));
+    const res = await tryCatch(fetcher.post("http://localhost:8080/api/auth/logout"));
 
     if (res.error) {
         return false;
@@ -51,7 +51,9 @@ export async function apiWhoami(): Promise<
       }
     | false
 > {
-    const res = await tryCatch(axios.get("http://localhost:8080/api/auth/whoami"));
+    const res = await tryCatch(fetcher.get("http://localhost:8080/api/auth/whoami", {
+        withCredentials: true,
+    }));
 
     if (res.error) {
         return false;

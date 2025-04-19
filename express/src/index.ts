@@ -15,7 +15,15 @@ const app = express()
             origin: env.FRONTEND_URL,
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             optionsSuccessStatus: 204,
-            allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+            allowedHeaders: [
+                "Content-Type",
+                "Authorization",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Allow-Credentials"
+            ],
+            credentials: true,
         }),
     )
     .use(express.json())

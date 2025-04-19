@@ -1,12 +1,12 @@
+import { fetcher } from "@/lib/fetch";
 import { tryCatch } from "@/lib/utils";
-import axios from "axios";
 import { z } from "zod";
 
 export async function apiUploadMapImg(file: File, mapId: number): Promise<boolean> {
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await tryCatch(axios.post(`http://localhost:8080/api/maps/upload/${mapId}`, formData));
+    const res = await tryCatch(fetcher.post(`http://localhost:8080/api/maps/upload/${mapId}`, formData));
 
     if (res.error) {
         return false;
@@ -16,7 +16,7 @@ export async function apiUploadMapImg(file: File, mapId: number): Promise<boolea
 }
 
 export async function apiCreateMap(name: string): Promise<number | null> {
-    const res = await tryCatch(axios.post("http://localhost:8080/api/maps", { name }));
+    const res = await tryCatch(fetcher.post("http://localhost:8080/api/maps", { name }));
     if (res.error) {
         return null;
     }
@@ -57,7 +57,7 @@ export async function apiGetMap(mapId: number): Promise<
       }
     | false
 > {
-    const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/${mapId}`));
+    const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/${mapId}`));
 
     if (res.error) {
         return false;
@@ -105,7 +105,7 @@ export async function apiGetUserMaps(): Promise<
       }[]
     | false
 > {
-    const res = await tryCatch(axios.get("http://localhost:8080/api/maps/user"));
+    const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/user"));
 
     if (res.error) {
         return false;
@@ -135,7 +135,7 @@ export async function apiGetUserMaps(): Promise<
 }
 
 export async function apiDeleteMap(mapId: number): Promise<boolean> {
-    const res = await tryCatch(axios.delete(`http://localhost:8080/api/maps/${mapId}`));
+    const res = await tryCatch(fetcher.delete(`http://localhost:8080/api/maps/${mapId}`));
 
     if (res.error) {
         return false;
@@ -154,7 +154,7 @@ export async function apiSearchMaps(query: string): Promise<
       }[]
     | false
 > {
-    const res = await tryCatch(axios.get(`http://localhost:8080/api/maps/search?s=${query}`));
+    const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/search?s=${query}`));
 
     if (res.error) {
         return false;
@@ -198,7 +198,7 @@ export async function apiAddMarker(
     | false
 > {
     const res = await tryCatch(
-        axios.post(`http://localhost:8080/api/maps/${mapId}/markers`, {
+        fetcher.post(`http://localhost:8080/api/maps/${mapId}/markers`, {
             x,
             y,
             title,
@@ -241,7 +241,7 @@ export async function apiUpdateMarker(
         color?: string;
     },
 ): Promise<boolean> {
-    const res = await tryCatch(axios.put(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
+    const res = await tryCatch(fetcher.put(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
 
     if (res.error) {
         return false;
@@ -251,7 +251,7 @@ export async function apiUpdateMarker(
 }
 
 export async function apiDeleteMarker(mapId: number, markerId: number): Promise<boolean> {
-    const res = await tryCatch(axios.delete(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`));
+    const res = await tryCatch(fetcher.delete(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`));
 
     if (res.error) {
         return false;
@@ -261,7 +261,7 @@ export async function apiDeleteMarker(mapId: number, markerId: number): Promise<
 }
 
 export async function apiUpdateMap(mapId: number, name: string): Promise<boolean> {
-    const res = await tryCatch(axios.put(`http://localhost:8080/api/maps/${mapId}`, { name }));
+    const res = await tryCatch(fetcher.put(`http://localhost:8080/api/maps/${mapId}`, { name }));
 
     if (res.error) {
         return false;
