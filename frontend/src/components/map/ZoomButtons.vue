@@ -11,7 +11,7 @@ const emit = defineEmits(["zoomIn", "zoomOut"]);
 </script>
 
 <template>
-    <div class="flex flex-col gap-1 rounded-md border p-1.5 bg-background">
+    <div class="flex flex-col gap-1 rounded-md border bg-background p-1.5">
         <Button @click="emit('zoomIn')" :disabled="props.zoomInDisabled" variant="secondary">
             <LucideZoomIn />
         </Button>

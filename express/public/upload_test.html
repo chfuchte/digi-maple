@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Map Image Upload</title>
+    </head>
+
+    <body>
+        <h1>Upload Map Image</h1>
+        <form id="uploadForm">
+            <label for="mapId">Map ID:</label>
+            <input type="text" id="mapId" name="mapId" required /><br /><br />
+
+            <label for="image">Select image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required /><br /><br />
+
+            <button type="submit">Upload</button>
+        </form>
+
+        <div id="response"></div>
+
+        <script>
+            document.getElementById("uploadForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const mapId = document.getElementById("mapId").value;
+                const fileInput = document.getElementById("image");
+                const file = fileInput.files[0];
+
+                if (!mapId || !file) {
+                    alert("Map ID and image are required.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("image", file);
+
+                try {
+                    const response = await fetch(`/api/maps/upload/${mapId}`, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    const responseDiv = document.getElementById("response");
+
+                    if (response.ok) {
+                        responseDiv.innerHTML = `<p>Upload successful!</p><p><strong>Image URL:</strong> <a href="${result.imageUrl}" target="_blank">${result.imageUrl}</a></p>`;
+                    } else {
+                        responseDiv.innerHTML = `<p style="color:red;">Error: ${result.error}</p>`;
+                    }
+                } catch (err) {
+                    console.error("Upload failed", err);
+                    document.getElementById("response").innerHTML =
+                        `<p style="color:red;">Unexpected error occurred.</p>`;
+                }
+            });
+        </script>
+    </body>
+</html>

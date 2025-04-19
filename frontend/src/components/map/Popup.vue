@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { MapMarker } from "@/schema/mapView";
 import MapIconPin from "@/components/map/pins/index.vue";
+import type { MapPinType } from "@/typings/map";
 
 const props = defineProps<{
     title: string;
     content: string;
-    icon: MapMarker["display"]["markerType"];
+    icon: MapPinType;
 }>();
 </script>
 

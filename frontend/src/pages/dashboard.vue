@@ -3,7 +3,7 @@ import Layout from "@/components/layouts/default.vue";
 import { useRouter } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { LucidePlusCircle } from "lucide-vue-next";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     AlertDialog,
     AlertDialogDescription,
