@@ -8,7 +8,11 @@ import { LucideMapPinPlus } from "lucide-vue-next";
 import MapPin from "@/components/map/pins/index.vue";
 import { Button } from "@/components/ui/button";
 import MapPopup from "@/components/map/Popup.vue";
-import type { Marker } from "@/typings/map";
+import type { MapPinType, Marker as MarkerType } from "@/typings/map";
+
+type Marker = MarkerType & {
+    id: number;
+};
 
 const props = defineProps<{
     mapImgUrl: string;

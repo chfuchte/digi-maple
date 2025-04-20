@@ -5,7 +5,9 @@ import MapPopup from "@/components/map/Popup.vue";
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
 import { latLngBounds, CRS, Map } from "leaflet";
-import type { Marker } from "@/typings/map";
+import type { MapPinType, Marker } from "@/typings/map";
+import { LucideMapPin } from "lucide-vue-next";
+import { LIcon } from "@vue-leaflet/vue-leaflet";
 
 const props = defineProps<{
     mapImgUrl: string;
@@ -31,7 +33,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
+const bounds = latLngBounds([0, 0], [2000, props.mapImgWidth/props.mapImgheight * 2000]);
 </script>
 
 <template>
@@ -50,8 +52,8 @@ const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgheight]);
         @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
             <MapZoomButtons
-                @zoom-in="leafletObject?.zoomIn(0.5)"
-                @zoom-out="leafletObject?.zoomOut(0.5)"
+                @zoom-in="leafletObject?.zoomIn(1)"
+                @zoom-out="leafletObject?.zoomOut(1)"
                 :zoom-in-disabled="zoomInDisabled"
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>

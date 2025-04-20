@@ -105,7 +105,7 @@ export async function apiGetUserMaps(): Promise<
       }[]
     | false
 > {
-    const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/user"));
+    const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/my"));
 
     if (res.error) {
         return false;

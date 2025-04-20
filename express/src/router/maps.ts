@@ -55,15 +55,13 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
         if (!req.file) {
             logger("WARN", `No file uploaded for map ID: ${mapId}`);
@@ -82,7 +80,7 @@ export function mapsRouter() {
             return;
         }
 
-        const imageUrl = `/api/maps/images/${mapId}.webp`;
+        const imageUrl = `http://localhost:8080/api/maps/images/${mapId}.webp`;
 
         logger("DEBUG", `File uploaded: ${req.file.originalname} -> ${webpPath}`);
 
@@ -151,71 +149,7 @@ export function mapsRouter() {
         }
 
         logger("INFO", `Map created with ID: ${result.data.lastInsertRowid}`);
-        res.status(201).json({ id: result.data.lastInsertRowid });
-    });
-
-    router.get("/api/maps/:id", async (req, res) => {
-        logger("INFO", `GET /api/maps/${req.params.id} called`);
-
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
-            logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
-            return;
-        }
-
-        const mapId = mapIdRes.data;
-
-        const result = await tryCatch(
-            db
-                .select({
-                    id: maps.id,
-                    name: maps.name,
-                    imgWidth: maps.imgWidth,
-                    imgHeight: maps.imgHeight,
-                    markers: markers,
-                })
-                .from(maps)
-                .where(eq(maps.id, mapId))
-                .innerJoin(markers, eq(maps.id, markers.mapId)),
-        );
-
-        if (result.error) {
-            logger("ERROR", `Failed to get map details: ${result.error}`);
-            res.status(500).json({ error: "Failed to get map details" });
-            return;
-        }
-
-        if (result.data.length === 0) {
-            logger("WARN", `Map not found with ID: ${mapId}`);
-            res.status(404).json({ error: "Map not found" });
-            return;
-        }
-
-        if (result.data.length === 1) {
-            logger("ERROR", `Multiple Maps found with ID: ${mapId}`);
-            res.status(500).json({ error: "To many maps found" });
-            return;
-        }
-
-        logger("INFO", `Map details retrieved for ID: ${mapId}`);
-        res.status(200).json({
-            id: result.data[0].id,
-            name: result.data[0].name,
-            imgWidth: result.data[0].imgWidth,
-            imgHeight: result.data[0].imgHeight,
-            imgUrl: `/api/maps/images/${mapId}.webp`,
-            markers: result.data.map((marker) => ({
-                id: marker.markers.id,
-                x: marker.markers.x,
-                y: marker.markers.y,
-                title: marker.markers.title,
-                description: marker.markers.description,
-                color: marker.markers.color,
-                icon: marker.markers.icon,
-            })),
-        });
+        res.status(200).json({ id: Number(result.data.lastInsertRowid) });
     });
 
     router.get("/api/maps/my", async (req, res) => {
@@ -243,23 +177,71 @@ export function mapsRouter() {
             return;
         }
 
-        if (result.data.length === 0) {
-            logger("INFO", "No maps found for user");
-            res.status(404).json({ error: "No maps found" });
-            return;
-        }
-
         logger("INFO", `User's maps retrieved: ${result.data.length} maps found`);
 
         res.status(200).json(
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `/api/maps/images/${map.id}.webp`,
+                imgUrl: `http://localhost:8080/api/maps/images/${map.id}.webp`,
                 imgWidth: map.imgWidth,
                 imgHeight: map.imgHeight,
             })),
         );
+    });
+
+    router.get("/api/maps/:id", async (req, res) => {
+        logger("INFO", `GET /api/maps/${req.params.id} called`);
+
+        if (Number.isInteger(req.params.id)) {
+            logger("WARN", `Invalid map ID: ${req.params.id}`);
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
+            return;
+        }
+
+        const mapId = parseInt(req.params.id);
+
+        const result = await tryCatch(
+            db.query.maps.findFirst({
+                with: {
+                    markers: true,
+                },
+                where: eq(maps.id, mapId),
+            }
+            )
+        );
+
+        if (result.error) {
+            logger("ERROR", `Failed to get map details: ${result.error}`);
+            res.status(500).json({ error: "Failed to get map details" });
+            return;
+        }
+
+        console.log(result.data);
+
+        if (!result.data) {
+            logger("WARN", `Map not found with ID: ${mapId}`);
+            res.status(404).json({ error: "Map not found" });
+            return;
+        }
+
+        logger("INFO", `Map details retrieved for ID: ${mapId}`);
+        res.status(200).json({
+            id: result.data.id,
+            name: result.data.name,
+            imgWidth: result.data.imgWidth,
+            imgHeight: result.data.imgHeight,
+            imgUrl: `http://localhost:8080/api/maps/images/${mapId}.webp`,
+            markers: result.data.markers.map((marker) => ({
+                id: marker.id,
+                x: marker.x,
+                y: marker.y,
+                title: marker.title,
+                description: marker.description,
+                color: marker.color,
+                icon: marker.icon,
+            })),
+        });
     });
 
     router.delete("/api/maps/:id", async (req, res) => {
@@ -272,15 +254,13 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
         const result = await tryCatch(db.delete(maps).where(eq(maps.id, mapId)));
 
@@ -353,15 +333,13 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
         const body = z
             .object({
@@ -404,15 +382,13 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
         // check if the map exists and belongs to the user
         const mapCheckResult = await tryCatch(
@@ -468,27 +444,21 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
-        const markerIdRes = await tryCatch<number, Error>(
-            new Promise((resolve) => resolve(parseInt(req.params.markerId))),
-        );
-
-        if (markerIdRes.error) {
+        if (Number.isInteger(req.params.markerId)) {
             logger("WARN", `Invalid marker ID: ${req.params.markerId}`);
-            res.status(400).json({ error: "Marker id is required" });
+            res.status(400).json({ error: "Marker id is required and needs to be an int" });
             return;
         }
 
-        const markerId = markerIdRes.data;
+        const markerId = parseInt(req.params.markerId);
 
         // check if the map exists and belongs to the user
         const mapCheckResult = await tryCatch(
@@ -558,25 +528,22 @@ export function mapsRouter() {
             return;
         }
 
-        const mapIdRes = await tryCatch<number, Error>(new Promise((resolve) => resolve(parseInt(req.params.id))));
-
-        if (mapIdRes.error) {
+        if (Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
-            res.status(400).json({ error: "Map id is required" });
+            res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
         }
 
-        const mapId = mapIdRes.data;
+        const mapId = parseInt(req.params.id);
 
-        const markerIdRes = await tryCatch<number, Error>(
-            new Promise((resolve) => resolve(parseInt(req.params.markerId))),
-        );
-
-        if (markerIdRes.error) {
+        if (Number.isInteger(req.params.markerId)) {
             logger("WARN", `Invalid marker ID: ${req.params.markerId}`);
-            res.status(400).json({ error: "Marker id is required" });
+            res.status(400).json({ error: "Marker id is required and needs to be an int" });
             return;
         }
+
+
+
 
         // check if the map exists and belongs to the user
         const mapCheckResult = await tryCatch(
@@ -592,7 +559,7 @@ export function mapsRouter() {
             return;
         }
 
-        const markerId = markerIdRes.data;
+        const markerId = parseInt(req.params.markerId);
 
         const result = await tryCatch(db.delete(markers).where(eq(markers.id, markerId)));
 

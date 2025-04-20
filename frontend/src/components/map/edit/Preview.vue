@@ -4,7 +4,7 @@ import { CRS, LatLng, latLngBounds, Map } from "leaflet";
 import { ref, useTemplateRef, watch } from "vue";
 import MapPopup from "@/components/map/Popup.vue";
 import MapPin from "@/components/map/pins/index.vue";
-import type { Marker } from "@/typings/map";
+import type { MapPinType, Marker } from "@/typings/map";
 
 const props = defineProps<{
     mapImgUrl: string;

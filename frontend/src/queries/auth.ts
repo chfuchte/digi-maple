@@ -51,9 +51,11 @@ export async function apiWhoami(): Promise<
       }
     | false
 > {
-    const res = await tryCatch(fetcher.get("http://localhost:8080/api/auth/whoami", {
-        withCredentials: true,
-    }));
+    const res = await tryCatch(
+        fetcher.get("http://localhost:8080/api/auth/whoami", {
+            withCredentials: true,
+        }),
+    );
 
     if (res.error) {
         return false;

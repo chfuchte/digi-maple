@@ -1,126 +1,86 @@
 <script setup lang="ts">
 import Layout from "@/components/layouts/default.vue";
+import CreateDialog from "@/components/CreateDialog.vue";
+import { onBeforeMount, ref } from "vue";
+import type { Map } from "@/typings/map";
+import { apiDeleteMap, apiGetUserMaps } from "@/queries/maps";
 import { useRouter } from "vue-router";
+import { CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LucidePlusCircle } from "lucide-vue-next";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    AlertDialog,
-    AlertDialogDescription,
-    AlertDialogHeader,
-    AlertDialogTrigger,
-    AlertDialogTitle,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { ref } from "vue";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { AlertDialog, AlertDialogTrigger, AlertDialogTitle, AlertDialogContent, AlertDialogAction, AlertDialogHeader, AlertDialogFooter, AlertDialogDescription, AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const router = useRouter();
+const maps = ref<Map[] | null>(null);
 
-const file = ref<File | null>();
-const titleModel = defineModel<string>("titleModel");
-titleModel.value = "";
+onBeforeMount(async () => {
+    const mapRes = await apiGetUserMaps();
 
-let uploading = ref<boolean>(false);
-
-function upload(): void {
-    if (file.value == null || titleModel.value == null) {
+    if (!mapRes) {
+        await router.push("/");
         return;
     }
 
-    fetch("/", {
-        method: "POST",
-        headers: {
-            "Content-Type": file.value!.type,
-        },
-        body: file.value!,
-    }).then(() => {
-        router.push("/create");
-    });
+    maps.value = mapRes;
+});
+
+function handleDeleteMap(id: number): void {
+    const deleteResult = apiDeleteMap(id);
+    if (!deleteResult) {
+        alert("Fehler beim Löschen der Karte.");
+        return;
+    }
+    maps.value = maps.value?.filter((map) => map.id !== id) ?? null;
+    alert("Karte erfolgreich gelöscht.");
 }
 </script>
 
 <template>
     <Layout>
-        <div class="flex flex-col gap-8 p-8">
-            <div class="flex flex-row justify-between">
-                <h1 class="text-3xl font-semibold">Dashboard</h1>
-                <Dialog>
-                    <DialogTrigger>
-                        <Button>
-                            <LucidePlusCircle />
-                            Neue Karte
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle> Neue Karte erstellen </DialogTitle>
-                        </DialogHeader>
-                        <div class="flex w-full flex-col items-start gap-4">
-                            <div class="flex w-full flex-col gap-1.5">
-                                <Label for="title">Titel</Label>
-                                <Input
-                                    v-bind:model-value="titleModel"
-                                    id="title"
-                                    type="text"
-                                    placeholder="Disney Land" />
-                            </div>
-                            <div class="flex w-full flex-col gap-1.5">
-                                <Label for="picture">Kartenbild</Label>
-                                <!-- TODO: event: any; find type -->
-                                <Input
-                                    id="picture"
-                                    type="file"
-                                    @change="(event: any) => (file = event.target.files[0])" />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <DialogClose>
-                                <Button variant="outline"> Zurück </Button>
-                            </DialogClose>
-                            <Button @click="upload()" :disabled="file == null || titleModel == ''"> Erstellen </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
-            <div class="column-layout grid gap-4">
-                <Card v-for="n in 8" :key="n">
+        <div class="w-full">
+            <CardHeader class="flex flex-row items-center justify-between p-4">
+                <CardTitle class="text-2xl font-semibold">Deine Karten</CardTitle>
+                <CreateDialog />
+            </CardHeader>
+            <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
+                <Card class="max-w-80 w-3/4" v-for="map in maps" :to="`/map/${map.id}`" :key="map.id">
                     <CardHeader>
-                        <CardTitle>Test Map</CardTitle>
-                        <CardDescription>Example description....</CardDescription>
+                        <CardTitle>{{ map.name }}</CardTitle>
                     </CardHeader>
                     <CardContent class="flex justify-center">
-                        <img src="/dev/preview.png" alt="An example preview map" :width="250" />
+                        <img :src="map.imgUrl" alt="Map Image" class="h-auto w-full" />
                     </CardContent>
-                    <CardFooter class="flex flex-row justify-between">
-                        <Button>Öffnen</Button>
+                    <CardFooter>
+                        <RouterLink :to="`/map/${map.id}`">
+                            <Button variant="outline" class="w-full">
+                                Bearbeiten
+                            </Button>
+                        </RouterLink>
                         <AlertDialog>
                             <AlertDialogTrigger>
-                                <Button variant="destructive"> Löschen </Button>
+                                <Button variant="destructive" class="w-full">
+                                    Löschen
+                                </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle> Bist du dir sicher? </AlertDialogTitle>
+                                    <AlertDialogTitle>Map löschen</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        Deine Map wird unwideruflich gelöscht!
+                                        Bist du sicher, dass du diese Map löschen möchtest? Diese Aktion kann nicht
+                                        rückgängig gemacht werden.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Zurück</AlertDialogCancel>
-                                    <AlertDialogAction>Löschen</AlertDialogAction>
+                                <AlertDialogFooter class="flex gap-2">
+                                    <AlertDialogAction asChild>
+                                        <Button @click="handleDeleteMap(map.id)" variant="destructive" class="flex-1">
+                                            Löschen
+                                        </Button>
+                                    </AlertDialogAction>
+                                    <AlertDialogCancel>
+                                        <Button variant="outline" class="flex-1">
+                                            Abbrechen
+                                        </Button>
+                                    </AlertDialogCancel>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
@@ -130,9 +90,3 @@ function upload(): void {
         </div>
     </Layout>
 </template>
-
-<style>
-.column-layout {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, auto));
-}
-</style>

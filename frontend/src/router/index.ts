@@ -7,23 +7,23 @@ const router = createRouter({
     routes: [
         {
             path: "/",
-            name: "Welcome to Maple",
             component: IndexPage,
         },
         {
             path: "/auth",
-            name: "Anmelden",
             component: () => import("../pages/auth/index.vue"),
         },
         {
             path: "/dashboard",
-            name: "Dashboard",
             component: () => import("../pages/dashboard.vue"),
         },
         {
-            path: "/edit",
-            name: "Edit a map",
-            component: () => import("../pages/edit.vue"),
+            path: "/map/:id",
+            component: () => import("../pages/map/[id]/index.vue"),
+        },
+        {
+            path: "/map/:id/edit",
+            component: () => import("../pages/map/[id]/edit.vue"),
         },
     ],
 });

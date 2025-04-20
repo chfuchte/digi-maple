@@ -9,20 +9,13 @@ export type Map = {
 export type FullMap = Map & {
     markers: {
         id: number;
-        name: string;
-        imgWidth: number;
-        imgHeight: number;
-        imgUrl: string;
-        markers: {
-            id: number;
-            x: number;
-            y: number;
-            title: string;
-            description: string;
-            icon: string;
-            color: string;
-        }[];
-    };
+        x: number;
+        y: number;
+        title: string;
+        description: string;
+        icon: string;
+        color: string;
+    }[];
 };
 
 export type Marker = {
