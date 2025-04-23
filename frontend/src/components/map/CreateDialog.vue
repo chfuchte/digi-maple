@@ -8,11 +8,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input as UIInput } from "./ui/input";
+import { Input as UIInput } from "../ui/input";
 import { apiCreateMap } from "@/queries/maps";
 import { LucidePlusCircle } from "lucide-vue-next";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 import { useRouter } from "vue-router";
 
 const titleModel = defineModel<string>("titleModel");
@@ -30,7 +30,7 @@ async function handleCreate(): Promise<void> {
         return;
     }
 
-    await router.push(`/maps/${createResult}`);
+    await router.push(`/maps/${createResult}/edit`);
 }
 </script>
 

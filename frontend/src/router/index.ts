@@ -18,12 +18,12 @@ const router = createRouter({
             component: () => import("../pages/dashboard.vue"),
         },
         {
-            path: "/map/:id",
-            component: () => import("../pages/map/[id]/index.vue"),
-        },
-        {
             path: "/map/:id/edit",
             component: () => import("../pages/map/[id]/edit.vue"),
+        },
+        {
+            path: "/map/:id",
+            component: () => import("../pages/map/[id]/index.vue"),
         },
     ],
 });

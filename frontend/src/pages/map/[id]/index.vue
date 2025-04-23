@@ -26,6 +26,11 @@ onBeforeMount(async () => {
         return;
     }
 
+    if (!mapRes.imgHeight || !mapRes.imgWidth) {
+        await router.push("/");
+        return;
+    }
+
     map.value = mapRes;
 });
 
@@ -33,7 +38,7 @@ onBeforeMount(async () => {
 
 <template>
     <Layout>
-        <MapView v-if="map" :map-img-url="map.imgUrl" :map-img-width="map.imgWidth" :map-imgheight="map.imgHeight"
+        <MapView v-if="map" :map-img-url="map.imgUrl" :map-img-width="map.imgWidth!" :map-imgheight="map.imgHeight!"
             :markers="map.markers" />
     </Layout>
 </template>

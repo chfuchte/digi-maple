@@ -18,6 +18,7 @@ import {
     LucideMoon,
     LucideSun,
     LucideMap,
+    LucideHome,
 } from "lucide-vue-next";
 import { onBeforeMount, ref } from "vue";
 
@@ -48,9 +49,9 @@ const handleLogout = async () => {
 
 <template>
     <header class="flex h-12 items-center justify-between border-b px-4">
-        <nav class="flex items-center gap-4">
+        <nav class="flex items-center flex-row truncate gap-4">
             <RouterLink to="/" class="my-2 mr-2 flex items-center gap-3">
-                <div class="flex items-center gap-1">
+                <div class="flex items-center flex-row gap-1">
                     <LucideMap :size="30" />
                     <h1 class="text-3xl">Maple</h1>
                 </div>
@@ -86,6 +87,13 @@ const handleLogout = async () => {
                                 </p>
                             </div>
                         </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <RouterLink to="/dashboard">
+                            <DropdownMenuItem class="cursor-pointer">
+                                <LucideHome />
+                                <span>Dashboard</span>
+                            </DropdownMenuItem>
+                        </RouterLink>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem @click="handleLogout" class="cursor-pointer">
                             <LucideLogOut />

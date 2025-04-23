@@ -219,7 +219,7 @@ export async function apiUpdateMarker(
         color?: string;
     },
 ): Promise<boolean> {
-    const res = await tryCatch(fetcher.put(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
+    const res = await tryCatch(fetcher.patch(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
 
     if (res.error) {
         return false;
@@ -239,7 +239,7 @@ export async function apiDeleteMarker(mapId: number, markerId: number): Promise<
 }
 
 export async function apiUpdateMap(mapId: number, name: string): Promise<boolean> {
-    const res = await tryCatch(fetcher.put(`http://localhost:8080/api/maps/${mapId}`, { name }));
+    const res = await tryCatch(fetcher.patch(`http://localhost:8080/api/maps/${mapId}`, { name }));
 
     if (res.error) {
         return false;

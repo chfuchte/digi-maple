@@ -272,8 +272,8 @@ export function mapsRouter() {
         res.status(200).json({
             id: result.data.id,
             name: result.data.name,
-            imgWidth: result.data.imgWidth,
-            imgHeight: result.data.imgHeight,
+            imgWidth: result.data.imgWidth ? result.data.imgWidth : undefined,
+            imgHeight: result.data.imgHeight ? result.data.imgHeight : undefined,
             imgUrl: `http://localhost:8080/api/maps/images/${mapId}.webp`,
             markers: result.data.markers.map((marker) => ({
                 id: marker.id,

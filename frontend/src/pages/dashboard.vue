@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Layout from "@/components/layouts/default.vue";
-import CreateDialog from "@/components/CreateDialog.vue";
+import CreateDialog from "@/components/map/CreateDialog.vue";
 import { onBeforeMount, ref } from "vue";
 import type { Map } from "@/typings/map";
 import { apiDeleteMap, apiGetUserMaps } from "@/queries/maps";
@@ -43,7 +43,7 @@ function handleDeleteMap(id: number): void {
                 <CreateDialog />
             </CardHeader>
             <div class="flex gap-4 px-4 max-sm:justify-center flex-wrap flex-row w-full">
-                <Card class="max-w-80 w-[90dvw]" v-for="map in maps" :to="`/map/${map.id}`" :key="map.id">
+                <Card class="max-w-80 w-[90dvw]" v-for="map in maps" :key="map.id">
                     <CardHeader>
                         <CardTitle>{{ map.name }}</CardTitle>
                     </CardHeader>
@@ -57,7 +57,7 @@ function handleDeleteMap(id: number): void {
                     </CardContent>
                     <CardFooter class="flex flex-wrap gap-2">
                         <div class="flex-1">
-                            <RouterLink :to="`/map/${map.id}`" class="w-full">
+                            <RouterLink :to="`/map/${map.id}/edit`" class="w-full">
                                 <Button variant="outline" class="w-full">
                                     Bearbeiten
                                 </Button>
