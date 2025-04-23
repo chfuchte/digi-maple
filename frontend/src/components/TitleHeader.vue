@@ -15,16 +15,16 @@ import {
     LucideCircleUser,
     LucideLogOut,
     LucideLogIn,
-    LucideUser,
     LucideMoon,
     LucideSun,
     LucideMap,
 } from "lucide-vue-next";
+import { onBeforeMount, ref } from "vue";
 
-const { getUser } = useCurrentUserStore();
-const user = getUser();
-
+const { getUser, logout } = useCurrentUserStore();
 const router = useRouter();
+
+const user = ref<Awaited<ReturnType<typeof getUser>>>(null)
 
 const colorMode = useColorMode({
     initialValue: "auto",
@@ -32,13 +32,16 @@ const colorMode = useColorMode({
     selector: "html",
 });
 
+onBeforeMount(async () => {
+    user.value = await getUser();
+});
+
 const toggleColorMode = () => {
     colorMode.value = colorMode.value === "light" ? "dark" : "light";
 };
 
-const logout = async () => {
-    await useCurrentUserStore().logout();
-    await useCurrentUserStore().logout();
+const handleLogout = async () => {
+    await logout();
     await router.push("/auth");
 };
 </script>
@@ -52,15 +55,14 @@ const logout = async () => {
                     <h1 class="text-3xl">Maple</h1>
                 </div>
             </RouterLink>
-            <RouterLink
-                to="/dashboard"
+            <RouterLink v-if="user" to="/dashboard"
                 class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Dashboard
             </RouterLink>
         </nav>
 
         <div class="flex items-center gap-2">
-            <Button @click="toggleColorMode" variant="ghost">
+            <Button @click="toggleColorMode" variant="ghost" size="icon">
                 <template v-if="colorMode === 'dark'">
                     <LucideSun />
                 </template>
@@ -69,7 +71,7 @@ const logout = async () => {
                 </template>
             </Button>
 
-            <DropdownMenu>
+            <DropdownMenu v-if="user">
                 <DropdownMenuTrigger>
                     <Button variant="secondary" size="icon" class="rounded-full">
                         <LucideCircleUser class="h-5 w-5" />
@@ -82,30 +84,22 @@ const logout = async () => {
                                 <p class="text-sm font-medium leading-none">
                                     {{ user.full_name }}
                                 </p>
-                                <p class="text-xs leading-none text-muted-foreground">3 Maps</p>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <RouterLink to="/account/general">
-                            <DropdownMenuItem class="cursor-pointer">
-                                <LucideUser />
-                                <span>Account</span>
-                            </DropdownMenuItem>
-                        </RouterLink>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem @click="logout" class="cursor-pointer">
+                        <DropdownMenuItem @click="handleLogout" class="cursor-pointer">
                             <LucideLogOut />
                             <span>Abmelden</span>
                         </DropdownMenuItem>
                     </template>
-                    <RouterLink to="/auth" v-else>
-                        <DropdownMenuItem class="cursor-pointer">
-                            <LucideLogIn />
-                            <span>Anmelden</span>
-                        </DropdownMenuItem>
-                    </RouterLink>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <RouterLink to="/auth" v-else>
+                <Button variant="ghost">
+                    <LucideLogIn />
+                    <span>Anmelden</span>
+                </Button>
+            </RouterLink>
         </div>
     </header>
 </template>

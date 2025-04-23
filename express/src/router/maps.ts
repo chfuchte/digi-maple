@@ -55,7 +55,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -190,10 +190,53 @@ export function mapsRouter() {
         );
     });
 
+    router.get("/api/maps/search", async (req, res) => {
+        logger("INFO", "GET /api/maps/search called");
+
+        const searchTerm = req.query.s as string;
+
+        if (!searchTerm) {
+            logger("WARN", "Search term is required for searching maps");
+            res.status(400).json({ error: "Search term is required" });
+            return;
+        }
+
+        const result = await tryCatch(
+            db
+                .select({ id: maps.id, name: maps.name, imgWidth: maps.imgWidth, imgHeight: maps.imgHeight })
+                .from(maps)
+                .where(sql`${maps.name} LIKE ${`%${searchTerm}%`}`),
+        );
+
+        if (result.error) {
+            logger("ERROR", `Failed to search maps: ${result.error}`);
+            res.status(500).json({ error: "Failed to search maps" });
+            return;
+        }
+
+        if (result.data.length === 0) {
+            logger("INFO", "No maps found matching the search term");
+            res.status(404).json({ error: "No maps found" });
+            return;
+        }
+
+        logger("INFO", `Maps found matching the search term: ${result.data.length} maps found`);
+
+        res.status(200).json(
+            result.data.map((map) => ({
+                id: map.id,
+                name: map.name,
+                imgUrl: `/api/maps/images/${map.id}.webp`,
+                imgWidth: map.imgWidth,
+                imgHeight: map.imgHeight,
+            })),
+        );
+    });
+
     router.get("/api/maps/:id", async (req, res) => {
         logger("INFO", `GET /api/maps/${req.params.id} called`);
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -254,7 +297,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -280,49 +323,6 @@ export function mapsRouter() {
         res.status(200).json({ message: "Map deleted successfully" });
     });
 
-    router.get("/api/maps/search", async (req, res) => {
-        logger("INFO", "GET /api/maps/search called");
-
-        const searchTerm = req.query.s as string;
-
-        if (!searchTerm) {
-            logger("WARN", "Search term is required for searching maps");
-            res.status(400).json({ error: "Search term is required" });
-            return;
-        }
-
-        const result = await tryCatch(
-            db
-                .select({ id: maps.id, name: maps.name, imgWidth: maps.imgWidth, imgHeight: maps.imgHeight })
-                .from(maps)
-                .where(sql`${maps.name} LIKE ${`%${searchTerm}%`}`),
-        );
-
-        if (result.error) {
-            logger("ERROR", `Failed to search maps: ${result.error}`);
-            res.status(500).json({ error: "Failed to search maps" });
-            return;
-        }
-
-        if (result.data.length === 0) {
-            logger("INFO", "No maps found matching the search term");
-            res.status(404).json({ error: "No maps found" });
-            return;
-        }
-
-        logger("INFO", `Maps found matching the search term: ${result.data.length} maps found`);
-
-        res.status(200).json(
-            result.data.map((map) => ({
-                id: map.id,
-                name: map.name,
-                imgUrl: `/api/maps/images/${map.id}.webp`,
-                imgWidth: map.imgWidth,
-                imgHeight: map.imgHeight,
-            })),
-        );
-    });
-
     router.patch("/api/maps/:id", async (req, res) => {
         logger("INFO", `PATCH /api/maps/${req.params.id} called`);
 
@@ -333,7 +333,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -382,7 +382,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -444,7 +444,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -528,7 +528,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (Number.isInteger(req.params.id)) {
+        if (!Number.isInteger(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
