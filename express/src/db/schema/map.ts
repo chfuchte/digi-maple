@@ -8,8 +8,8 @@ export const maps = sqliteTable("maps", {
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    imgWidth: integer("img_w").notNull().default(-1),
-    imgHeight: integer("img_h").notNull().default(-1),
+    imgWidth: integer("img_w"),
+    imgHeight: integer("img_h"),
 });
 
 export const mapRelations = relations(maps, ({ one, many }) => ({

@@ -9,17 +9,17 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input as UIInput } from "./ui/input";
-import { ref } from "vue";
-import { apiCreateMap, apiUploadMapImg } from "@/queries/maps";
+import { apiCreateMap } from "@/queries/maps";
 import { LucidePlusCircle } from "lucide-vue-next";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
+import { useRouter } from "vue-router";
 
 const titleModel = defineModel<string>("titleModel");
-const file = ref<File | null>();
+const router = useRouter();
 
-async function handleUpload(): Promise<void> {
-    if (!file.value || !titleModel.value) {
+async function handleCreate(): Promise<void> {
+    if (!titleModel.value) {
         alert("Bitte Titel und Datei angeben.");
         return;
     }
@@ -30,14 +30,7 @@ async function handleUpload(): Promise<void> {
         return;
     }
 
-    const formData = new FormData();
-    formData.append("image", file.value!);
-
-    const uploadResult = await apiUploadMapImg(file.value, createResult);
-    if (!uploadResult) {
-        alert("Fehler beim Hochladen des Bildes.");
-        return;
-    }
+    await router.push(`/maps/${createResult}`);
 }
 </script>
 
@@ -58,16 +51,12 @@ async function handleUpload(): Promise<void> {
                     <Label for="title">Titel</Label>
                     <UIInput v-model="titleModel" id="title" type="text" placeholder="Disney Land" />
                 </div>
-                <div class="flex w-full flex-col gap-1.5">
-                    <Label for="picture">Datei</Label>
-                    <input type="file" @input="(event: any) => (file = event.target.files[0])" />
-                </div>
             </div>
             <DialogFooter>
                 <DialogClose>
                     <Button variant="outline"> Abbrechen </Button>
                 </DialogClose>
-                <Button @click="handleUpload()" :disabled="!file || titleModel == ''">Erstellen</Button>
+                <Button @click="handleCreate()" :disabled="titleModel == ''">Erstellen</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
