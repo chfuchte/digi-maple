@@ -1,5 +1,6 @@
 import { fetcher } from "@/lib/fetch";
 import { tryCatch } from "@/lib/utils";
+import type { FullMap, Map } from "@/typings/map";
 import { z } from "zod";
 
 export async function apiUploadMapImg(file: File, mapId: number): Promise<boolean> {
@@ -39,22 +40,7 @@ export async function apiCreateMap(name: string): Promise<number | null> {
 }
 
 export async function apiGetMap(mapId: number): Promise<
-    | {
-          id: number;
-          name: string;
-          imgWidth: number;
-          imgHeight: number;
-          imgUrl: string;
-          markers: {
-              id: number;
-              x: number;
-              y: number;
-              title: string;
-              description: string;
-              icon: string;
-              color: string;
-          }[];
-      }
+    | FullMap
     | false
 > {
     const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/${mapId}`));
@@ -71,8 +57,8 @@ export async function apiGetMap(mapId: number): Promise<
         .object({
             id: z.number(),
             name: z.string(),
-            imgWidth: z.number(),
-            imgHeight: z.number(),
+            imgWidth: z.number().optional(),
+            imgHeight: z.number().optional(),
             imgUrl: z.string(),
             markers: z.array(
                 z.object({
@@ -96,13 +82,7 @@ export async function apiGetMap(mapId: number): Promise<
 }
 
 export async function apiGetUserMaps(): Promise<
-    | {
-          id: number;
-          name: string;
-          imgWidth: number;
-          imgHeight: number;
-          imgUrl: string;
-      }[]
+    | Map[]
     | false
 > {
     const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/my"));
@@ -120,8 +100,8 @@ export async function apiGetUserMaps(): Promise<
             z.object({
                 id: z.number(),
                 name: z.string(),
-                imgWidth: z.number(),
-                imgHeight: z.number(),
+                imgWidth: z.number().optional(),
+                imgHeight: z.number().optional(),
                 imgUrl: z.string(),
             }),
         )
@@ -145,13 +125,7 @@ export async function apiDeleteMap(mapId: number): Promise<boolean> {
 }
 
 export async function apiSearchMaps(query: string): Promise<
-    | {
-          id: number;
-          name: string;
-          imgWidth: number;
-          imgHeight: number;
-          imgUrl: string;
-      }[]
+    | Map[]
     | false
 > {
     const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/search?s=${query}`));
@@ -169,8 +143,8 @@ export async function apiSearchMaps(query: string): Promise<
             z.object({
                 id: z.number(),
                 name: z.string(),
-                imgWidth: z.number(),
-                imgHeight: z.number(),
+                imgWidth: z.number().optional(),
+                imgHeight: z.number().optional(),
                 imgUrl: z.string(),
             }),
         )
