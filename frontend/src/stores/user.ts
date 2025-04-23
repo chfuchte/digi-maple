@@ -23,13 +23,10 @@ export const useCurrentUserStore = defineStore("currentUser", () => {
     };
 
     const getUser = async () => {
-        console.log("getUser");
         if (currentUser.value === null || Date.now() - lastFetched.value > 1000 * 60 * 5) {
             // 5 min
-            console.log("fetching user");
             await fetch();
         }
-        console.log("user", currentUser.value);
         return currentUser.value;
     };
 

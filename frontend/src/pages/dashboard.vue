@@ -42,48 +42,57 @@ function handleDeleteMap(id: number): void {
                 <CardTitle class="text-2xl font-semibold">Deine Karten</CardTitle>
                 <CreateDialog />
             </CardHeader>
-            <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
-                <Card class="max-w-80 w-3/4" v-for="map in maps" :to="`/map/${map.id}`" :key="map.id">
+            <div class="flex gap-4 px-4 max-sm:justify-center flex-wrap flex-row w-full">
+                <Card class="max-w-80 w-[90dvw]" v-for="map in maps" :to="`/map/${map.id}`" :key="map.id">
                     <CardHeader>
                         <CardTitle>{{ map.name }}</CardTitle>
                     </CardHeader>
-                    <CardContent class="flex justify-center">
-                        <img :src="map.imgUrl" alt="Map Image" class="h-auto w-full" />
+                    <CardContent class="flex justify-center items-center bg-background h-[300px]">
+                        <div v-if="map.imgHeight && map.imgWidth"
+                            :style="`background-image: url(${map.imgUrl}); background-repeat: no-repeat; background-size: cover; background-position: center center;`"
+                            class="w-full h-full" />
+                        <p v-else class="text-center text-2xl font-semibold">
+                            Bitte Kartenbild hochgeladen
+                        </p>
                     </CardContent>
-                    <CardFooter>
-                        <RouterLink :to="`/map/${map.id}`">
-                            <Button variant="outline" class="w-full">
-                                Bearbeiten
-                            </Button>
-                        </RouterLink>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                                <Button variant="destructive" class="w-full">
-                                    Löschen
+                    <CardFooter class="flex flex-wrap gap-2">
+                        <div class="flex-1">
+                            <RouterLink :to="`/map/${map.id}`" class="w-full">
+                                <Button variant="outline" class="w-full">
+                                    Bearbeiten
                                 </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Map löschen</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Bist du sicher, dass du diese Map löschen möchtest? Diese Aktion kann nicht
-                                        rückgängig gemacht werden.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter class="flex gap-2">
-                                    <AlertDialogAction asChild>
-                                        <Button @click="handleDeleteMap(map.id)" variant="destructive" class="flex-1">
-                                            Löschen
-                                        </Button>
-                                    </AlertDialogAction>
-                                    <AlertDialogCancel>
-                                        <Button variant="outline" class="flex-1">
-                                            Abbrechen
-                                        </Button>
-                                    </AlertDialogCancel>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                            </RouterLink>
+                        </div>
+                        <div class="flex-1">
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" class="w-full">
+                                        Löschen
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Karte löschen</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Bist du sicher, dass du diese Karte löschen möchtest? <br/> Diese Aktion kann nicht
+                                            rückgängig gemacht werden.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter class="flex gap-2">
+                                        <AlertDialogAction asChild>
+                                            <Button @click="handleDeleteMap(map.id)" class="flex-1">
+                                                Löschen
+                                            </Button>
+                                        </AlertDialogAction>
+                                        <AlertDialogCancel asChild>
+                                            <Button variant="outline" class="flex-1">
+                                                Abbrechen
+                                            </Button>
+                                        </AlertDialogCancel>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
                     </CardFooter>
                 </Card>
             </div>

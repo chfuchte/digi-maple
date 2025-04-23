@@ -55,7 +55,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -184,8 +184,8 @@ export function mapsRouter() {
                 id: map.id,
                 name: map.name,
                 imgUrl: `http://localhost:8080/api/maps/images/${map.id}.webp`,
-                imgWidth: map.imgWidth,
-                imgHeight: map.imgHeight,
+                imgWidth: map.imgWidth ? map.imgWidth : undefined,
+                imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
         );
     });
@@ -227,8 +227,8 @@ export function mapsRouter() {
                 id: map.id,
                 name: map.name,
                 imgUrl: `/api/maps/images/${map.id}.webp`,
-                imgWidth: map.imgWidth,
-                imgHeight: map.imgHeight,
+                imgWidth: map.imgWidth ? map.imgWidth : undefined,
+                imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
         );
     });
@@ -236,7 +236,7 @@ export function mapsRouter() {
     router.get("/api/maps/:id", async (req, res) => {
         logger("INFO", `GET /api/maps/${req.params.id} called`);
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -297,7 +297,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -333,7 +333,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -382,7 +382,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -444,7 +444,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;
@@ -528,7 +528,7 @@ export function mapsRouter() {
             return;
         }
 
-        if (!Number.isInteger(req.params.id)) {
+        if (Number.isNaN(req.params.id)) {
             logger("WARN", `Invalid map ID: ${req.params.id}`);
             res.status(400).json({ error: "Map id is required and needs to be an int" });
             return;

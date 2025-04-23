@@ -82,7 +82,7 @@ export async function apiGetMap(mapId: number): Promise<
 }
 
 export async function apiGetUserMaps(): Promise<
-    | Map[]
+    Map[]
     | false
 > {
     const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/my"));
@@ -134,6 +134,10 @@ export async function apiSearchMaps(query: string): Promise<
         return false;
     }
 
+    if (res.data.status === 404) {
+        return [];
+    }
+
     if (res.data.status !== 200) {
         return false;
     }
@@ -167,8 +171,8 @@ export async function apiAddMarker(
     color: string,
 ): Promise<
     | {
-          id: number;
-      }
+        id: number;
+    }
     | false
 > {
     const res = await tryCatch(
