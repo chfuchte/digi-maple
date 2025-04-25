@@ -5,9 +5,10 @@ import { useRouter } from "vue-router";
 
 onMounted(async () => {
     const { getUser } = useCurrentUserStore();
-    const user = getUser();
+    const user = await getUser();
+    const router = useRouter();
     if (user) {
-        useRouter().push("/");
+        router.push("/");
     }
 });
 </script>
