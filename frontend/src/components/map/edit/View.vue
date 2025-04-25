@@ -57,7 +57,7 @@ const markerLocationUpdatedEvent = (id: number, location: LatLng) => {
     emit("markerLocationUpdate", id, location);
 };
 
-const bounds = latLngBounds([0, 0], [props.mapImgWidth, props.mapImgHeight]);
+const bounds = latLngBounds([0, 0], [2000, props.mapImgWidth/props.mapImgHeight * 2000]);
 </script>
 
 <template>

@@ -276,7 +276,7 @@ export function mapsRouter() {
             imgHeight: result.data.imgHeight ? result.data.imgHeight : undefined,
             imgUrl: `http://localhost:8080/api/maps/images/${mapId}.webp`,
             markers: result.data.markers.map((marker) => ({
-                id: marker.id,
+                id: Number(marker.id),
                 x: marker.x,
                 y: marker.y,
                 title: marker.title,
@@ -431,7 +431,7 @@ export function mapsRouter() {
         }
 
         logger("INFO", `Marker added to map with ID: ${mapId}`);
-        res.status(201).json({ id: result.data.lastInsertRowid });
+        res.status(200).json({ id: Number(result.data.lastInsertRowid) });
     });
 
     router.patch("/api/maps/:id/markers/:markerId", async (req, res) => {
@@ -541,9 +541,6 @@ export function mapsRouter() {
             res.status(400).json({ error: "Marker id is required and needs to be an int" });
             return;
         }
-
-
-
 
         // check if the map exists and belongs to the user
         const mapCheckResult = await tryCatch(
