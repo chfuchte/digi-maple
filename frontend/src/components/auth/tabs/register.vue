@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import { useRouter } from "vue-router";
 import { z } from "zod";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,13 +28,9 @@ const registerform = useForm({
     validationSchema: typedFormSchema,
 });
 
-const router = useRouter();
-
 const onRegisterSubmit = async (values: RegisterForm) => {
-    const registerSuccess = await apiRegister(values.fullName, values.email, values.password);
-    if (registerSuccess) {
-        router.push("/auth");
-    } else {
+    const registerSuccess = await apiRegister(values.email, values.password, values.fullName);
+    if (!registerSuccess) {
         registerform.resetField("password");
         // TODO: Show error message
         alert("Fehler bei der Registrierung.");
