@@ -33,7 +33,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const bounds = latLngBounds([0, 0], [2000, props.mapImgWidth/props.mapImgheight * 2000]);
+const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgheight) * 2000]);
 </script>
 
 <template>

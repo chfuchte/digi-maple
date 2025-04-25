@@ -39,10 +39,7 @@ export async function apiCreateMap(name: string): Promise<number | null> {
     return data.data.id;
 }
 
-export async function apiGetMap(mapId: number): Promise<
-    | FullMap
-    | false
-> {
+export async function apiGetMap(mapId: number): Promise<FullMap | false> {
     const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/${mapId}`));
 
     if (res.error) {
@@ -81,10 +78,7 @@ export async function apiGetMap(mapId: number): Promise<
     return data.data;
 }
 
-export async function apiGetUserMaps(): Promise<
-    Map[]
-    | false
-> {
+export async function apiGetUserMaps(): Promise<Map[] | false> {
     const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/my"));
 
     if (res.error) {
@@ -124,10 +118,7 @@ export async function apiDeleteMap(mapId: number): Promise<boolean> {
     return res.data.status === 200;
 }
 
-export async function apiSearchMaps(query: string): Promise<
-    | Map[]
-    | false
-> {
+export async function apiSearchMaps(query: string): Promise<Map[] | false> {
     const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/search?s=${query}`));
 
     if (res.error) {
@@ -171,8 +162,8 @@ export async function apiAddMarker(
     color: string,
 ): Promise<
     | {
-        id: number;
-    }
+          id: number;
+      }
     | false
 > {
     const res = await tryCatch(

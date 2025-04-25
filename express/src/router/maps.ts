@@ -250,8 +250,7 @@ export function mapsRouter() {
                     markers: true,
                 },
                 where: eq(maps.id, mapId),
-            }
-            )
+            }),
         );
 
         if (result.error) {

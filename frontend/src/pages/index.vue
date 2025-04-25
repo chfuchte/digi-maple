@@ -35,7 +35,7 @@ const handleSearchInput = (e: { target: { value: string } }) => {
 
 <template>
     <Layout>
-        <div class="my-4 w-full border-0 px-4 relative items-center">
+        <div class="relative my-4 w-full items-center border-0 px-4">
             <Input @input="handleSearchInput" id="search" type="text" placeholder="Suche..." class="w-full pl-10" />
             <span class="absolute inset-y-0 start-0 flex items-center justify-center px-6">
                 <MagnifyingGlassIcon class="size-6 text-muted-foreground" />
@@ -46,8 +46,8 @@ const handleSearchInput = (e: { target: { value: string } }) => {
                 <CardTitle class="text-2xl font-semibold">Suchergebnisse</CardTitle>
                 <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
             </CardHeader>
-            <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
-                <RouterLink class="max-w-80 w-3/4" v-for="map in searchResults" :to="`/map/${map.id}`" :key="map.id">
+            <div class="flex w-full flex-row flex-wrap gap-4 px-4">
+                <RouterLink class="w-3/4 max-w-80" v-for="map in searchResults" :to="`/map/${map.id}`" :key="map.id">
                     <Card class="w-full">
                         <CardHeader>
                             <CardTitle>{{ map.name }}</CardTitle>
