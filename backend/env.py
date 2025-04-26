@@ -1,7 +1,2 @@
-import sys
-
-def is_docker():
-    # check if --docker flag is passed
-    if "--docker" in sys.argv:
-        return True
-    return False
+DB_PATH = "db.sqlite"
+IMAGES_DIR = "./images"

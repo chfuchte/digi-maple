@@ -1,4 +1,4 @@
-FROM python:3.13-slim AS base
+FROM python:3.13-alpine AS base
 WORKDIR /usr/src/backend
 
 COPY . /usr/src/backend/
