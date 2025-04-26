@@ -452,7 +452,7 @@ export function mapsRouter() {
 
         const mapId = parseInt(req.params.id);
 
-        if (Number.isInteger(req.params.markerId)) {
+        if (Number.isNaN(req.params.markerId)) {
             logger("WARN", `Invalid marker ID: ${req.params.markerId}`);
             res.status(400).json({ error: "Marker id is required and needs to be an int" });
             return;
@@ -536,7 +536,7 @@ export function mapsRouter() {
 
         const mapId = parseInt(req.params.id);
 
-        if (Number.isInteger(req.params.markerId)) {
+        if (Number.isNaN(req.params.markerId)) {
             logger("WARN", `Invalid marker ID: ${req.params.markerId}`);
             res.status(400).json({ error: "Marker id is required and needs to be an int" });
             return;
