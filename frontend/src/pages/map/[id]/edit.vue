@@ -4,17 +4,32 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/componen
 import { onBeforeMount, ref } from "vue";
 import type { FullMap as ApiMap, MapPinType, Marker } from "@/typings/map";
 import { useRouter, useRoute } from "vue-router";
-import { apiAddMarker, apiDeleteMarker, apiGetMap, apiUpdateMap, apiUpdateMarker, apiUploadMapImg } from "@/queries/maps";
+import {
+    apiAddMarker,
+    apiDeleteMarker,
+    apiGetMap,
+    apiUpdateMap,
+    apiUpdateMarker,
+    apiUploadMapImg,
+} from "@/queries/maps";
 import type { LatLng, Map } from "leaflet";
 import Label from "@/components/ui/label/Label.vue";
 import { Input as UInput } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Preview from "@/components/map/edit/Preview.vue";
 import View from "@/components/map/edit/View.vue";
 import { Textarea } from "@/components/ui/textarea";
 import { LucideAccessibility, LucideAlertTriangle, LucideInfo, LucidePin } from "lucide-vue-next";
-
+import { toast } from "vue-sonner";
 
 const router = useRouter();
 const route = useRoute();
@@ -63,7 +78,7 @@ async function setMapTitle() {
 
     const mapUpdateResult = await apiUpdateMap(map.value.id, title.value);
     if (!mapUpdateResult) {
-        alert("Failed to update map title");
+        toast.error("Fehler beim Ändern des Kartennames!");
         return;
     }
 
@@ -75,7 +90,7 @@ async function uploadMapImage() {
 
     const mapUpdateResult = await apiUploadMapImg(file.value, map.value.id);
     if (!mapUpdateResult) {
-        alert("Failed to update map image");
+        toast.error("Fehler beim Ändern des Kartenbildes!");
         return;
     }
 
@@ -94,9 +109,17 @@ async function uploadMapImage() {
 async function createMarker() {
     if (!leafletObject || !map.value) return;
 
-    const res = await apiAddMarker(map.value.id, leafletObject!.getCenter().lng, leafletObject!.getCenter().lat, "Neuer Marker", "", "default", "#2563eb");
+    const res = await apiAddMarker(
+        map.value.id,
+        leafletObject!.getCenter().lng,
+        leafletObject!.getCenter().lat,
+        "Neuer Marker",
+        "",
+        "default",
+        "#2563eb",
+    );
     if (!res) {
-        alert("Failed to create marker");
+        toast.error("Fehler beim Erstellen des Markers!");
         return;
     }
 
@@ -108,7 +131,7 @@ async function createMarker() {
         description: "",
         icon: "default",
         color: "#2563eb",
-    })
+    });
 
     markerClicked(map.value.markers[map.value.markers.length - 1].id);
 }
@@ -139,7 +162,7 @@ async function markerLocationUpdated(id: number, location: LatLng) {
     });
 
     if (!res) {
-        alert("Failed to update marker location");
+        toast.error("Fehler beim Aktualisieren der Marker-Position!");
         return;
     }
 
@@ -153,14 +176,14 @@ async function saveChangesOfSelectMarker() {
     const marker = map.value.markers[selectedMarker.value!];
 
     const res = await apiUpdateMarker(map.value.id, marker.id, {
-        title: selectedMarkerEdits.value.title, 
-        description: selectedMarkerEdits.value.description, 
-        icon: selectedMarkerEdits.value.icon, 
-        color: selectedMarkerEdits.value.color
+        title: selectedMarkerEdits.value.title,
+        description: selectedMarkerEdits.value.description,
+        icon: selectedMarkerEdits.value.icon,
+        color: selectedMarkerEdits.value.color,
     });
 
     if (!res) {
-        alert("Failed to update marker");
+        toast.error("Fehler beim Aktualisieren des Markers!");
         return;
     }
 
@@ -178,7 +201,7 @@ async function deleteSelectedMarker() {
     const res = await apiDeleteMarker(map.value.id, marker.id);
 
     if (!res) {
-        alert("Failed to delete marker");
+        toast.error("Fehler beim Löschen des Markers!");
         return;
     }
 
@@ -205,33 +228,48 @@ async function deleteSelectedMarker() {
                             <legend class="-ml-1 px-1 text-sm font-medium">Generelles</legend>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>
-                                <UInput v-model="title" id="name" type="text" placeholder="Campus Bockenheim"
+                                <UInput
+                                    v-model="title"
+                                    id="name"
+                                    type="text"
+                                    placeholder="Campus Bockenheim"
                                     autocomplete="off" />
-                                <Button variant="secondary" type="button" @click="setMapTitle">
-                                    Speichern
-                                </Button>
+                                <Button variant="secondary" type="button" @click="setMapTitle"> Speichern </Button>
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="file">Kartenbild</Label>
-                                <input type="file" accept="image/*"
+                                <input
+                                    type="file"
+                                    accept="image/*"
                                     @input="(event: any) => (file = event.target.files[0])" />
-                                <Button variant="secondary" type="button" @click="uploadMapImage">
-                                    Hochladen
-                                </Button>
+                                <Button variant="secondary" type="button" @click="uploadMapImage"> Hochladen </Button>
                             </div>
                         </fieldset>
                         <fieldset class="flex w-full flex-col gap-6 rounded-lg border p-4">
                             <legend class="-ml-1 px-1 text-sm font-medium">Ausgewählten Marker bearbeiten</legend>
                             <div class="h-[150px] w-full" v-if="map && map.imgUrl && map.imgWidth && map.imgHeight">
-                                <Preview :map-img-url="map.imgUrl" :map-img-width="map.imgWidth"
-                                    :map-img-height="map.imgHeight" :marker="selectedMarker != null ? {id: selectedMarker, ...selectedMarkerEdits} : null" class="rounded-md" />
+                                <Preview
+                                    :map-img-url="map.imgUrl"
+                                    :map-img-width="map.imgWidth"
+                                    :map-img-height="map.imgHeight"
+                                    :marker="
+                                        selectedMarker != null ? { id: selectedMarker, ...selectedMarkerEdits } : null
+                                    "
+                                    class="rounded-md" />
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>
-                                <UInput v-model="selectedMarkerEdits.title" id="name" type="text" autocomplete="off"
+                                <UInput
+                                    v-model="selectedMarkerEdits.title"
+                                    id="name"
+                                    type="text"
+                                    autocomplete="off"
                                     placeholder="Gebäude B" />
                                 <Label for="description">Beschreibung</Label>
-                                <Textarea v-model="selectedMarkerEdits.description" id="description" type="text"
+                                <Textarea
+                                    v-model="selectedMarkerEdits.description"
+                                    id="description"
+                                    type="text"
                                     placeholder="Aufzüge sind kapput!" />
                                 <Label for="type">Stil</Label>
                                 <div class="flex gap-3">
@@ -242,8 +280,10 @@ async function deleteSelectedMarker() {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Marker Typ</SelectLabel>
-                                                <SelectItem v-for="icon in ['default', 'info', 'wheelchair', 'warning']"
-                                                    :value="icon" :key="icon">
+                                                <SelectItem
+                                                    v-for="icon in ['default', 'info', 'wheelchair', 'warning']"
+                                                    :value="icon"
+                                                    :key="icon">
                                                     <div class="flex flex-row items-center gap-2">
                                                         <LucideAccessibility v-if="icon == 'wheelchair'" :size="18" />
                                                         <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
@@ -255,8 +295,12 @@ async function deleteSelectedMarker() {
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                    <UInput v-model="selectedMarkerEdits.color" id="color" type="color"
-                                        autocomplete="off" class="max-w-[250px]" />
+                                    <UInput
+                                        v-model="selectedMarkerEdits.color"
+                                        id="color"
+                                        type="color"
+                                        autocomplete="off"
+                                        class="max-w-[250px]" />
                                 </div>
                                 <Button @click="deleteSelectedMarker" variant="destructive" type="button">
                                     Löschen
@@ -271,14 +315,18 @@ async function deleteSelectedMarker() {
             </ResizablePanel>
             <ResizableHandle with-handle />
             <ResizablePanel>
-                <View v-if="map && map.imgHeight && map.imgWidth" @leaflet-ready="onMapReady"
-                    @create-marker="createMarker" @marker-clicked="markerClicked"
-                    @marker-location-update="markerLocationUpdated" :map-img-url="map.imgUrl"
-                    :map-img-width="map.imgWidth!" :map-img-height="map.imgHeight!" :markers="map.markers" />
+                <View
+                    v-if="map && map.imgHeight && map.imgWidth"
+                    @leaflet-ready="onMapReady"
+                    @create-marker="createMarker"
+                    @marker-clicked="markerClicked"
+                    @marker-location-update="markerLocationUpdated"
+                    :map-img-url="map.imgUrl"
+                    :map-img-width="map.imgWidth!"
+                    :map-img-height="map.imgHeight!"
+                    :markers="map.markers" />
                 <div v-else class="flex h-full w-full items-center justify-center">
-                    <p class="text-center text-3xl font-semibold">
-                        Kein Kartenbild gefunden
-                    </p>
+                    <p class="text-center text-3xl font-semibold">Kein Kartenbild gefunden</p>
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>

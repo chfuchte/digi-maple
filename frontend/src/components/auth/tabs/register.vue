@@ -2,6 +2,9 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { z } from "zod";
+import { ref } from "vue";
+import { LucideCircleAlert } from "lucide-vue-next";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -32,10 +35,12 @@ const onRegisterSubmit = async (values: RegisterForm) => {
     const registerSuccess = await apiRegister(values.email, values.password, values.fullName);
     if (!registerSuccess) {
         registerform.resetField("password");
-        // TODO: Show error message
-        alert("Fehler bei der Registrierung.");
+        showRegistrationError.value = true;
+        return;
     }
 };
+
+const showRegistrationError = ref(false);
 </script>
 
 <template>
@@ -90,4 +95,9 @@ const onRegisterSubmit = async (values: RegisterForm) => {
             </CardFooter>
         </Card>
     </form>
+    <Alert variant="destructive" class="mt-4" v-if="showRegistrationError">
+        <LucideCircleAlert class="h-4 w-4" />
+        <AlertTitle>Fehler</AlertTitle>
+        <AlertDescription> Ein Fehler ist bei der Registierung aufgetaucht! </AlertDescription>
+    </Alert>
 </template>

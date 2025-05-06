@@ -3,6 +3,9 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { useRouter } from "vue-router";
 import { z } from "zod";
+import { ref } from "vue";
+import { LucideCircleAlert } from "lucide-vue-next";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -34,10 +37,12 @@ const onloginSubmit = async (values: LoginForm) => {
         await router.push("/");
     } else {
         loginForm.resetForm();
-        // TODO: Show error message
-        alert("Fehler bei dem Login.");
+        showLoginAlert.value = true;
+        return;
     }
 };
+
+const showLoginAlert = ref(false);
 </script>
 
 <template>
@@ -80,4 +85,9 @@ const onloginSubmit = async (values: LoginForm) => {
             </CardFooter>
         </Card>
     </form>
+    <Alert variant="destructive" class="mt-4" v-if="showLoginAlert">
+        <LucideCircleAlert class="h-4 w-4" />
+        <AlertTitle>Fehler</AlertTitle>
+        <AlertDescription> Ein Fehler ist bei dem Login aufgetaucht! </AlertDescription>
+    </Alert>
 </template>
