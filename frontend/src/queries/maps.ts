@@ -1,6 +1,7 @@
 import { fetcher } from "@/lib/fetch";
 import { tryCatch } from "@/lib/utils";
 import type { FullMap, Map } from "@/typings/map";
+import { AxiosError } from "axios";
 import { z } from "zod";
 
 export async function apiUploadMapImg(file: File, mapId: number): Promise<boolean> {
@@ -131,6 +132,11 @@ export async function apiSearchMaps(query: string): Promise<
     const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/search?s=${query}`));
 
     if (res.error) {
+        if (res.error instanceof AxiosError) {
+            if (res.error.response?.status === 404) {
+                return [];
+            }
+        }
         return false;
     }
 

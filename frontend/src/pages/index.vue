@@ -6,6 +6,7 @@ import { MagnifyingGlassIcon } from "@radix-icons/vue";
 import { apiSearchMaps } from "@/queries/maps";
 import { ref } from "vue";
 import type { Map } from "@/typings/map";
+import { toast } from "vue-sonner";
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 const searchResults = ref<Array<Map>>([]);
@@ -19,12 +20,16 @@ const handleSearchInput = (e: { target: { value: string } }) => {
         const searchResult = await apiSearchMaps(e.target.value);
 
         if (searchResult === false) {
-            alert("Fehler beim Abrufen der Daten");
+            toast.error("Fehler beim Abrufen der Daten", {
+                description: "Bitte versuche es später erneut.",
+            });
             return;
         }
 
         if (searchResult.length === 0) {
-            alert("Keine Daten gefunden");
+            toast("Keine Karten gefunden", {
+                description: "Bitte versuche es mit einem anderen Suchbegriff.",
+            });
             return;
         }
 
