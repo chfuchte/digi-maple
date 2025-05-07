@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { apiRegister } from "@/queries/auth";
+import { ref } from "vue";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
     fullName: z.string(),
@@ -19,6 +21,7 @@ const formSchema = z.object({
             "Das Passwort muss mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.",
         ),
 });
+const err = ref<string | false>(false);
 
 const typedFormSchema = toTypedSchema(formSchema);
 
@@ -31,30 +34,34 @@ const registerform = useForm({
 const onRegisterSubmit = async (values: RegisterForm) => {
     const registerSuccess = await apiRegister(values.email, values.password, values.fullName);
     if (!registerSuccess) {
+        err.value = "Registrierung fehlgeschlagen.";
         registerform.resetField("password");
-        // TODO: Show error message
-        alert("Fehler bei der Registrierung.");
     }
 };
 </script>
 
 <template>
-    <form
-        @submit="
-            (e) => {
-                e.preventDefault();
-                registerform.handleSubmit(onRegisterSubmit)(e);
-            }
-        "
-        :validation-schema="registerform">
+    <form @submit="
+        (e) => {
+            e.preventDefault();
+            registerform.handleSubmit(onRegisterSubmit)(e);
+        }
+    " :validation-schema="registerform">
         <Card>
             <CardHeader>
                 <CardTitle>Registrierung</CardTitle>
-                <CardDescription
-                    >Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten digitalisieren.
+                <CardDescription>Hier können Sie einen eigenen Account erstellen und selbst Orientierungskarten
+                    digitalisieren.
                 </CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">
+                <Alert v-if="err" variant="destructive">
+                    <AlertTitle class="font-bold">{{ err }}</AlertTitle>
+                    <AlertDescription>
+                        Bitte überprüfen Sie Ihre Eingaben oder versuchen Sie es später erneut.
+                    </AlertDescription>
+                </Alert>
+
                 <FormField v-slot="{ componentField }" name="fullName">
                     <FormItem>
                         <FormLabel>Vollständiger Name</FormLabel>

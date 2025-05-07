@@ -14,6 +14,7 @@ import Preview from "@/components/map/edit/Preview.vue";
 import View from "@/components/map/edit/View.vue";
 import { Textarea } from "@/components/ui/textarea";
 import { LucideAccessibility, LucideAlertTriangle, LucideInfo, LucidePin } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 
 const router = useRouter();
@@ -63,11 +64,14 @@ async function setMapTitle() {
 
     const mapUpdateResult = await apiUpdateMap(map.value.id, title.value);
     if (!mapUpdateResult) {
-        alert("Failed to update map title");
+        toast.error("Fehler beim Aktualisieren des Kartennamens.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
 
     map.value.name = title.value;
+    toast.success("Kartennamen erfolgreich aktualisiert.");
 }
 
 async function uploadMapImage() {
@@ -75,7 +79,9 @@ async function uploadMapImage() {
 
     const mapUpdateResult = await apiUploadMapImg(file.value, map.value.id);
     if (!mapUpdateResult) {
-        alert("Failed to update map image");
+        toast.error("Fehler beim Hochladen des Kartenbildes.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
 
@@ -89,6 +95,8 @@ async function uploadMapImage() {
     map.value = mapRes;
     title.value = mapRes.name;
     file.value = null;
+
+    toast.success("Kartenbild erfolgreich hochgeladen.");
 }
 
 async function createMarker() {
@@ -96,7 +104,9 @@ async function createMarker() {
 
     const res = await apiAddMarker(map.value.id, leafletObject!.getCenter().lng, leafletObject!.getCenter().lat, "Neuer Marker", "", "default", "#2563eb");
     if (!res) {
-        alert("Failed to create marker");
+        toast.error("Fehler beim Erstellen des Markers.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
 
@@ -111,6 +121,7 @@ async function createMarker() {
     })
 
     markerClicked(map.value.markers[map.value.markers.length - 1].id);
+    toast.success("Marker hinzugefügt");
 }
 
 function markerClicked(id: number): void {
@@ -139,7 +150,12 @@ async function markerLocationUpdated(id: number, location: LatLng) {
     });
 
     if (!res) {
-        alert("Failed to update marker location");
+        toast.error("Fehler beim Aktualisieren des Markers.", {
+            description: "Bitte versuche es später erneut.",
+        });
+        // move marker back to old location
+        map.value!.markers[marker].x = map.value!.markers[marker].x;
+        map.value!.markers[marker].y = map.value!.markers[marker].y;
         return;
     }
 
@@ -153,14 +169,16 @@ async function saveChangesOfSelectMarker() {
     const marker = map.value.markers[selectedMarker.value!];
 
     const res = await apiUpdateMarker(map.value.id, marker.id, {
-        title: selectedMarkerEdits.value.title, 
-        description: selectedMarkerEdits.value.description, 
-        icon: selectedMarkerEdits.value.icon, 
+        title: selectedMarkerEdits.value.title,
+        description: selectedMarkerEdits.value.description,
+        icon: selectedMarkerEdits.value.icon,
         color: selectedMarkerEdits.value.color
     });
 
     if (!res) {
-        alert("Failed to update marker");
+        toast.error("Fehler beim Aktualisieren des Markers.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
 
@@ -168,6 +186,7 @@ async function saveChangesOfSelectMarker() {
     map.value.markers[selectedMarker.value!].description = selectedMarkerEdits.value.description;
     map.value.markers[selectedMarker.value!].icon = selectedMarkerEdits.value.icon;
     map.value.markers[selectedMarker.value!].color = selectedMarkerEdits.value.color;
+    toast.success("Marker erfolgreich aktualisiert.");
 }
 
 async function deleteSelectedMarker() {
@@ -178,7 +197,9 @@ async function deleteSelectedMarker() {
     const res = await apiDeleteMarker(map.value.id, marker.id);
 
     if (!res) {
-        alert("Failed to delete marker");
+        toast.error("Fehler beim Löschen des Markers.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
 
@@ -192,6 +213,7 @@ async function deleteSelectedMarker() {
         x: 0,
         y: 0,
     };
+    toast.success("Marker erfolgreich gelöscht.");
 }
 </script>
 
@@ -224,7 +246,9 @@ async function deleteSelectedMarker() {
                             <legend class="-ml-1 px-1 text-sm font-medium">Ausgewählten Marker bearbeiten</legend>
                             <div class="h-[150px] w-full" v-if="map && map.imgUrl && map.imgWidth && map.imgHeight">
                                 <Preview :map-img-url="map.imgUrl" :map-img-width="map.imgWidth"
-                                    :map-img-height="map.imgHeight" :marker="selectedMarker != null ? {id: selectedMarker, ...selectedMarkerEdits} : null" class="rounded-md" />
+                                    :map-img-height="map.imgHeight"
+                                    :marker="selectedMarker != null ? { id: selectedMarker, ...selectedMarkerEdits } : null"
+                                    class="rounded-md" />
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>

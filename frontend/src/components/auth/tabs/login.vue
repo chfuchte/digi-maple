@@ -8,17 +8,16 @@ import { FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { apiLogin } from "@/queries/auth";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { ref } from "vue";
 
 const formSchema = z.object({
     email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
     password: z.string(),
 });
+const err = ref<string | false>(false);
 
 const router = useRouter();
-
-if (!router) {
-    console.log("Router not found");
-}
 
 const typedFormSchema = toTypedSchema(formSchema);
 
@@ -34,27 +33,31 @@ const onloginSubmit = async (values: LoginForm) => {
         await router.push("/");
     } else {
         loginForm.resetForm();
-        // TODO: Show error message
-        alert("Fehler bei dem Login.");
+        err.value = "Anmeldung fehlgeschlagen.";
     }
 };
 </script>
 
 <template>
-    <form
-        @submit="
-            (e) => {
-                e.preventDefault();
-                loginForm.handleSubmit(onloginSubmit)(e);
-            }
-        "
-        :validation-schema="loginForm">
+    <form @submit="
+        (e) => {
+            e.preventDefault();
+            loginForm.handleSubmit(onloginSubmit)(e);
+        }
+    " :validation-schema="loginForm">
         <Card>
             <CardHeader>
                 <CardTitle>Anmeldung</CardTitle>
                 <CardDescription> Melden Sie sich hier an. </CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">
+                <Alert v-if="err" variant="destructive">
+                    <AlertTitle class="font-bold">{{ err }}</AlertTitle>
+                    <AlertDescription>
+                        Bitte überprüfen Sie Ihre Eingaben oder versuchen Sie es später erneut.
+                    </AlertDescription>
+                </Alert>
+
                 <FormField v-slot="{ componentField }" name="email">
                     <FormItem>
                         <FormLabel>E-Mail</FormLabel>

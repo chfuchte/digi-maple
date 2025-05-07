@@ -9,6 +9,7 @@ import { CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { AlertDialog, AlertDialogTrigger, AlertDialogTitle, AlertDialogContent, AlertDialogAction, AlertDialogHeader, AlertDialogFooter, AlertDialogDescription, AlertDialogCancel } from "@/components/ui/alert-dialog";
+import { toast } from "vue-sonner";
 
 const router = useRouter();
 const maps = ref<Map[] | null>(null);
@@ -27,11 +28,13 @@ onBeforeMount(async () => {
 function handleDeleteMap(id: number): void {
     const deleteResult = apiDeleteMap(id);
     if (!deleteResult) {
-        alert("Fehler beim Löschen der Karte.");
+        toast.error("Fehler beim Löschen der Karte.", {
+            description: "Bitte versuche es später erneut.",
+        });
         return;
     }
     maps.value = maps.value?.filter((map) => map.id !== id) ?? null;
-    alert("Karte erfolgreich gelöscht.");
+    toast.success("Karte erfolgreich gelöscht.");
 }
 </script>
 
@@ -74,7 +77,8 @@ function handleDeleteMap(id: number): void {
                                     <AlertDialogHeader>
                                         <AlertDialogTitle>Karte löschen</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            Bist du sicher, dass du diese Karte löschen möchtest? <br/> Diese Aktion kann nicht
+                                            Bist du sicher, dass du diese Karte löschen möchtest? <br /> Diese Aktion
+                                            kann nicht
                                             rückgängig gemacht werden.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>

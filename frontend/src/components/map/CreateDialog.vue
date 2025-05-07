@@ -14,23 +14,26 @@ import { LucidePlusCircle } from "lucide-vue-next";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 const titleModel = defineModel<string>("titleModel");
 const router = useRouter();
 
 async function handleCreate(): Promise<void> {
     if (!titleModel.value) {
-        alert("Bitte Titel und Datei angeben.");
         return;
     }
 
     const createResult = await apiCreateMap(titleModel.value);
     if (createResult === null) {
-        alert("Fehler beim Erstellen der Karte.");
+        toast.error("Fehler beim Erstellen der Karte.", {
+            description: "Bitte versuchen Sie es später erneut.",
+        });
         return;
     }
 
     await router.push(`/maps/${createResult}/edit`);
+    toast.success("Karte erfolgreich erstellt.");
 }
 </script>
 
