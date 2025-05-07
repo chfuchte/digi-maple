@@ -8,17 +8,3 @@ import TitleHeader from "../TitleHeader.vue";
         <slot />
     </main>
 </template>
-
-<style>
-:root {
-    --header-height: 48px;
-}
-
-header {
-    height: var(--header-height);
-}
-
-main {
-    height: calc(100dvh - var(--header-height));
-}
-</style>

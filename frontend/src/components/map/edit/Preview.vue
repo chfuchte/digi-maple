@@ -29,8 +29,6 @@ const bounds = latLngBounds([0, 0], [100, props.mapImgWidth/props.mapImgHeight *
 watch(
     () => props.marker,
     (marker) => {
-        console.log("marker", marker);
-        
         if (marker != null) {
             leafletObject.value!.setView(new LatLng(bounds.getCenter().lat, bounds.getCenter().lng), leafletObject.value!.getZoom());
 
