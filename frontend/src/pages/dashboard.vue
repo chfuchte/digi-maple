@@ -57,7 +57,7 @@ function handleDeleteMap(id: number): void {
                     </CardContent>
                     <CardFooter class="flex flex-wrap gap-2">
                         <div class="flex-1">
-                            <RouterLink :to="`/map/${map.id}/edit`" class="w-full">
+                            <RouterLink :to="`/maps/${map.id}/edit`" class="w-full">
                                 <Button variant="outline" class="w-full">
                                     Bearbeiten
                                 </Button>

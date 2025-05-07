@@ -47,7 +47,7 @@ const handleSearchInput = (e: { target: { value: string } }) => {
                 <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
             </CardHeader>
             <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
-                <RouterLink class="max-w-80 w-3/4" v-for="map in searchResults" :to="`/map/${map.id}`" :key="map.id">
+                <RouterLink class="max-w-80 w-3/4" v-for="map in searchResults" :to="`/maps/${map.id}`" :key="map.id">
                     <Card class="w-full">
                         <CardHeader>
                             <CardTitle>{{ map.name }}</CardTitle>
