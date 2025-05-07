@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
 import { apiSearchMaps } from "@/queries/maps";
-import { ref } from "vue";
+import { Fragment, ref } from "vue";
 import type { Map } from "@/typings/map";
 import { toast } from "vue-sonner";
 
@@ -23,13 +23,7 @@ const handleSearchInput = (e: { target: { value: string } }) => {
             toast.error("Fehler beim Abrufen der Daten", {
                 description: "Bitte versuche es später erneut.",
             });
-            return;
-        }
-
-        if (searchResult.length === 0) {
-            toast("Keine Karten gefunden", {
-                description: "Bitte versuche es mit einem anderen Suchbegriff.",
-            });
+            searchResults.value = [];
             return;
         }
 
@@ -47,22 +41,31 @@ const handleSearchInput = (e: { target: { value: string } }) => {
             </span>
         </div>
         <div class="w-full">
-            <CardHeader>
-                <CardTitle class="text-2xl font-semibold">Suchergebnisse</CardTitle>
-                <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
+            <CardHeader v-if="searchResults.length === 0">
+                <CardTitle class="text-2xl font-semibold">Keine Karten gefunden</CardTitle>
+                <CardDescription>
+                    Es konnte keine Karten gefunden werden, die deiner Anfrage entsprechen.
+                </CardDescription>
             </CardHeader>
-            <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
-                <RouterLink class="max-w-80 w-3/4" v-for="map in searchResults" :to="`/maps/${map.id}`" :key="map.id">
-                    <Card class="w-full">
-                        <CardHeader>
-                            <CardTitle>{{ map.name }}</CardTitle>
-                        </CardHeader>
-                        <CardContent class="flex justify-center">
-                            <img :src="map.imgUrl" alt="Map Image" class="h-auto w-full" />
-                        </CardContent>
-                    </Card>
-                </RouterLink>
-            </div>
+            <Fragment v-else>
+                <CardHeader>
+                    <CardTitle class="text-2xl font-semibold">Suchergebnisse</CardTitle>
+                    <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
+                </CardHeader>
+                <div class="flex gap-4 px-4 flex-wrap flex-row w-full">
+                    <RouterLink class="max-w-80 w-3/4" v-for="map in searchResults" :to="`/maps/${map.id}`"
+                        :key="map.id">
+                        <Card class="w-full">
+                            <CardHeader>
+                                <CardTitle>{{ map.name }}</CardTitle>
+                            </CardHeader>
+                            <CardContent class="flex justify-center">
+                                <img :src="map.imgUrl" alt="Map Image" class="h-auto w-full" />
+                            </CardContent>
+                        </Card>
+                    </RouterLink>
+                </div>
+            </Fragment>
         </div>
     </Layout>
 </template>
