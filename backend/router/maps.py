@@ -1,11 +1,18 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 import os
 import sqlite3
 from PIL import Image
 from io import BytesIO
 from env import DB_PATH as DATABASE_PATH
 from env import IMAGES_DIR as ABSOLUTE_IMAGES_DIR
+
+
+class MapRequest(BaseModel):
+    name: str
+    user_id: int
+
 
 router = APIRouter()
 
@@ -43,11 +50,11 @@ async def upload_map_image(map_id: int, file: UploadFile = File(...)):
     # Update map with image dimensions
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("UPDATE maps SET imgWidth = ?, imgHeight = ? WHERE id = ?", (width, height, map_id))
+    cursor.execute("UPDATE maps SET img_w = ?, img_h = ? WHERE id = ?", (width, height, map_id))
     conn.commit()
 
     # Return image URL
-    image_url = f"http://localhost:8000/api/maps/images/{map_id}.webp"
+    image_url = f"http://localhost:8080/api/maps/images/{map_id}.webp"
     print(f"Map {map_id} updated with new image: {image_url}")
     
     # Remove the original image
@@ -58,15 +65,15 @@ async def upload_map_image(map_id: int, file: UploadFile = File(...)):
 
 # Endpoint to create a new map
 @router.post("/api/maps")
-async def create_map(name: str, user_id: int):
+async def create_map(map_req: MapRequest):
     print(f"POST /api/maps called")
 
-    if not name:
+    if not map_req.name:
         raise HTTPException(status_code=400, detail="Name is required")
 
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO maps (name, userId) VALUES (?, ?)", (name, user_id))
+    cursor.execute("INSERT INTO maps (name, user_id) VALUES (?, ?)", (map_req.name, map_req.user_id))
     conn.commit()
     map_id = cursor.lastrowid
 
@@ -90,20 +97,20 @@ async def get_user_maps(user_id: int):
     result = []
     for map in maps:
         map_id, name, img_width, img_height = map
-        img_url = f"http://localhost:8000/api/maps/images/{map_id}.webp"
+        img_url = f"http://localhost:8080/api/maps/images/{map_id}.webp"
         result.append({"id": map_id, "name": name, "imgUrl": img_url, "imgWidth": img_width, "imgHeight": img_height})
 
     return result
 
 
 # Endpoint to search maps by name
-@router.get("/api/maps/search")
+@router.get("/api/maps/search/{s}")
 async def search_maps(s: str):
     print(f"GET /api/maps/search called with search term: {s}")
 
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, imgWidth, imgHeight FROM maps WHERE name LIKE ?", ('%' + s + '%',))
+    cursor.execute("SELECT id, name, img_w, img_h FROM maps WHERE name LIKE ?", ('%' + s + '%',))
     maps = cursor.fetchall()
 
     if not maps:
@@ -112,7 +119,7 @@ async def search_maps(s: str):
     result = []
     for map in maps:
         map_id, name, img_width, img_height = map
-        img_url = f"http://localhost:8000/api/maps/images/{map_id}.webp"
+        img_url = f"http://localhost:8080/maps/images/{map_id}.webp"
         result.append({"id": map_id, "name": name, "imgUrl": img_url, "imgWidth": img_width, "imgHeight": img_height})
 
     return result
@@ -132,7 +139,7 @@ async def get_map(map_id: int):
         raise HTTPException(status_code=404, detail="Map not found")
 
     map_id, name, img_width, img_height = map_details
-    img_url = f"http://localhost:8000/api/maps/images/{map_id}.webp"
+    img_url = f"http://localhost:8080/api/maps/images/{map_id}.webp"
 
     cursor.execute("SELECT id, x, y, title, description, color, icon FROM markers WHERE mapId = ?", (map_id,))
     markers = cursor.fetchall()

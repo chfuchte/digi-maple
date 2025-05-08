@@ -19,11 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/images", StaticFiles(directory="images"), name="images")
+app.mount("/maps/images", StaticFiles(directory="images"), name="images")
 
-@app.event("startup")
-def startup():
-    db.setup()
+db.setup()
 
 app.include_router(user_router)
 app.include_router(maps_router)
