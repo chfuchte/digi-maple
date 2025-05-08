@@ -30,7 +30,7 @@ async function handleCreate(): Promise<void> {
         return;
     }
 
-    await router.push(`/maps/${createResult}/edit`);
+    await router.push(`/map/${createResult}/edit`);
 }
 </script>
 
