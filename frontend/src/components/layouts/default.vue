@@ -8,3 +8,9 @@ import TitleHeader from "../TitleHeader.vue";
         <slot />
     </main>
 </template>
+
+<style>
+main {
+    height: calc(100dvh - 48px);
+}
+</style>

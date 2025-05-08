@@ -8,7 +8,17 @@ import { useRouter } from "vue-router";
 import { CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { AlertDialog, AlertDialogTrigger, AlertDialogTitle, AlertDialogContent, AlertDialogAction, AlertDialogHeader, AlertDialogFooter, AlertDialogDescription, AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogTitle,
+    AlertDialogContent,
+    AlertDialogAction,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogDescription,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { toast } from "vue-sonner";
 
 const router = useRouter();
@@ -45,53 +55,43 @@ function handleDeleteMap(id: number): void {
                 <CardTitle class="text-2xl font-semibold">Deine Karten</CardTitle>
                 <CreateDialog />
             </CardHeader>
-            <div class="flex gap-4 px-4 max-sm:justify-center flex-wrap flex-row w-full">
-                <Card class="max-w-80 w-[90dvw]" v-for="map in maps" :key="map.id">
+            <div class="flex w-full flex-row flex-wrap gap-4 px-4 max-sm:justify-center">
+                <Card class="w-[90dvw] max-w-80" v-for="map in maps" :key="map.id">
                     <CardHeader>
                         <CardTitle>{{ map.name }}</CardTitle>
                     </CardHeader>
-                    <CardContent class="flex justify-center items-center bg-background h-[300px]">
-                        <div v-if="map.imgHeight && map.imgWidth"
+                    <CardContent class="flex h-[300px] items-center justify-center bg-background">
+                        <div
+                            v-if="map.imgHeight && map.imgWidth"
                             :style="`background-image: url(${map.imgUrl}); background-repeat: no-repeat; background-size: cover; background-position: center center;`"
-                            class="w-full h-full" />
-                        <p v-else class="text-center text-2xl font-semibold">
-                            Bitte Kartenbild hochgeladen
-                        </p>
+                            class="h-full w-full" />
+                        <p v-else class="text-center text-2xl font-semibold">Bitte Kartenbild hochgeladen</p>
                     </CardContent>
                     <CardFooter class="flex flex-wrap gap-2">
                         <div class="flex-1">
                             <RouterLink :to="`/maps/${map.id}/edit`" class="w-full">
-                                <Button variant="outline" class="w-full">
-                                    Bearbeiten
-                                </Button>
+                                <Button variant="outline" class="w-full"> Bearbeiten </Button>
                             </RouterLink>
                         </div>
                         <div class="flex-1">
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" class="w-full">
-                                        Löschen
-                                    </Button>
+                                    <Button variant="destructive" class="w-full"> Löschen </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
                                         <AlertDialogTitle>Karte löschen</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            Bist du sicher, dass du diese Karte löschen möchtest? <br /> Diese Aktion
-                                            kann nicht
-                                            rückgängig gemacht werden.
+                                            Bist du sicher, dass du diese Karte löschen möchtest? <br />
+                                            Diese Aktion kann nicht rückgängig gemacht werden.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter class="flex gap-2">
                                         <AlertDialogAction asChild>
-                                            <Button @click="handleDeleteMap(map.id)" class="flex-1">
-                                                Löschen
-                                            </Button>
+                                            <Button @click="handleDeleteMap(map.id)" class="flex-1"> Löschen </Button>
                                         </AlertDialogAction>
                                         <AlertDialogCancel asChild>
-                                            <Button variant="outline" class="flex-1">
-                                                Abbrechen
-                                            </Button>
+                                            <Button variant="outline" class="flex-1"> Abbrechen </Button>
                                         </AlertDialogCancel>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>

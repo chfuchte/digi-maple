@@ -24,13 +24,16 @@ const onPopupReady = () => {
     markerRef.value!.leafletObject?.openPopup();
 };
 
-const bounds = latLngBounds([0, 0], [100, props.mapImgWidth/props.mapImgHeight * 100]);
+const bounds = latLngBounds([0, 0], [100, (props.mapImgWidth / props.mapImgHeight) * 100]);
 
 watch(
     () => props.marker,
     (marker) => {
         if (marker != null) {
-            leafletObject.value!.setView(new LatLng(bounds.getCenter().lat, bounds.getCenter().lng), leafletObject.value!.getZoom());
+            leafletObject.value!.setView(
+                new LatLng(bounds.getCenter().lat, bounds.getCenter().lng),
+                leafletObject.value!.getZoom(),
+            );
 
             if (!markerRef.value!.leafletObject?.isPopupOpen()) {
                 markerRef.value!.leafletObject?.openPopup();
@@ -58,7 +61,11 @@ watch(
         }"
         @ready="onMapReady">
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-if="marker != null" ref="marker" :key="marker.id" :lat-lng="new LatLng(bounds.getCenter().lat, bounds.getCenter().lng)">
+        <LMarker
+            v-if="marker != null"
+            ref="marker"
+            :key="marker.id"
+            :lat-lng="new LatLng(bounds.getCenter().lat, bounds.getCenter().lng)">
             <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
                 <MapPin
                     :variant="marker.icon as MapPinType"

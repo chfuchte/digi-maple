@@ -18,7 +18,7 @@ export type CreateMarker = {
     description: string;
     icon: string;
     color: string;
-}
+};
 
 export type Marker = {
     id: number;
