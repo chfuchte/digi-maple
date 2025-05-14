@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Layout from "@/components/layouts/default.vue";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import type { FullMap as ApiMap, MapPinType, Marker } from "@/typings/map";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -68,6 +68,24 @@ const selectedMarkerEdits = ref<Omit<Marker, "id">>({
     x: 0,
     y: 0,
 });
+
+const didMarkerChange = ref<boolean>(false);
+
+watch(
+    selectedMarkerEdits,
+    async (newEdits) => {
+        didMarkerChange.value = checkForMarkerChange(newEdits);
+    },
+    { deep: true },
+);
+
+function checkForMarkerChange(newMarker: Omit<Marker, "id">): boolean {
+    if (!map.value || !selectedMarkerEdits.value) return false;
+
+    const marker = map.value.markers[selectedMarker.value!];
+    if (marker.color == newMarker.color) return false;
+    return true;
+}
 
 function onMapReady(map: Map): void {
     leafletObject = map;
@@ -157,6 +175,7 @@ function markerClicked(id: number): void {
         x: map.value!.markers[marker].x,
         y: map.value!.markers[marker].y,
     };
+    didMarkerChange.value = checkForMarkerChange(selectedMarkerEdits.value);
 }
 
 async function markerLocationUpdated(id: number, location: LatLng) {
@@ -209,6 +228,8 @@ async function saveChangesOfSelectMarker() {
     map.value.markers[selectedMarker.value!].icon = selectedMarkerEdits.value.icon;
     map.value.markers[selectedMarker.value!].color = selectedMarkerEdits.value.color;
     toast.success("Marker erfolgreich aktualisiert.");
+
+    didMarkerChange.value = false;
 }
 
 async function deleteSelectedMarker() {
@@ -326,7 +347,11 @@ async function deleteSelectedMarker() {
                                 <Button @click="deleteSelectedMarker" variant="destructive" type="button">
                                     Löschen
                                 </Button>
-                                <Button @click="saveChangesOfSelectMarker" variant="secondary" type="button">
+                                <Button
+                                    @click="saveChangesOfSelectMarker"
+                                    :disabled="!didMarkerChange"
+                                    variant="secondary"
+                                    type="button">
                                     Übernehmen
                                 </Button>
                             </div>
