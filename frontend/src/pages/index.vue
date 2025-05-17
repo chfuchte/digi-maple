@@ -4,11 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
 import { apiSearchMaps } from "@/queries/maps";
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import type { Map } from "@/typings/map";
 import { toast } from "vue-sonner";
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+const emptySearch = ref<boolean>(true);
 const searchResults = ref<Array<Map>>([]);
 
 const handleSearchInput = (e: { target: { value: string } }) => {
@@ -17,6 +18,12 @@ const handleSearchInput = (e: { target: { value: string } }) => {
     }
 
     searchTimeout = setTimeout(async () => {
+        if (e.target.value === "") {
+            emptySearch.value = true;
+        } else {
+            emptySearch.value = false;
+        }
+
         const searchResult = await apiSearchMaps(e.target.value);
 
         if (searchResult === false) {
@@ -30,6 +37,21 @@ const handleSearchInput = (e: { target: { value: string } }) => {
         searchResults.value = searchResult;
     }, 500);
 };
+
+onBeforeMount(async () => {
+    const searchResult = await apiSearchMaps("");
+    emptySearch.value = true;
+
+    if (searchResult === false) {
+        toast.error("Fehler beim Abrufen der Daten", {
+            description: "Bitte versuche es später erneut.",
+        });
+        searchResults.value = [];
+        return;
+    }
+
+    searchResults.value = searchResult;
+});
 </script>
 
 <template>
@@ -42,30 +64,30 @@ const handleSearchInput = (e: { target: { value: string } }) => {
         </div>
         <div class="w-full">
             <div v-if="searchResults.length > 0">
-                <CardHeader>
+                <CardHeader v-if="emptySearch">
+                    <CardTitle class="text-2xl font-semibold">
+                        Karten durchsuchen - Zeige nur die ersten {{ searchResults.length || 10 }} Karten an
+                    </CardTitle>
+                    <CardDescription>
+                        Bitte gib einen Suchbegriff ein, um weitere Karten zu finden.
+                    </CardDescription>
+                </CardHeader>
+                <CardHeader v-else>
                     <CardTitle class="text-2xl font-semibold">Suchergebnisse</CardTitle>
                     <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
                 </CardHeader>
                 <div class="flex w-full flex-row flex-wrap gap-4 px-4">
-                    <RouterLink
-                        class="w-3/4 max-w-80"
-                        v-for="map in searchResults"
-                        :to="`/maps/${map.id}`"
+                    <RouterLink class="w-[90dvw] max-w-80" v-for="map in searchResults" :to="`/maps/${map.id}`"
                         :key="map.id">
                         <Card class="w-full">
                             <CardHeader>
                                 <CardTitle>{{ map.name }}</CardTitle>
                             </CardHeader>
-                            <CardContent class="flex justify-center">
-                                <CardContent class="flex h-[300px] items-center justify-center bg-background">
-                                    <div
-                                        v-if="map.imgHeight && map.imgWidth"
-                                        :style="`background-image: url(${map.imgUrl}); background-repeat: no-repeat; background-size: cover; background-position: center center;`"
-                                        class="h-full w-full" />
-                                    <p v-else class="text-center text-2xl font-semibold">
-                                        Bitte Kartenbild hochgeladen
-                                    </p>
-                                </CardContent>
+                            <CardContent class="flex h-[300px] items-center justify-center bg-background">
+                                <div v-if="map.imgHeight && map.imgWidth"
+                                    :style="`background-image: url(${map.imgUrl}); background-repeat: no-repeat; background-size: cover; background-position: center center;`"
+                                    class="h-full w-full" />
+                                <p v-else class="text-center text-2xl font-semibold">Bitte Kartenbild hochgeladen</p>
                             </CardContent>
                         </Card>
                     </RouterLink>

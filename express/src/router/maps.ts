@@ -195,13 +195,18 @@ export function mapsRouter() {
 
         const searchTerm = req.query.s as string;
 
+        let result;
+
         if (!searchTerm) {
-            logger("WARN", "Search term is required for searching maps");
-            res.status(400).json({ error: "Search term is required" });
-            return;
+            result = await tryCatch(
+                db
+                    .select({ id: maps.id, name: maps.name, imgWidth: maps.imgWidth, imgHeight: maps.imgHeight })
+                    .from(maps)
+                    .limit(10)
+            );
         }
 
-        const result = await tryCatch(
+        result = await tryCatch(
             db
                 .select({ id: maps.id, name: maps.name, imgWidth: maps.imgWidth, imgHeight: maps.imgHeight })
                 .from(maps)
@@ -226,7 +231,7 @@ export function mapsRouter() {
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `/api/maps/images/${map.id}.webp`,
+                imgUrl: `http://localhost:8080/api/maps/images/${map.id}.webp`,
                 imgWidth: map.imgWidth ? map.imgWidth : undefined,
                 imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
