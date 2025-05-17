@@ -103,7 +103,11 @@ async def search_maps(s: str):
 
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, imgWidth, imgHeight FROM maps WHERE name LIKE ?", ('%' + s + '%',))
+
+    if not s:
+        cursor.execute("SELECT id, name, imgWidth, imgHeight FROM maps LIMIT 10")
+    else:
+        cursor.execute("SELECT id, name, imgWidth, imgHeight FROM maps WHERE name LIKE ?", ('%' + s + '%',))
     maps = cursor.fetchall()
 
     if not maps:
