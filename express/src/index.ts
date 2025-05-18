@@ -6,6 +6,7 @@ import env from "./env";
 import getLogger from "./utils/logger";
 import { userRouter } from "./router/user";
 import { mapsRouter } from "./router/maps";
+import { accountRouter } from "./router/account";
 
 const logger = getLogger("main");
 
@@ -30,6 +31,7 @@ const app = express()
     .use(cookieParser())
     .use(userRouter())
     .use(mapsRouter())
+    .use(accountRouter())
     .use(express.static(env.ABSOLUTE_FRONTEND_DIR));
 
 createHTTPServer(app).listen(env.PORT, () => {
