@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { apiRegister } from "@/queries/auth";
 import { ref } from "vue";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { toast } from "vue-sonner";
 
 const formSchema = z.object({
     fullName: z.string(),
@@ -36,6 +37,9 @@ const onRegisterSubmit = async (values: RegisterForm) => {
     if (!registerSuccess) {
         err.value = "Registrierung fehlgeschlagen.";
         registerform.resetField("password");
+    } else {
+        err.value = false;
+            toast.success("Registrierung erfolgreich.");
     }
 };
 </script>

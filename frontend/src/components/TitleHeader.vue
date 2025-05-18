@@ -19,6 +19,7 @@ import {
     LucideSun,
     LucideMap,
     LucideHome,
+    LucideUser,
 } from "lucide-vue-next";
 import { onBeforeMount, ref } from "vue";
 
@@ -94,6 +95,13 @@ const handleLogout = async () => {
                             <DropdownMenuItem class="cursor-pointer">
                                 <LucideHome />
                                 <span>Dashboard</span>
+                            </DropdownMenuItem>
+                        </RouterLink>
+                        <DropdownMenuSeparator />
+                        <RouterLink to="/account">
+                            <DropdownMenuItem class="cursor-pointer">
+                                <LucideUser />
+                                <span>Account</span>
                             </DropdownMenuItem>
                         </RouterLink>
                         <DropdownMenuSeparator />

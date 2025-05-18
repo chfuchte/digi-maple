@@ -25,6 +25,10 @@ const router = createRouter({
             path: "/maps/:id",
             component: () => import("../pages/maps/[id]/index.vue"),
         },
+        {
+            path: "/account",
+            component: () => import("../pages/account.vue"),
+        }
     ],
 });
 
