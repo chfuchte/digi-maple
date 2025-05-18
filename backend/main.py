@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import db
 from router.user import router as user_router
 from router.maps import router as maps_router
+from router.account import router as account_router
 
 app = FastAPI()
 
@@ -27,6 +28,7 @@ def startup():
 
 app.include_router(user_router)
 app.include_router(maps_router)
+app.include_router(account_router)
 
 if __name__ == "__main__":
     import uvicorn
