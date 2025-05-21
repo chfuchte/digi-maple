@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export async function apiLogin(email: string, password: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.post("http://localhost:8080/api/auth/login", {
+        fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
             email: email,
             password: password,
         }),
@@ -19,7 +19,7 @@ export async function apiLogin(email: string, password: string): Promise<boolean
 
 export async function apiRegister(email: string, password: string, fullName: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.post("http://localhost:8080/api/auth/register", {
+        fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
             email: email,
             password: password,
             full_name: fullName,
@@ -34,7 +34,7 @@ export async function apiRegister(email: string, password: string, fullName: str
 }
 
 export async function apiLogout(): Promise<boolean> {
-    const res = await tryCatch(fetcher.post("http://localhost:8080/api/auth/logout"));
+    const res = await tryCatch(fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`));
 
     if (res.error) {
         return false;
@@ -52,7 +52,7 @@ export async function apiWhoami(): Promise<
     | false
 > {
     const res = await tryCatch(
-        fetcher.get("http://localhost:8080/api/auth/whoami", {
+        fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/whoami`, {
             withCredentials: true,
         }),
     );

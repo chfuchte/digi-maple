@@ -7,6 +7,6 @@ If you're using an outdated version, please upgrade to the most recent stable ve
 
 ## Reporting a Vulnerability
 
-To report a security vulnerability, simply create an [issue](https://github.com/chfuchte/digitechnikum-todo/issues). 
+To report a security vulnerability, simply create an [issue](https://github.com/chfuchte/digi-maple/issues). 
 Please check if the issue has already been reported before creating a new one.
 Thanks for helping!

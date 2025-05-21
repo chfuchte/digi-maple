@@ -3,18 +3,19 @@ services:
         container_name: maple_frontend
         build: ./frontend
         ports:
-            - "80:80"
+            - "3001:80"
         restart: unless-stopped
         depends_on:
             - backend
+
     backend:
         container_name: maple_backend
         build: ./express
         ports:
-            - "8080:8080"
+            - "8080:80"
         volumes:
-            - sqlite_data:/usr/src/web/.persistent
+            - pers_data:/usr/src/web/.persistent
         restart: unless-stopped
 
 volumes:
-    sqlite_data:
+    pers_data:

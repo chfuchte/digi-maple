@@ -1,7 +1,6 @@
-node_modules
-distlogs
-images
-drizzle
-.env
-.env.example
+dist/
+node_modules/
+drizzle/
+.env*
 *.db
+images/

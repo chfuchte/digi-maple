@@ -8,7 +8,7 @@ export async function apiUploadMapImg(file: File, mapId: number): Promise<boolea
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await tryCatch(fetcher.post(`http://localhost:8080/api/maps/upload/${mapId}`, formData));
+    const res = await tryCatch(fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/maps/upload/${mapId}`, formData));
 
     if (res.error) {
         return false;
@@ -18,7 +18,7 @@ export async function apiUploadMapImg(file: File, mapId: number): Promise<boolea
 }
 
 export async function apiCreateMap(name: string): Promise<number | null> {
-    const res = await tryCatch(fetcher.post("http://localhost:8080/api/maps", { name }));
+    const res = await tryCatch(fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/maps`, { name }));
     if (res.error) {
         return null;
     }
@@ -41,7 +41,7 @@ export async function apiCreateMap(name: string): Promise<number | null> {
 }
 
 export async function apiGetMap(mapId: number): Promise<FullMap | false> {
-    const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/${mapId}`));
+    const res = await tryCatch(fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}`));
 
     if (res.error) {
         return false;
@@ -80,7 +80,7 @@ export async function apiGetMap(mapId: number): Promise<FullMap | false> {
 }
 
 export async function apiGetUserMaps(): Promise<Map[] | false> {
-    const res = await tryCatch(fetcher.get("http://localhost:8080/api/maps/my"));
+    const res = await tryCatch(fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/api/maps/my`));
 
     if (res.error) {
         return false;
@@ -110,7 +110,7 @@ export async function apiGetUserMaps(): Promise<Map[] | false> {
 }
 
 export async function apiDeleteMap(mapId: number): Promise<boolean> {
-    const res = await tryCatch(fetcher.delete(`http://localhost:8080/api/maps/${mapId}`));
+    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}`));
 
     if (res.error) {
         return false;
@@ -120,7 +120,7 @@ export async function apiDeleteMap(mapId: number): Promise<boolean> {
 }
 
 export async function apiSearchMaps(query: string): Promise<Map[] | false> {
-    const res = await tryCatch(fetcher.get(`http://localhost:8080/api/maps/search?s=${query}`));
+    const res = await tryCatch(fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/maps/search?s=${query}`));
 
     if (res.error) {
         if (res.error instanceof AxiosError) {
@@ -173,7 +173,7 @@ export async function apiAddMarker(
     | false
 > {
     const res = await tryCatch(
-        fetcher.post(`http://localhost:8080/api/maps/${mapId}/markers`, {
+        fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers`, {
             x,
             y,
             title,
@@ -216,7 +216,7 @@ export async function apiUpdateMarker(
         color?: string;
     },
 ): Promise<boolean> {
-    const res = await tryCatch(fetcher.patch(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`, data));
+    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers/${markerId}`, data));
 
     if (res.error) {
         return false;
@@ -226,7 +226,7 @@ export async function apiUpdateMarker(
 }
 
 export async function apiDeleteMarker(mapId: number, markerId: number): Promise<boolean> {
-    const res = await tryCatch(fetcher.delete(`http://localhost:8080/api/maps/${mapId}/markers/${markerId}`));
+    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers/${markerId}`));
 
     if (res.error) {
         return false;
@@ -236,7 +236,7 @@ export async function apiDeleteMarker(mapId: number, markerId: number): Promise<
 }
 
 export async function apiUpdateMap(mapId: number, name: string): Promise<boolean> {
-    const res = await tryCatch(fetcher.patch(`http://localhost:8080/api/maps/${mapId}`, { name }));
+    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}`, { name }));
 
     if (res.error) {
         return false;

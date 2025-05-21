@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { createServer as createHTTPServer } from "http";
+import { createServer } from "http";
 import env from "./env";
 import getLogger from "./utils/logger";
 import { userRouter } from "./router/user";
@@ -13,7 +13,7 @@ const logger = getLogger("main");
 const app = express()
     .use(
         cors({
-            origin: env.FRONTEND_URL,
+            origin: env.SERVER_CORS_ORIGINS.split(",").map((origin) => origin.trim()),
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             optionsSuccessStatus: 204,
             allowedHeaders: [
@@ -31,9 +31,8 @@ const app = express()
     .use(cookieParser())
     .use(userRouter())
     .use(mapsRouter())
-    .use(accountRouter())
-    .use(express.static(env.ABSOLUTE_FRONTEND_DIR));
+    .use(accountRouter());
 
-createHTTPServer(app).listen(env.PORT, () => {
-    logger("INFO", `Server is running on port http://localhost:${env.PORT}`);
+createServer(app).listen(env.SERVER_PORT, () => {
+    logger("INFO", `Server is running on port ${env.SERVER_PORT}`);
 });

@@ -19,8 +19,8 @@ const FILE_DATE_FORMAT = "dd.MM" as const;
  * ```
  */
 export default function getLogger(name: string): (level: LogLevel, message: string) => void {
-    if (env.LOG_DIR !== "NONE" && !existsSync(env.LOG_DIR)) {
-        mkdirSync(env.LOG_DIR, {
+    if (env.LOG_DIR_PATH !== "NONE" && !existsSync(env.LOG_DIR_PATH)) {
+        mkdirSync(env.LOG_DIR_PATH, {
             recursive: true,
         });
     }
@@ -32,9 +32,9 @@ export default function getLogger(name: string): (level: LogLevel, message: stri
         console.log(logMessage);
 
         // don't log to file if the log directory is set to "NONE"
-        if (env.LOG_DIR === "NONE") return;
+        if (env.LOG_DIR_PATH === "NONE") return;
 
-        const filepath = join(env.LOG_DIR, date.getFullYear().toString(), format(date, FILE_DATE_FORMAT));
+        const filepath = join(env.LOG_DIR_PATH, date.getFullYear().toString(), format(date, FILE_DATE_FORMAT));
         const filename = `${name}.log`;
 
         if (!existsSync(filepath)) {

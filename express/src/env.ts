@@ -1,12 +1,10 @@
-import { join } from "node:path";
 import { z } from "zod";
 
 const envSchema = z.object({
-    LOG_DIR: z.string(),
-    PORT: z.string(),
-    ABSOLUTE_FRONTEND_DIR: z.string().default(join(__dirname, "../public")),
-    ABSOLUTE_IMAGES_DIR: z.string().default(join(__dirname, "../images")),
-    FRONTEND_URL: z.string(),
+    LOG_DIR_PATH: z.string(),
+    IMAGES_DIR_PATH: z.string(),
+    SERVER_CORS_ORIGINS: z.string(),
+    SERVER_PORT: z.string(),
     DATABASE_URL: z.string(),
     DATABASE_AUTH_TOKEN: z.string(),
 });

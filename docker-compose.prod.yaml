@@ -1,0 +1,41 @@
+networks:
+  sv-internal:
+    external: true
+
+services:
+    frontend:
+        container_name: maple_frontend
+        build: ./frontend
+        ports:
+            - "3001:80"
+        restart: unless-stopped
+        labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=sv-internal"
+        - "traefik.http.routers.digi.rule=Host(`digi.teschnik.de`)"
+        - "traefik.http.routers.digi.entrypoints=websecure"
+        - "traefik.http.routers.digi.tls.certresolver=myresolver"
+        - "traefik.services.digi.loadbalancer.server.port=3001"
+        networks:
+            - sv-internal
+        depends_on:
+            - backend
+
+    backend:
+        container_name: maple_backend
+        build: ./express
+        volumes:
+            - pers_data:/usr/src/web/.persistent
+        restart: unless-stopped
+        labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=sv-internal"
+        - "traefik.http.routers.digiapi.rule=Host(`digiapi.teschnik.de`)"
+        - "traefik.http.routers.digiapi.entrypoints=websecure"
+        - "traefik.http.routers.digiapi.tls.certresolver=myresolver"
+        - "traefik.services.digiapi.loadbalancer.server.port=80"
+        networks:
+            - sv-internal
+
+volumes:
+    pers_data:

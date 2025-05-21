@@ -17,8 +17,8 @@ const logger = getLogger("router.maps");
 
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => {
-        mkdirSync(env.ABSOLUTE_IMAGES_DIR, { recursive: true });
-        cb(null, env.ABSOLUTE_IMAGES_DIR);
+        mkdirSync(env.IMAGES_DIR_PATH, { recursive: true });
+        cb(null, env.IMAGES_DIR_PATH);
     },
     filename: (req, file, cb) => {
         const mapId = req.params.id;
@@ -42,8 +42,8 @@ const upload = multer({
 export function mapsRouter() {
     const router = Router();
 
-    router.use("/api/maps/images", express.static(env.ABSOLUTE_IMAGES_DIR));
-    logger("INFO", `Serving static files from ${env.ABSOLUTE_IMAGES_DIR} at /api/maps/images`);
+    router.use("/api/maps/images", express.static(env.IMAGES_DIR_PATH));
+    logger("INFO", `Serving static files from ${env.IMAGES_DIR_PATH} at /api/maps/images`);
 
     router.post("/api/maps/upload/:id", upload.single("image"), async (req, res) => {
         logger("INFO", `POST /api/maps/upload/${req.params.id} called`);
@@ -70,7 +70,7 @@ export function mapsRouter() {
         }
 
         const originalPath = req.file.path;
-        const webpPath = `${env.ABSOLUTE_IMAGES_DIR}/${mapId}.webp`;
+        const webpPath = `${env.IMAGES_DIR_PATH}/${mapId}.webp`;
 
         const convertResult = await tryCatch(sharp(originalPath).webp({ quality: 90 }).toFile(webpPath));
 
@@ -80,7 +80,7 @@ export function mapsRouter() {
             return;
         }
 
-        const imageUrl = `http://localhost:8080/api/maps/images/${mapId}.webp`;
+        const imageUrl = `https://digiapi.teschnik.de/api/maps/images/${mapId}.webp`;
 
         logger("DEBUG", `File uploaded: ${req.file.originalname} -> ${webpPath}`);
 
@@ -183,7 +183,7 @@ export function mapsRouter() {
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `http://localhost:8080/api/maps/images/${map.id}.webp`,
+                imgUrl: `https://digiapi.teschnik.de/api/maps/images/${map.id}.webp`,
                 imgWidth: map.imgWidth ? map.imgWidth : undefined,
                 imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
@@ -231,7 +231,7 @@ export function mapsRouter() {
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `http://localhost:8080/api/maps/images/${map.id}.webp`,
+                imgUrl: `https://digiapi.teschnik.de/api/maps/images/${map.id}.webp`,
                 imgWidth: map.imgWidth ? map.imgWidth : undefined,
                 imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
@@ -278,7 +278,7 @@ export function mapsRouter() {
             name: result.data.name,
             imgWidth: result.data.imgWidth ? result.data.imgWidth : undefined,
             imgHeight: result.data.imgHeight ? result.data.imgHeight : undefined,
-            imgUrl: `http://localhost:8080/api/maps/images/${mapId}.webp`,
+            imgUrl: `https://digiapi.teschnik.de/api/maps/images/${mapId}.webp`,
             markers: result.data.markers.map((marker) => ({
                 id: Number(marker.id),
                 x: marker.x,

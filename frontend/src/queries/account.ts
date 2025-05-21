@@ -3,7 +3,7 @@ import { tryCatch } from "@/lib/utils";
 
 export async function apiChangePassword(oldPassword: string, newPassword: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.patch("http://localhost:8080/api/account/chpwd", {
+        fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/api/account/chpwd`, {
             old_password: oldPassword,
             new_password: newPassword,
         }),
@@ -18,7 +18,7 @@ export async function apiChangePassword(oldPassword: string, newPassword: string
 
 export async function apiChangeEmail(email: string, password: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.patch("http://localhost:8080/api/account/chemail", {
+        fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/api/account/chemail`, {
             email: email,
             password: password,
         }),
@@ -33,7 +33,7 @@ export async function apiChangeEmail(email: string, password: string): Promise<b
 
 export async function apiChangeName(name: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.patch("http://localhost:8080/api/account/chname", {
+        fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/api/account/chname`, {
             full_name: name,
         }),
     );
@@ -47,7 +47,7 @@ export async function apiChangeName(name: string): Promise<boolean> {
 
 export async function apiDeleteAccount(password: string): Promise<boolean> {
     const res = await tryCatch(
-        fetcher.delete("http://localhost:8080/api/account", {
+        fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/api/account`, {
             data: {
                 password: password,
             },

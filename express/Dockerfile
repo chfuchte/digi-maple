@@ -13,16 +13,17 @@ COPY . .
 RUN mkdir -p .persistent && touch .persistent/sqlite.db
 
 ENV NODE_ENV=production
-ENV PORT=8080
-ENV LOG_DIR=logs
-ENV FRONTEND_URL=http://localhost
+ENV SERVER_PORT=80
+ENV LOG_DIR_PATH=logs
+ENV IMAGES_DIR_PATH=/usr/src/web/.persistent/images
+ENV SERVER_CORS_ORIGINS=https://digi.teschnik.de,localhost,http://digi.teschnik.de
 ENV DATABASE_URL=file:///usr/src/web/.persistent/sqlite.db
+# fuck this, its not secure anyway
 ENV DATABASE_AUTH_TOKEN=1234
-ENV ABSOLUTE_IMAGES_DIR=/usr/src/web/.persistent/images
 
 RUN pnpm run db:generate
 RUN pnpm run db:push
 RUN pnpm run build
 
-EXPOSE 8080/tcp
+EXPOSE 80/tcp
 CMD ["node", "dist/index.js"]

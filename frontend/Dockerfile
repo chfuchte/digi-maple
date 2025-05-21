@@ -8,6 +8,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+ENV VITE_API_BASE_URL="https://digiapi.teschnik.de"
 RUN pnpm run build
 
 FROM nginx:alpine

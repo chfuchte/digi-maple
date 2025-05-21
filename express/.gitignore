@@ -1,6 +1,6 @@
 dist/
 node_modules/
 drizzle/
-.env
-sqlite.db
+.env*
+*.db
 images/

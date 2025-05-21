@@ -1,5 +1,5 @@
 {
-    "$schema": "https://shadcn-vue.com/schema.json",
+    "$schema": "httpss://shadcn-vue.com/schema.json",
     "style": "new-york",
     "typescript": true,
     "tsConfigPath": "./tsconfig.json",
