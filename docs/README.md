@@ -2,7 +2,7 @@
 
 ## Table of contents
 
-- [Deployment](#deployment)
+- [Deployment](DEPLOY.md)
 - [License](#license)
 
 ## [Deployment](DEPLOY.md)
