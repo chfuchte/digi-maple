@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
-import { LMap, LControl, LImageOverlay, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
-import MapPopup from "@/components/map/Popup.vue";
+import { LMap, LControl, LImageOverlay, LMarker, LPopup, LIcon } from "@vue-leaflet/vue-leaflet";
 import MapZoomButtons from "@/components/map/ZoomButtons.vue";
 import { ref } from "vue";
-import { latLngBounds, CRS, Map } from "leaflet";
-import type { MapPinType, Marker } from "@/typings/map";
-import { LucideMapPin } from "lucide-vue-next";
-import { LIcon } from "@vue-leaflet/vue-leaflet";
+import { latLngBounds, CRS, Map, LatLng } from "leaflet";
+import MapPin from "@/components/map/pins/index.vue";
+import MapPopup from "@/components/map/Popup.vue";
+import type { MapPinType, Marker as MarkerType } from "@/typings/map";
+
+type Marker = MarkerType & {
+    id: number;
+};
 
 const props = defineProps<{
     mapImgUrl: string;
     mapImgWidth: number;
-    mapImgheight: number;
+    mapImgHeight: number;
     markers?: Array<Marker>;
 }>();
 
@@ -33,7 +36,7 @@ const handleZoomEvent = (newZoomLevel: number) => {
     zoomOutDisabled.value = zoomLevel.value == leafletObject.value?.getMinZoom();
 };
 
-const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgheight) * 2000]);
+const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgHeight) * 2000]);
 </script>
 
 <template>
@@ -52,15 +55,18 @@ const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgheig
         @update:zoom="handleZoomEvent">
         <LControl position="bottomleft">
             <MapZoomButtons
-                @zoom-in="leafletObject?.zoomIn(1)"
-                @zoom-out="leafletObject?.zoomOut(1)"
+                @zoom-in="leafletObject?.zoomIn()"
+                @zoom-out="leafletObject?.zoomOut()"
                 :zoom-in-disabled="zoomInDisabled"
                 :zoom-out-disabled="zoomOutDisabled" />
         </LControl>
         <LImageOverlay :url="props.mapImgUrl!" :bounds />
-        <LMarker v-for="marker in markers" :key="marker.id" :lat-lng="[marker.x, marker.y]">
-            <LIcon :iconSize="[42, 42]" class-name="border-none outline-none">
-                <LucideMapPin class="fill-blue-500" :size="42" />
+        <LMarker
+            :key="marker.id"
+            v-for="marker in markers"
+            :lat-lng="new LatLng(marker.y, marker.x)">
+            <LIcon :iconSize="[32, 32]" class-name="border-none outline-none">
+                <MapPin :variant="marker.icon as MapPinType" :style="{ color: marker.color }" :size="32" />
             </LIcon>
             <LPopup>
                 <MapPopup

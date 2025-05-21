@@ -41,7 +41,7 @@ onBeforeMount(async () => {
             v-if="map"
             :map-img-url="map.imgUrl"
             :map-img-width="map.imgWidth!"
-            :map-imgheight="map.imgHeight!"
+            :map-img-height="map.imgHeight!"
             :markers="map.markers" />
     </Layout>
 </template>
