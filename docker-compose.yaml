@@ -13,7 +13,7 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - sqlite_data:/usr/src/web/sqlite.db
+            - sqlite_data:/usr/src/web/.persistent
         restart: unless-stopped
 
 volumes:
