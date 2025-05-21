@@ -1,6 +1,7 @@
 {
     "scripts": {
         "build": "tsc",
+        "build-only": "tsc --noEmit",
         "start": "node --env-file=.env dist/index.js",
         "format": "prettier --write .",
         "db:generate": "drizzle-kit generate",

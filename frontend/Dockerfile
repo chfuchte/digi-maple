@@ -9,7 +9,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 ENV VITE_API_BASE_URL="https://digiapi.teschnik.de"
-RUN pnpm run build
+RUN pnpm run build-only
 
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/www

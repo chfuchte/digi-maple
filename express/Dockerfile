@@ -23,7 +23,7 @@ ENV DATABASE_AUTH_TOKEN=1234
 
 RUN pnpm run db:generate
 RUN pnpm run db:push
-RUN pnpm run build
+RUN pnpm run build-only
 
 EXPOSE 80/tcp
 CMD ["node", "dist/index.js"]
