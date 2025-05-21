@@ -70,6 +70,7 @@ pnpm start # or the start command of your choices package manager
 The frontend is a Vite application. Please create a `.env` file in the root directory of the frontend with the following content:
 
 ```env
+VITE_API_BASE_URL=<url_of_the_backend_inkluding_port_and_protocol>
 ```
 
 ```bash
