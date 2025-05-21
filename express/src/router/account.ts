@@ -97,9 +97,7 @@ export function accountRouter() {
             res.status(401).json({ error: "Incorrect old password" });
             return;
         }
-        const result = await tryCatch(
-            db.update(users).set({ password: new_password }).where(eq(users.id, userId)),
-        );
+        const result = await tryCatch(db.update(users).set({ password: new_password }).where(eq(users.id, userId)));
         if (result.error) {
             logger("ERROR", `DB error updating password: ${result.error}`);
             res.status(500).json({ error: "Internal server error" });
@@ -146,9 +144,7 @@ export function accountRouter() {
             res.status(401).json({ error: "Incorrect password" });
             return;
         }
-        const result = await tryCatch(
-            db.update(users).set({ email }).where(eq(users.id, userId)),
-        );
+        const result = await tryCatch(db.update(users).set({ email }).where(eq(users.id, userId)));
         if (result.error) {
             logger("ERROR", `DB error updating email: ${result.error}`);
             res.status(500).json({ error: "Internal server error" });
@@ -177,9 +173,7 @@ export function accountRouter() {
             return;
         }
         const { full_name } = body.data;
-        const result = await tryCatch(
-            db.update(users).set({ full_name }).where(eq(users.id, userId)),
-        );
+        const result = await tryCatch(db.update(users).set({ full_name }).where(eq(users.id, userId)));
         if (result.error) {
             logger("ERROR", `DB error updating name: ${result.error}`);
             res.status(500).json({ error: "Internal server error" });

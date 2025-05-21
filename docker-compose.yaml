@@ -1,0 +1,20 @@
+services:
+    frontend:
+        container_name: maple_frontend
+        build: ./frontend
+        ports:
+            - "80:80"
+        restart: unless-stopped
+        depends_on:
+            - backend
+    backend:
+        container_name: maple_backend
+        build: ./express
+        ports:
+            - "8080:8080"
+        volumes:
+            - sqlite_data:/usr/src/web/sqlite.db
+        restart: unless-stopped
+
+volumes:
+    sqlite_data:

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MDIIcon from '@/components/MDIIcon.vue';
-import { mdiBike  } from '@mdi/js';
+import MDIIcon from "@/components/MDIIcon.vue";
+import { mdiBike } from "@mdi/js";
 
 const props = defineProps<{
     size?: number;

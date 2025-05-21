@@ -7,25 +7,12 @@ import { toast } from "vue-sonner";
 import { useRouter } from "vue-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormMessage,
-} from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useCurrentUserStore } from "@/stores/user";
 
 const router = useRouter();
-const {fetch} = useCurrentUserStore();
+const { fetch } = useCurrentUserStore();
 
 const schema = z.object({
     fullName: z.string().min(1, "Name darf nicht leer sein."),

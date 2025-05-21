@@ -22,7 +22,7 @@ const app = express()
                 "X-Requested-With",
                 "Accept",
                 "Origin",
-                "Access-Control-Allow-Credentials"
+                "Access-Control-Allow-Credentials",
             ],
             credentials: true,
         }),
