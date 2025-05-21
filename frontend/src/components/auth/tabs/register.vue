@@ -39,7 +39,7 @@ const onRegisterSubmit = async (values: RegisterForm) => {
         registerform.resetField("password");
     } else {
         err.value = false;
-            toast.success("Registrierung erfolgreich.");
+        toast.success("Registrierung erfolgreich.");
     }
 };
 </script>

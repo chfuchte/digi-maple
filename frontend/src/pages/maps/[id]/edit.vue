@@ -3,6 +3,7 @@ import Layout from "@/components/layouts/default.vue";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { onBeforeMount, ref } from "vue";
 import type { FullMap as ApiMap, MapPinType, Marker } from "@/typings/map";
+import { markerTypes } from "@/typings/map";
 import { useRouter, useRoute } from "vue-router";
 import {
     apiAddMarker,
@@ -28,8 +29,8 @@ import { Button } from "@/components/ui/button";
 import Preview from "@/components/map/edit/Preview.vue";
 import View from "@/components/map/edit/View.vue";
 import { Textarea } from "@/components/ui/textarea";
-import { LucideAccessibility, LucideAlertTriangle, LucideInfo, LucidePin } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import MapPin from "@/components/map/pins/index.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -301,15 +302,9 @@ async function deleteSelectedMarker() {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Marker Typ</SelectLabel>
-                                                <SelectItem
-                                                    v-for="icon in ['default', 'info', 'wheelchair', 'warning']"
-                                                    :value="icon"
-                                                    :key="icon">
+                                                <SelectItem v-for="icon in markerTypes" :value="icon" :key="icon">
                                                     <div class="flex flex-row items-center gap-2">
-                                                        <LucideAccessibility v-if="icon == 'wheelchair'" :size="18" />
-                                                        <LucideAlertTriangle v-else-if="icon == 'warning'" :size="18" />
-                                                        <LucideInfo v-else-if="icon == 'info'" :size="18" />
-                                                        <LucidePin v-else :size="18" />
+                                                        <MapPin :variant="icon" :size="18" />
                                                         {{ icon }}
                                                     </div>
                                                 </SelectItem>

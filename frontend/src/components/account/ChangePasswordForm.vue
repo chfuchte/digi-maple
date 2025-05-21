@@ -8,21 +8,8 @@ import { apiChangePassword } from "@/queries/account";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormMessage,
-} from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 const router = useRouter();
 
@@ -61,9 +48,7 @@ const onSubmit = async (values: FormValues) => {
         <Card class="w-[90svw] max-w-[450px]">
             <CardHeader>
                 <CardTitle>Passwort ändern</CardTitle>
-                <CardDescription>
-                    Ändere dein Passwort, um dein Konto zu schützen.
-                </CardDescription>
+                <CardDescription> Ändere dein Passwort, um dein Konto zu schützen. </CardDescription>
             </CardHeader>
             <CardContent>
                 <FormField v-slot="{ componentField }" name="oldPassword">

@@ -7,21 +7,8 @@ import { toast } from "vue-sonner";
 import { apiDeleteAccount } from "@/queries/account";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormMessage,
-} from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 const router = useRouter();
 
@@ -52,9 +39,8 @@ const onSubmit = async (values: FormValues) => {
             <CardHeader>
                 <CardTitle>Account löschen</CardTitle>
                 <CardDescription>
-                    Diese Aktion kann nicht rückgängig gemacht werden. Mit der Löschung deines Kontos werden
-                    alle deine Daten inklusive deiner Karten gelöscht. Bitte gib dein Passwort ein, um
-                    fortzufahren.
+                    Diese Aktion kann nicht rückgängig gemacht werden. Mit der Löschung deines Kontos werden alle deine
+                    Daten inklusive deiner Karten gelöscht. Bitte gib dein Passwort ein, um fortzufahren.
                 </CardDescription>
             </CardHeader>
             <CardContent>

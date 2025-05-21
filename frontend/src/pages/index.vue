@@ -68,23 +68,25 @@ onBeforeMount(async () => {
                     <CardTitle class="text-2xl font-semibold">
                         Karten durchsuchen - Zeige nur die ersten {{ searchResults.length || 10 }} Karten an
                     </CardTitle>
-                    <CardDescription>
-                        Bitte gib einen Suchbegriff ein, um weitere Karten zu finden.
-                    </CardDescription>
+                    <CardDescription> Bitte gib einen Suchbegriff ein, um weitere Karten zu finden. </CardDescription>
                 </CardHeader>
                 <CardHeader v-else>
                     <CardTitle class="text-2xl font-semibold">Suchergebnisse</CardTitle>
                     <CardDescription>Hier sind die Suchergebnisse für deine Anfrage.</CardDescription>
                 </CardHeader>
                 <div class="flex w-full flex-row flex-wrap gap-4 px-4">
-                    <RouterLink class="w-[90dvw] max-w-80" v-for="map in searchResults" :to="`/maps/${map.id}`"
+                    <RouterLink
+                        class="w-[90dvw] max-w-80"
+                        v-for="map in searchResults"
+                        :to="`/maps/${map.id}`"
                         :key="map.id">
                         <Card class="w-full">
                             <CardHeader>
                                 <CardTitle>{{ map.name }}</CardTitle>
                             </CardHeader>
                             <CardContent class="flex h-[300px] items-center justify-center bg-background">
-                                <div v-if="map.imgHeight && map.imgWidth"
+                                <div
+                                    v-if="map.imgHeight && map.imgWidth"
                                     :style="`background-image: url(${map.imgUrl}); background-repeat: no-repeat; background-size: cover; background-position: center center;`"
                                     class="h-full w-full" />
                                 <p v-else class="text-center text-2xl font-semibold">Bitte Kartenbild hochgeladen</p>

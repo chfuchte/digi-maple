@@ -202,7 +202,7 @@ export function mapsRouter() {
                 db
                     .select({ id: maps.id, name: maps.name, imgWidth: maps.imgWidth, imgHeight: maps.imgHeight })
                     .from(maps)
-                    .limit(10)
+                    .limit(10),
             );
         }
 
@@ -255,8 +255,7 @@ export function mapsRouter() {
                     markers: true,
                 },
                 where: eq(maps.id, mapId),
-            }
-            )
+            }),
         );
 
         if (result.error) {

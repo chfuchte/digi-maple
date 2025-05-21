@@ -30,5 +30,15 @@ export type Marker = {
     color: string;
 };
 
-export const markerTypes = ["wheelchair", "warning", "info", "default"] as const;
+export const markerTypes = [
+    "wheelchair",
+    "warning",
+    "info",
+    "elevator",
+    "stairs",
+    "default",
+    "bus",
+    "car",
+    "bike",
+] as const;
 export type MapPinType = (typeof markerTypes)[number];

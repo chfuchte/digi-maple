@@ -22,7 +22,7 @@ onBeforeMount(async () => {
 
 <template>
     <Layout>
-        <div class="flex flex-col items-center justify-center w-full p-4 gap-4">
+        <div class="flex w-full flex-col items-center justify-center gap-4 p-4">
             <h1 class="text-3xl font-bold">Dein Account</h1>
             <ChangeEmailForm />
             <ChangeNameForm />

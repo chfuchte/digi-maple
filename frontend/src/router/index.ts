@@ -28,7 +28,7 @@ const router = createRouter({
         {
             path: "/account",
             component: () => import("../pages/account.vue"),
-        }
+        },
     ],
 });
 
