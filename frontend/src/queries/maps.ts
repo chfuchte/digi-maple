@@ -110,7 +110,7 @@ export async function apiGetUserMaps(): Promise<Map[] | false> {
 }
 
 export async function apiDeleteMap(mapId: number): Promise<boolean> {
-    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}`));
+    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}`));
 
     if (res.error) {
         return false;
@@ -120,7 +120,7 @@ export async function apiDeleteMap(mapId: number): Promise<boolean> {
 }
 
 export async function apiSearchMaps(query: string): Promise<Map[] | false> {
-    const res = await tryCatch(fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/maps/search?s=${query}`));
+    const res = await tryCatch(fetcher.get(`${import.meta.env.VITE_API_BASE_URL}/api/maps/search?s=${query}`));
 
     if (res.error) {
         if (res.error instanceof AxiosError) {
@@ -173,7 +173,7 @@ export async function apiAddMarker(
     | false
 > {
     const res = await tryCatch(
-        fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers`, {
+        fetcher.post(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}/markers`, {
             x,
             y,
             title,
@@ -216,7 +216,7 @@ export async function apiUpdateMarker(
         color?: string;
     },
 ): Promise<boolean> {
-    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers/${markerId}`, data));
+    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}/markers/${markerId}`, data));
 
     if (res.error) {
         return false;
@@ -226,7 +226,7 @@ export async function apiUpdateMarker(
 }
 
 export async function apiDeleteMarker(mapId: number, markerId: number): Promise<boolean> {
-    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}/markers/${markerId}`));
+    const res = await tryCatch(fetcher.delete(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}/markers/${markerId}`));
 
     if (res.error) {
         return false;
@@ -236,7 +236,7 @@ export async function apiDeleteMarker(mapId: number, markerId: number): Promise<
 }
 
 export async function apiUpdateMap(mapId: number, name: string): Promise<boolean> {
-    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/maps/${mapId}`, { name }));
+    const res = await tryCatch(fetcher.patch(`${import.meta.env.VITE_API_BASE_URL}/api/maps/${mapId}`, { name }));
 
     if (res.error) {
         return false;
