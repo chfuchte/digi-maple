@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { useCurrentUserStore } from "@/stores/user";
 
 const router = useRouter();
+const { logout } = useCurrentUserStore();
 
 const schema = z.object({
     password: z.string().min(1, "Passwort ist erforderlich."),
@@ -25,6 +27,7 @@ const onSubmit = async (values: FormValues) => {
     const success = await apiDeleteAccount(values.password);
     if (success) {
         toast.success("Konto erfolgreich gelöscht.");
+        await logout();
         await router.push("/");
     } else {
         form.resetForm();

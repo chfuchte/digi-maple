@@ -66,8 +66,8 @@ const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgHeig
         :zoom="zoomLevel"
         :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
         :crs="CRS.Simple"
-        :min-zoom="-2"
-        :max-zoom="2"
+        :min-zoom="-5"
+        :max-zoom="5"
         :options="{
             zoomControl: false,
             attributionControl: false,

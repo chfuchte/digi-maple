@@ -263,7 +263,7 @@ async function deleteSelectedMarker() {
                         <fieldset class="flex w-full flex-col gap-6 rounded-lg border p-4">
                             <legend class="-ml-1 px-1 text-sm font-medium">Ausgewählten Marker bearbeiten</legend>
                             <div class="h-[150px] w-full" v-if="map && map.imgUrl && map.imgWidth && map.imgHeight">
-                                <Preview :map-img-url="map.imgUrl" :map-img-width="map.imgWidth"
+                                <Preview :map-img-url="map.imgUrl" :map-img-width="map.imgWidth" :key="viewKey"
                                     :map-img-height="map.imgHeight" :marker="selectedMarker != null ? { id: selectedMarker, ...selectedMarkerEdits } : null
                                         " class="rounded-md" />
                             </div>

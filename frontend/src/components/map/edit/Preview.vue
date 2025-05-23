@@ -49,7 +49,7 @@ watch(
         ref="preview"
         :zoom="1"
         :max-zoom="1"
-        :min-zoom="-2"
+        :min-zoom="1"
         :crs="CRS.Simple"
         :center="[bounds.getCenter().lat, bounds.getCenter().lng]"
         :options="{

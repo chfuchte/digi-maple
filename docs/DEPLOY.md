@@ -19,7 +19,8 @@ The docker setup is the recommended way to run the application in production sin
 The simplest way to run the application is to use the docker compose file.
 
 ```bash
-docker compose -f docker-compose.prod.no-traefik.yaml up
+docker compose up # takes docker-compose.yaml by default
+docker compose -f docker-compose.yaml up # explicitly specify the file
 ```
 
 ### With Traefik
@@ -47,6 +48,7 @@ NODE_ENV=production
 SERVER_PORT=<port_of_the_server>
 LOG_DIR_PATH=<path_to_logs_folder>
 IMAGES_DIR_PATH=<absolute_path_to_persistent_images_folder>
+SERVER_URL=<url_of_the_server_including_port_and_protocol>
 SERVER_CORS_ORIGINS=<comma_separated_list_of_allowed_origins>
 DATABASE_URL=file://<absolute_path_to_sqlite.db>
 DATABASE_AUTH_TOKEN=<your_auth_token_for_the_sqlite_database> 
