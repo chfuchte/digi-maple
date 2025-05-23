@@ -5,7 +5,10 @@ networks:
 services:
     frontend:
         container_name: maple_frontend
-        build: ./frontend
+        build: 
+            context: ./frontend
+            args:
+                VITE_API_BASE_URL: https://digiapi.teschnik.de
         ports:
             - "3001:80"
         restart: unless-stopped

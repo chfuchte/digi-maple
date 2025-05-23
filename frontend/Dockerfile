@@ -1,5 +1,9 @@
 FROM node:lts-slim AS builder
 WORKDIR /usr/src/web
+
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -8,7 +12,6 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-ENV VITE_API_BASE_URL="https://digiapi.teschnik.de"
 RUN pnpm run build-only
 
 FROM nginx:alpine

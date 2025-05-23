@@ -1,14 +1,15 @@
 services:
     frontend:
         container_name: maple_frontend
-        build: ./frontend
+        build: 
+            context: ./frontend
+            args:
+                VITE_API_BASE_URL: http://localhost:8080
         ports:
-            - "3001:80"
+            - "80:80"
         restart: unless-stopped
         depends_on:
             - backend
-        environment:
-            VITE_API_BASE_URL: http://localhost:8080
 
     backend:
         container_name: maple_backend
@@ -21,7 +22,7 @@ services:
         environment:
             SERVER_URL: http://localhost:8080
             SERVER_CORS_ORIGINS: >
-                http://localhost:3001,
+                http://localhost,
                 http://localhost:8080
 
 volumes:

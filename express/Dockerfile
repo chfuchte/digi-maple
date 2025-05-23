@@ -16,9 +16,7 @@ ENV NODE_ENV=production
 ENV SERVER_PORT=80
 ENV LOG_DIR_PATH=logs
 ENV IMAGES_DIR_PATH=/usr/src/web/.persistent/images
-ENV SERVER_CORS_ORIGINS=https://localhost,http://localhost,https://localhost:3001,http://localhost:3001,https://localhost:8080,http://localhost:8080,https://digi.teschnik.de,http://digi.teschnik.de,https://digiapi.teschnik.de,http://digiapi.teschnik.de
 ENV DATABASE_URL=file:///usr/src/web/.persistent/sqlite.db
-ENV SERVER_URL=https://digiapi.teschnik.de
 # fuck this, its not secure anyway
 ENV DATABASE_AUTH_TOKEN=1234
 
