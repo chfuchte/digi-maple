@@ -7,6 +7,8 @@ services:
         restart: unless-stopped
         depends_on:
             - backend
+        environment:
+            VITE_API_BASE_URL: http://localhost:8080
 
     backend:
         container_name: maple_backend
@@ -16,6 +18,11 @@ services:
         volumes:
             - pers_data:/usr/src/web/.persistent
         restart: unless-stopped
+        environment:
+            SERVER_URL: http://localhost:8080
+            SERVER_CORS_ORIGINS: >
+                http://localhost:3001,
+                http://localhost:8080
 
 volumes:
     pers_data:
