@@ -83,7 +83,7 @@ export function mapsRouter() {
             return;
         }
 
-        const imageUrl = `https://digiapi.teschnik.de/api/maps/images/${mapId}.webp`;
+        const imageUrl = `${env.SERVER_URL}/api/maps/images/${mapId}.webp`;
 
         logger("DEBUG", `File uploaded: ${req.file.originalname} -> ${webpPath}`);
 
@@ -113,7 +113,7 @@ export function mapsRouter() {
         }
 
         logger("INFO", `Map ${mapId} updated with new image: ${imageUrl}`);
-        res.status(200).json({ imageUrl, imgWidth, imgHeight });
+        res.status(200).json({ imgUrl: `${imageUrl}?${Date.now()}`, imgWidth, imgHeight });
 
         const deleteResult = await tryCatch(unlink(originalPath));
         if (deleteResult.error) logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
@@ -181,7 +181,7 @@ export function mapsRouter() {
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `https://digiapi.teschnik.de/api/maps/images/${map.id}.webp`,
+                imgUrl: `${env.SERVER_URL}/api/maps/images/${map.id}.webp?${Date.now()}`,
                 imgWidth: map.imgWidth ? map.imgWidth : undefined,
                 imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
@@ -229,7 +229,7 @@ export function mapsRouter() {
             result.data.map((map) => ({
                 id: map.id,
                 name: map.name,
-                imgUrl: `https://digiapi.teschnik.de/api/maps/images/${map.id}.webp`,
+                imgUrl: `${env.SERVER_URL}/api/maps/images/${map.id}.webp?${Date.now()}`,
                 imgWidth: map.imgWidth ? map.imgWidth : undefined,
                 imgHeight: map.imgHeight ? map.imgHeight : undefined,
             })),
@@ -276,7 +276,7 @@ export function mapsRouter() {
             name: result.data.name,
             imgWidth: result.data.imgWidth ? result.data.imgWidth : undefined,
             imgHeight: result.data.imgHeight ? result.data.imgHeight : undefined,
-            imgUrl: `https://digiapi.teschnik.de/api/maps/images/${mapId}.webp`,
+            imgUrl: `${env.SERVER_URL}/api/maps/images/${mapId}.webp?${Date.now()}`,
             markers: result.data.markers.map((marker) => ({
                 id: Number(marker.id),
                 x: marker.x,

@@ -5,6 +5,7 @@ const envSchema = z.object({
     IMAGES_DIR_PATH: z.string(),
     SERVER_CORS_ORIGINS: z.string(),
     SERVER_PORT: z.string(),
+    SERVER_URL: z.string(),
     DATABASE_URL: z.string(),
     DATABASE_AUTH_TOKEN: z.string(),
 });

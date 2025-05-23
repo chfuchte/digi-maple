@@ -86,7 +86,7 @@ const bounds = latLngBounds([0, 0], [2000, (props.mapImgWidth / props.mapImgHeig
                 <LucideMapPinPlus />
             </Button>
         </LControl>
-        <LImageOverlay :url="props.mapImgUrl!" :bounds />
+        <LImageOverlay :url="props.mapImgUrl" :bounds />
         <LMarker
             :key="marker.id"
             v-for="marker in markers"

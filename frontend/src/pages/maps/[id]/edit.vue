@@ -59,6 +59,7 @@ onBeforeMount(async () => {
 let leafletObject: Map | null = null;
 const file = ref<File | null>(null);
 const title = ref("Neue Karte");
+const viewKey = ref(0);
 
 const selectedMarker = ref<Marker["id"] | null>(null);
 const selectedMarkerEdits = ref<Omit<Marker, "id">>({
@@ -100,17 +101,15 @@ async function uploadMapImage() {
         return;
     }
 
-    const mapRes = await apiGetMap(map.value.id);
-
-    if (!mapRes) {
-        await router.push("/dashboard");
-        return;
-    }
-
-    map.value = mapRes;
-    title.value = mapRes.name;
+    map.value = {
+        ...map.value,
+        imgUrl: mapUpdateResult.imgUrl,
+        imgWidth: mapUpdateResult.imgWidth,
+        imgHeight: mapUpdateResult.imgHeight,
+    };
     file.value = null;
 
+    viewKey.value++;
     toast.success("Kartenbild erfolgreich hochgeladen.");
 }
 
@@ -250,19 +249,13 @@ async function deleteSelectedMarker() {
                             <legend class="-ml-1 px-1 text-sm font-medium">Generelles</legend>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>
-                                <UInput
-                                    v-model="title"
-                                    id="name"
-                                    type="text"
-                                    placeholder="Campus Bockenheim"
+                                <UInput v-model="title" id="name" type="text" placeholder="Campus Bockenheim"
                                     autocomplete="off" />
                                 <Button variant="secondary" type="button" @click="setMapTitle"> Speichern </Button>
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="file">Kartenbild</Label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
+                                <input type="file" accept="image/*"
                                     @input="(event: any) => (file = event.target.files[0])" />
                                 <Button variant="secondary" type="button" @click="uploadMapImage"> Hochladen </Button>
                             </div>
@@ -270,28 +263,16 @@ async function deleteSelectedMarker() {
                         <fieldset class="flex w-full flex-col gap-6 rounded-lg border p-4">
                             <legend class="-ml-1 px-1 text-sm font-medium">Ausgewählten Marker bearbeiten</legend>
                             <div class="h-[150px] w-full" v-if="map && map.imgUrl && map.imgWidth && map.imgHeight">
-                                <Preview
-                                    :map-img-url="map.imgUrl"
-                                    :map-img-width="map.imgWidth"
-                                    :map-img-height="map.imgHeight"
-                                    :marker="
-                                        selectedMarker != null ? { id: selectedMarker, ...selectedMarkerEdits } : null
-                                    "
-                                    class="rounded-md" />
+                                <Preview :map-img-url="map.imgUrl" :map-img-width="map.imgWidth"
+                                    :map-img-height="map.imgHeight" :marker="selectedMarker != null ? { id: selectedMarker, ...selectedMarkerEdits } : null
+                                        " class="rounded-md" />
                             </div>
                             <div class="flex flex-col gap-3">
                                 <Label for="name">Name</Label>
-                                <UInput
-                                    v-model="selectedMarkerEdits.title"
-                                    id="name"
-                                    type="text"
-                                    autocomplete="off"
+                                <UInput v-model="selectedMarkerEdits.title" id="name" type="text" autocomplete="off"
                                     placeholder="Gebäude B" />
                                 <Label for="description">Beschreibung</Label>
-                                <Textarea
-                                    v-model="selectedMarkerEdits.description"
-                                    id="description"
-                                    type="text"
+                                <Textarea v-model="selectedMarkerEdits.description" id="description" type="text"
                                     placeholder="Aufzüge sind kapput!" />
                                 <Label for="type">Stil</Label>
                                 <div class="flex gap-3">
@@ -311,12 +292,8 @@ async function deleteSelectedMarker() {
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                    <UInput
-                                        v-model="selectedMarkerEdits.color"
-                                        id="color"
-                                        type="color"
-                                        autocomplete="off"
-                                        class="max-w-[250px]" />
+                                    <UInput v-model="selectedMarkerEdits.color" id="color" type="color"
+                                        autocomplete="off" class="max-w-[250px]" />
                                 </div>
                                 <Button @click="deleteSelectedMarker" variant="destructive" type="button">
                                     Löschen
@@ -331,16 +308,10 @@ async function deleteSelectedMarker() {
             </ResizablePanel>
             <ResizableHandle with-handle />
             <ResizablePanel>
-                <View
-                    v-if="map && map.imgHeight && map.imgWidth"
-                    @leaflet-ready="onMapReady"
-                    @create-marker="createMarker"
-                    @marker-clicked="markerClicked"
-                    @marker-location-update="markerLocationUpdated"
-                    :map-img-url="map.imgUrl"
-                    :map-img-width="map.imgWidth!"
-                    :map-img-height="map.imgHeight!"
-                    :markers="map.markers" />
+                <View :key="viewKey" v-if="map && map.imgHeight && map.imgWidth" @leaflet-ready="onMapReady"
+                    @create-marker="createMarker" @marker-clicked="markerClicked"
+                    @marker-location-update="markerLocationUpdated" :map-img-url="map.imgUrl"
+                    :map-img-width="map.imgWidth" :map-img-height="map.imgHeight" :markers="map.markers" />
                 <div v-else class="flex h-full w-full items-center justify-center">
                     <p class="text-center text-3xl font-semibold">Kein Kartenbild gefunden</p>
                 </div>

@@ -4,7 +4,7 @@ import type { FullMap, Map } from "@/typings/map";
 import { AxiosError } from "axios";
 import { z } from "zod";
 
-export async function apiUploadMapImg(file: File, mapId: number): Promise<boolean> {
+export async function apiUploadMapImg(file: File, mapId: number) {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -14,7 +14,23 @@ export async function apiUploadMapImg(file: File, mapId: number): Promise<boolea
         return false;
     }
 
-    return res.data.status === 200;
+    if (res.data.status !== 200) {
+        return false;
+    }
+
+    const data = z
+        .object({
+            imgWidth: z.number(),
+            imgHeight: z.number(),
+            imgUrl: z.string(),
+        })
+        .safeParse(res.data.data);
+
+    if (!data.success) {
+        return false;
+    }
+
+    return data.data;
 }
 
 export async function apiCreateMap(name: string): Promise<number | null> {
