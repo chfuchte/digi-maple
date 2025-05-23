@@ -54,7 +54,7 @@ const handleLogout = async () => {
             <RouterLink to="/" class="my-2 mr-2 flex items-center gap-3">
                 <div class="flex flex-row items-center gap-1">
                     <LucideMap :size="30" />
-                    <h1 class="text-3xl">Maple</h1>
+                    <h1 class="text-3xl">AnyMap</h1>
                 </div>
             </RouterLink>
             <RouterLink
