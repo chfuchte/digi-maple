@@ -19,7 +19,11 @@ services:
             - pers_data:/usr/src/web/.persistent
         restart: unless-stopped
         environment:
+<<<<<<< HEAD
             SERVER_URL: http://localhost:8080
+=======
+            SERVER_URL: https://digiapi.teschnik.de
+>>>>>>> bdc305e9442a2bf2cc43b0a4c610ef1271c4010e
             SERVER_CORS_ORIGINS: >
                 http://localhost:3001,
                 http://localhost:8080

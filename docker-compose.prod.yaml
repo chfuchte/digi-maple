@@ -43,6 +43,11 @@ services:
             SERVER_CORS_ORIGINS: >
                 https://digi.teschnik.de,
                 https://digiapi.teschnik.de
+        environment:
+            SERVER_URL: https://digiapi.teschnik.de
+            SERVER_CORS_ORIGINS: >
+                https://digi.teschnik.de,
+                https://digiapi.teschnik.de
 
 volumes:
     pers_data:
