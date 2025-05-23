@@ -76,6 +76,9 @@ export function mapsRouter() {
 
         if (convertResult.error) {
             logger("ERROR", `Failed to convert image to webp for map ${mapId}: ${convertResult.error}`);
+            const deleteResult = await tryCatch(unlink(originalPath));
+            if (deleteResult.error) logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
+            else logger("DEBUG", `Original image deleted: ${originalPath}`);
             res.status(500).json({ error: "Failed to convert image" });
             return;
         }
@@ -84,27 +87,27 @@ export function mapsRouter() {
 
         logger("DEBUG", `File uploaded: ${req.file.originalname} -> ${webpPath}`);
 
-        const metadataResult = await tryCatch(sharp(webpPath).metadata());
+        const imgHeight = convertResult.data.height;
+        const imgWidth = convertResult.data.width;
 
-        if (metadataResult.error) {
-            logger("ERROR", `Failed to read image metadata for map ${mapId}: ${metadataResult.error}`);
-            res.status(500).json({ error: "Failed to read image metadata" });
-            return;
-        }
-
-        const { width: imgWidth = 0, height: imgHeight = 0 } = metadataResult.data;
         logger("DEBUG", `Image dimensions for map ${mapId}: ${imgWidth}x${imgHeight}`);
 
         const result = await tryCatch(db.update(maps).set({ imgWidth, imgHeight }).where(eq(maps.id, mapId)));
 
         if (result.error) {
             logger("ERROR", `Failed to update map ${mapId}: ${result.error}`);
+            const deleteResult = await tryCatch(unlink(originalPath));
+            if (deleteResult.error) logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
+            else logger("DEBUG", `Original image deleted: ${originalPath}`);
             res.status(500).json({ error: "Failed to update map" });
             return;
         }
 
         if (result.data.rowsAffected === 0) {
             logger("WARN", `Map not found with ID: ${mapId}`);
+            const deleteResult = await tryCatch(unlink(originalPath));
+            if (deleteResult.error) logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
+            else logger("DEBUG", `Original image deleted: ${originalPath}`);
             res.status(404).json({ error: "Map not found" });
             return;
         }
@@ -113,13 +116,8 @@ export function mapsRouter() {
         res.status(200).json({ imageUrl, imgWidth, imgHeight });
 
         const deleteResult = await tryCatch(unlink(originalPath));
-
-        if (deleteResult.error) {
-            logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
-            return;
-        }
-
-        logger("DEBUG", `Original image deleted: ${originalPath}`);
+        if (deleteResult.error) logger("ERROR", `Failed to delete original image: ${deleteResult.error}`);
+        else logger("DEBUG", `Original image deleted: ${originalPath}`);
     });
 
     router.post("/api/maps", async (req, res) => {
